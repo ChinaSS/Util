@@ -2,9 +2,15 @@
 .s_grid label{
     padding-left:0 !important;
 }
+.s_grid a{
+    cursor: pointer
+}
 .s_grid table{
     margin-bottom: 0;
+    font-size: 13px;
+    font-family:'Open Sans';
 }
+
 .s_grid_toolbar ul{
     list-style: none;
     float: left;
