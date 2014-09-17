@@ -41,6 +41,28 @@
     text-decoration: none;
     border-radius: 5px;
 }
+
+/*表格标题*/
+.s_grid .s_grid_title{
+    background-color: rgb(242, 242, 242);
+    padding: 5px;
+    line-height: 20px;
+}
+.s_grid .s_grid_title i{
+    float:right;
+    padding:3px;
+    cursor:pointer;
+    color:#BDB4B4
+}
+.s_grid .s_grid_title i:hover{
+    color:#2898e0;
+}
+
+/*表格标题样式*/
+.s_grid table tr:first-child{
+    font-family: Arial, "微软雅黑", "宋体", Tahoma, Helvetica, sans-serif;
+    font-weight: bold;
+}
 /*分页样式*/
 .s_grid_pagination{
     border-bottom:#DDDDDD 1px solid;
