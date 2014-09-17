@@ -12,7 +12,8 @@
 2.提高开发效率，组件封装了前端常用组件，开发人员只需调用提供的API，不需关心该API的模块依赖  
 
 
-样例地址：http://chinass.github.io/Util/ 
+样例地址：http://chinass.github.io/Util/  
+wiki地址：https://github.com/ChinaSS/Util/wiki  
 
 资料：  
 jquery API:http://tool.oschina.net/apidocs/apidoc?api=jquery  
