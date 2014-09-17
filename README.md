@@ -16,12 +16,12 @@
 wiki地址：https://github.com/ChinaSS/Util/wiki  
 
 资料：  
-jquery API:http://tool.oschina.net/apidocs/apidoc?api=jquery  
-boostrap:http://v3.bootcss.com/    
-requireJS:http://www.requirejs.cn/  
+jquery API：http://tool.oschina.net/apidocs/apidoc?api=jquery  
+boostrap：http://v3.bootcss.com/    
+requireJS：http://www.requirejs.cn/  
 zTree：http://www.ztree.me/v3/main.php#_zTreeInfo  
-ECharts图表:http://echarts.baidu.com/  
-webuploader:http://fex.baidu.com/webuploader/
+ECharts图表：http://echarts.baidu.com/  
+webuploader：http://fex.baidu.com/webuploader/
 
 最后，该版本为第一版，实际使用中肯定会有许许多多的问题与不便，希望各位同学勿喷，积极提Issues与建议，通过大家共同的努力不断的完善与丰富该公共组件，为项目开发提供便利
   
