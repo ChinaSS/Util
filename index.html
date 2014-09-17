@@ -33,7 +33,7 @@
     </header>
     <div class="bs-docs-header" id="content">
         <div class="container">
-            <h1>公共组件</h1>
+            <h1>公共组件样例</h1>
         </div>
     </div>
     <div class="container bs-docs-container">
@@ -42,9 +42,23 @@
                 
                 <div class="bs-docs-section">
                     <h1 id="tabDemo" class="page-header">tab页签</h1>
-                    <p>tab页签样例</p>
-                    <div class="bs-example">
+                    <p>tab页签样例,请参考Bootstrap官方<a href="http://v3.bootcss.com/javascript/#tabs" target="_blank">样例</a></p>
+                    <div class="bs-example" style="height:160px">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
+                            <li><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
+                            <li><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
+                            <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+                        </ul>
 
+                        <!-- Tab panes -->
+                        <div class="tab-content" style="padding: 10px">
+                            <div class="tab-pane active" id="home">Home页签</div>
+                            <div class="tab-pane" id="profile">Profile页签</div>
+                            <div class="tab-pane" id="messages">Messages页签</div>
+                            <div class="tab-pane" id="settings">Settings页签</div>
+                        </div>
                     </div>
                 </div>
 
