@@ -2,4 +2,4 @@
 .typeahead-suggest{position:absolute;display:none;padding:0px;width: 100%;margin: 0 auto;background-color: #fafafa;border: 1px solid #dddddd;border-radius: 5px;-webkit-border-radius: 5px;-moz-border-radius: 5px;}
 .typeahead-suggest a,.typeahead-suggest p{display:block;color:#000000;height: 30px;line-height: 30px;text-indent: 15px;font-size: 15px;text-align: left;}
 .typeahead-suggest a span{color:#b1994a;}
-.typeahead-suggest a:hover,.typeahead-suggest a:focus{background-color: #cccccc;color: #ffffff;}
+.typeahead-suggest a:hover,.typeahead-suggest a:focus{background-color: #cccccc;color: #ffffff;text-decoration: none;}
