@@ -8,7 +8,7 @@
 该组件基于jquery、boostrap以及requireJS  
 树组件采用zTree，图表采用ECharts，附件上传采用WebUploader,使用时可以参照相关官方API
 
-主要目的为：  
+**主要目的为：**  
 1.规范前端开发组件  
 2.去掉笨重第三方组件，封装自己的前端常用组件作补充
 
