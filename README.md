@@ -5,11 +5,12 @@
 造成各个项目中用到的组件都不一样，有些项目可能同时使用多个前端组件，这样就带来项目维护困难，开发人员需要不同项目学习了解不同前端组件等问题，
 由此，该公共组件应运而生。
 
-该组件基于jquery、boostrap以及requireJS，树采用zTree，图表采用ECharts，附件上传采用WebUploader,使用时可以参照相关官方API
+该组件基于jquery、boostrap以及requireJS  
+树组件采用zTree，图表采用ECharts，附件上传采用WebUploader,使用时可以参照相关官方API
 
-该组件的主要目的为：  
+主要目的为：  
 1.规范前端开发组件  
-2.提高开发效率，组件封装了前端常用组件，开发人员只需调用提供的API，不需关心该API的模块依赖  
+2.去掉笨重第三方组件，封装自己的前端常用组件作补充
 
 
 样例地址：http://chinass.github.io/Util/  
