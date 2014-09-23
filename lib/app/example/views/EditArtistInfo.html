@@ -1,0 +1,372 @@
+<div class="sidebar_detail" id="EditOneArtistInfoPanel">
+    <div style="float:left">
+        <div style="padding:10px;font-size:24px"><i class="menu-icon fa fa-user">&nbsp;</i>王磊</div>
+        <div style="padding-left:32px;font-size:13px;padding-bottom:14px"><span class="last">{{Org.Person.PersonInfo.DeptInfo.deptName}}</span></div>
+    </div>
+    <!--<div style="float:right;padding-top:8px;padding-right:33px">
+        <button type="button" class="btn btn-default" style="width:98px;text-align:left"><i class="menu-icon fa fa-save"></i>&nbsp;保存</button><br/>
+        <button type="button" class="btn btn-default" style="margin-top:10px"><i class="menu-icon fa fa-save"></i>&nbsp;新增角色</button>
+    </div>-->
+    <div style="float:right;padding-top:23px;padding-right:33px">
+        <button type="button" class="btn btn-default" ng-click="Org.Person.save()"><i class="menu-icon fa fa-save"></i>&nbsp;保存</button>
+    </div>
+
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist" style="clear:both">
+        <li class="active"><a data-target="#PersonBaseInfo" role="tab" data-toggle="tab">基本信息</a></li>
+        <li><a data-target="#ZWeiOrZWu" role="tab" data-toggle="tab">职位/职务</a></li>
+        <li><a data-target="#PersonResume" role="tab" data-toggle="tab">个人履历</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="PersonBaseInfo">
+
+            <div class="row">
+                <div class="col-md-2 form-horizontal">
+                    <div align="center">
+                        <img src="images/user.jpg" style="width:150px;height:165px;margin-top:12px">
+                    </div>
+                </div>
+                <div class="col-md-10 form-horizontal">
+                    <div class="row">
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="userName" class="col-md-4 col-sm-2 control-label">姓名:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <input id="userName" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo2" class="col-md-4 col-sm-2 control-label">笔名/艺名:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <input id="attistInfo2" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo30" class="col-md-4 col-sm-2 control-label">性别:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <select class="form-control" id="attistInfo30">
+                                        <option>男</option>
+                                        <option>女</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo3" class="col-md-4 col-sm-2 control-label">外文名:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <input id="attistInfo3" type="text" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo27" class="col-md-4 col-sm-2 control-label">民族:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <select class="form-control" id="attistInfo27">
+                                        <option>汉族</option>
+                                        <option>维族</option>
+                                        <option>壮族</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo28" class="col-md-4 col-sm-2 control-label">婚姻状况:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <select class="form-control" id="attistInfo28">
+                                        <option>未婚</option>
+                                        <option>已婚</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo4" class="col-md-4 col-sm-2 control-label">籍贯:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <input id="attistInfo4" type="text" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo29" class="col-md-4 col-sm-2 control-label">政治面貌:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <select class="form-control" id="attistInfo29">
+                                        <option>群众</option>
+                                        <option>党员</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="userCode" class="col-md-4 col-sm-2 control-label">国籍:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <select class="form-control">
+                                        <option>中国</option>
+                                        <option>美国</option>
+                                        <option>英国</option>
+                                        <option>德国</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label for="attistInfo5" class="col-md-4 col-sm-2 control-label">出生地:</label>
+                                <div class="col-md-8 col-sm-10">
+                                    <input id="attistInfo5" type="text" class="form-control" >
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo6" class="col-md-4 col-sm-2 control-label">出生日期:</label>
+                        <div class="col-md-8 col-sm-10 select">
+                            <input id="attistInfo6" type="text" class="form-control form-date">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo7" class="col-md-4 col-sm-2 control-label">生卒日期:</label>
+                        <div class="col-md-8 col-sm-10 select">
+                            <input id="attistInfo7" type="text" class="form-control form-date">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo14" class="col-md-2 col-sm-2 control-label">家庭地址:</label>
+                        <div class="col-md-10 col-sm-10">
+                            <input id="attistInfo14" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo15" class="col-md-2 col-sm-2 control-label">办公地址:</label>
+                        <div class="col-md-10 col-sm-10">
+                            <input id="attistInfo15" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo18" class="col-md-4 col-sm-2 control-label">办公电话:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo18" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo19" class="col-md-4 col-sm-2 control-label">住宅电话:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo19" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo20" class="col-md-4 col-sm-2 control-label">手机号码:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo20" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo21" class="col-md-4 col-sm-2 control-label">传真号码:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo21" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo24" class="col-md-4 col-sm-2 control-label">邮箱:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo24" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo25" class="col-md-4 col-sm-2 control-label">标签:</label>
+                        <div class="col-md-8 col-sm-10">
+                            <input id="attistInfo25" type="text" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 form-horizontal">
+                    <div class="form-group">
+                        <label for="attistInfo26" class="col-sm-2 control-label">简介:</label>
+                        <div class="col-sm-10">
+                            <textarea id="attistInfo26" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="tab-pane" id="ZWeiOrZWu">
+
+            <div class="affix-section">
+                <h3 id="link0">行政职务</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>职务名称</td>
+                        <td>所属机构</td>
+                        <td>级别</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="affix-section">
+                <h3 id="link2">文联职务</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>职务名称</td>
+                        <td>所属机构</td>
+                        <td>届次</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                    <tr ng-repeat="role in Org.Person.Roles">
+                        <td style="text-align:center">{{$index+1}}</td>
+                        <td>{{ role.roleCode }}</td>
+                        <td>{{ role.roleName }}</td>
+                        <td>{{ role.dirName }}</td>
+                        <td>{{ role.manager }}</td>
+                        <td style="text-align:center;font-size:14px">
+                            <i class="glyphicon glyphicon-trash" style="cursor:pointer" title="删除" ng-click="Org.Person.delRole($index)"></i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="affix-section">
+                <h3 id="link3">协会职务</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>职务名称</td>
+                        <td>所属机构</td>
+                        <td>届次</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="affix-section">
+                <h3 id="link4">技术职务</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>职务名称</td>
+                        <td>所属机构</td>
+                        <td>级别</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="affix-section">
+                <h3 id="link5">社会职务</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>职务名称</td>
+                        <td>所属机构</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="PersonResume">
+            <div class="affix-section">
+                    <h3 id="link10">
+                        <span>教育经历</span>
+                        <span>
+                            <a style="float:right;font-size:14px"><i class="fa fa-plus-circle">&nbsp;</i>添加</a>
+                        </span>
+                    </h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>就读学校</td>
+                        <td>学习专业</td>
+                        <td>学历</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:65px">操作</td>
+                    </tr>
+                    <tr>
+                        <td style="width:50px">1</td>
+                        <td>北京大学</td>
+                        <td>中文</td>
+                        <td>本科</td>
+                        <td>1988-09</td>
+                        <td>1992-09</td>
+                        <td style="text-align:center;font-size:14px">
+                            <i class="glyphicon glyphicon-pencil" style="cursor:pointer" title="编辑"></i>
+                            <i class="glyphicon glyphicon-trash" style="cursor:pointer" title="删除" ng-click="Org.Person.delRole($index)"></i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="affix-section">
+                <h3 id="link11">工作经历</h3>
+                <table class="table table-bordered table-hover" style="margin-top:10px">
+                    <tr>
+                        <td style="width:50px">序号</td>
+                        <td>工作单位</td>
+                        <td>职位</td>
+                        <td>起始时间</td>
+                        <td>结束时间</td>
+                        <td style="width:50px">操作</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
