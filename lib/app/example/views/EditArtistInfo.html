@@ -1,7 +1,7 @@
 <div class="sidebar_detail" id="EditOneArtistInfoPanel">
     <div style="float:left">
         <div style="padding:10px;font-size:24px"><i class="menu-icon fa fa-user">&nbsp;</i>王磊</div>
-        <div style="padding-left:32px;font-size:13px;padding-bottom:14px"><span class="last">{{Org.Person.PersonInfo.DeptInfo.deptName}}</span></div>
+        <div style="padding-left:32px;font-size:13px;padding-bottom:14px"><span class="last"></span></div>
     </div>
     <!--<div style="float:right;padding-top:8px;padding-right:33px">
         <button type="button" class="btn btn-default" style="width:98px;text-align:left"><i class="menu-icon fa fa-save"></i>&nbsp;保存</button><br/>
@@ -267,16 +267,7 @@
                         <td>结束时间</td>
                         <td style="width:50px">操作</td>
                     </tr>
-                    <tr ng-repeat="role in Org.Person.Roles">
-                        <td style="text-align:center">{{$index+1}}</td>
-                        <td>{{ role.roleCode }}</td>
-                        <td>{{ role.roleName }}</td>
-                        <td>{{ role.dirName }}</td>
-                        <td>{{ role.manager }}</td>
-                        <td style="text-align:center;font-size:14px">
-                            <i class="glyphicon glyphicon-trash" style="cursor:pointer" title="删除" ng-click="Org.Person.delRole($index)"></i>
-                        </td>
-                    </tr>
+
                 </table>
             </div>
             <div class="affix-section">

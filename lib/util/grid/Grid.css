@@ -78,6 +78,13 @@
     cursor:pointer
 }
 
+/*空行不显示边框*/
+.s_grid .emptyRow td{
+    border:0;
+    height:39px;
+}
+
+
 /*分页样式*/
 .s_grid_pagination{
     border-bottom:#DDDDDD 1px solid;
