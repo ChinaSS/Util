@@ -16,16 +16,16 @@
 样例地址：http://chinass.github.io/Util/  
 wiki地址：https://github.com/ChinaSS/Util/wiki  
 
-资料：  
-jquery API：http://tool.oschina.net/apidocs/apidoc?api=jquery  
-boostrap：http://v3.bootcss.com/    
-requireJS：http://www.requirejs.cn/  
-图标：http://fontawesome.io/icons/  
-树：http://www.ztree.me/v3/main.php#_zTreeInfo  
-图表组件：http://echarts.baidu.com/  
-附件上传：http://fex.baidu.com/webuploader/  
-日期组件：http://www.bootcss.com/p/bootstrap-datetimepicker/  
-
 最后，该版本为第一版，实际使用中肯定会有许许多多的问题与不便，希望各位同学勿喷，积极提Issues与建议，通过大家共同的努力不断的完善与丰富该公共组件，为项目开发提供便利
-  
-  
+
+##资料：  
+* [jquery API](http://tool.oschina.net/apidocs/apidoc?api=jquery)  
+* [bootstrap](http://v3.bootcss.com/) boostrap中文网，里面有完整的使用说明
+* [requireJS](http://www.requirejs.cn/)  前端模块化管理组件
+* [fontawesome](http://fontawesome.io/icons/)  字体图标，建议使用到的图标都从中选择，不建议使用图片
+* [ztree](http://www.ztree.me/v3/main.php#_zTreeInfo)  树
+* [ECharts](http://echarts.baidu.com/  )  图表
+* [webuploader](http://fex.baidu.com/webuploader/ ) 附件上传组件
+* [datetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/) 日期选择组件  
+* [slimScroll](http://rocha.la/jQuery-slimScroll) 滚动条美化组件
+* [angular](http://www.ngnice.com/docs/guide) 前端MVC框架，这里是部分翻译成中文的文档，完整版可以去官网查看
