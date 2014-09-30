@@ -29,3 +29,4 @@ wiki地址：https://github.com/ChinaSS/Util/wiki
 * [datetimepicker](http://www.bootcss.com/p/bootstrap-datetimepicker/) 日期选择组件  
 * [slimScroll](http://rocha.la/jQuery-slimScroll) 滚动条美化组件
 * [angular](http://www.ngnice.com/docs/guide) 前端MVC框架，这里是部分翻译成中文的文档，完整版可以去官网查看
+* [gulp](http://gulpjs.com/) 前端构建工具，常用于文件压缩、合并等
