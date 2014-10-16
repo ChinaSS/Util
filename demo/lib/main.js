@@ -80,7 +80,7 @@ require.config({
     $("#sidebarButtonID").bind('click',function(){
         require(['Util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
-            util.sidebarDetial({
+            util.slidebar({
                 url:'app/example/views/EditArtistInfo.html',
                 width:'800px',
                 'afterLoad':function(){

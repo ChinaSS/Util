@@ -131,7 +131,7 @@
                 cache[param.id] = $Panel;
             }else{
                 require(['text!'+param.url],function(panel){
-                    var $Panel = $(panel);
+                    var $Panel = $("<div>"+panel+"</div>");
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
                     init($Panel);
