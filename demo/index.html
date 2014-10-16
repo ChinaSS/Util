@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>常用组件样例</title>
+    <link rel="stylesheet" href="lib/modules/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/docs.min.css" />
+    <link rel="stylesheet" href="lib/modules/util/css/util.css" />
+    <link rel="stylesheet" href="lib/modules/Font-Awesome/css/font-awesome.min.css" />
+</head>
+<body>
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="index.html" class="navbar-brand">首页</a>
+            </div>
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="index.html">常用组件</a>
+                    </li>
+                    <li>
+                        <a href="css.html">常用样式</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/ChinaSS/Util" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/ChinaSS/Util/wiki" target="_blank">Wiki</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="bs-docs-header" id="content">
+        <div class="container">
+            <h1>常用组件样例</h1>
+        </div>
+    </div>
+    <div class="container bs-docs-container">
+        <div class="row">
+            <div class="col-md-9" role="main">
+                <p style="font-size:20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    项目中往往只用到第三方大而全的组件中的某几块功能，它们的功能与样式固定，不能灵活满足项目需求，且修改不易，因此不建议使用。提供如下常用组件作补充，这些组件样式和功能可根据项目需求灵活调整。
+                </p>
+                <div class="bs-docs-section">
+                    <h1 id="SidebarDemo" class="page-header">侧边栏</h1>
+                    <p>侧边栏样例，该组件适用于窗口右侧弹出侧边栏编辑数据</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" id="sidebarButtonID">侧边栏</button>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="tabDemo" class="page-header">Tab页签</h1>
+                    <p>tab页签样例,请参考Bootstrap官方<a href="http://v3.bootcss.com/javascript/#tabs" target="_blank">样例</a></p>
+                    <div class="bs-example" style="height:160px">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
+                            <li><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
+                            <li><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
+                            <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content" style="padding: 10px">
+                            <div class="tab-pane active" id="home">Home页签</div>
+                            <div class="tab-pane" id="profile">Profile页签</div>
+                            <div class="tab-pane" id="messages">Messages页签</div>
+                            <div class="tab-pane" id="settings">Settings页签</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bs-docs-section">
+                    <h1 id="TypeaheadDemo" class="page-header">TypeaheadDemo</h1>
+                    <p>Typeahead样例</p>
+                    <div class="bs-example">
+                        <input type="text" id="TypeaheadId">
+                    </div>
+                </div>
+
+                <div class="bs-docs-section">
+                    <h1 id="gridDemo" class="page-header">Grid</h1>
+                    <p>Grid样例</p>
+                    <div class="bs-example">
+                        <div id="DemoGirdDivId"></div>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="treeDemo" class="page-header">Tree</h1>
+                    <p>树，参考zTree的<a href="http://www.ztree.me/v3/demo.php#_101" target="_bank">demo</a>
+                        以及<a href="http://www.ztree.me/v3/api.php" target="_blank">API</a>
+                    </p>
+                    <div class="bs-example">
+                        <div id="TreeId" class="ztree"></div>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="baseDialogDemo" class="page-header">BaseDialog</h1>
+                    <p>弹出模态框样例</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" onclick="require(['demo/dialogDemo'],function(demo){demo.createDialog()})">BaseDialog</button>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="alertDemo" class="page-header">Alert</h1>
+                    <p>Alert弹出框</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" onclick="require(['Util'],function(u){u.alert('alert弹出框！')})">Alert</button>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="confirmDemo" class="page-header">Comfirm</h1>
+                    <p>Confirm弹出框</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" onclick="require(['Util'],function(u){u.confirm('confirm弹出框！')})">Confirm</button>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="TreeDialogDemo" class="page-header">TreeDialog</h1>
+                    <p>TreeDialog样例</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" id="treeDialogId">TreeDialog</button>
+                    </div>
+                    
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="GridDialogDemo" class="page-header">GridDialog</h1>
+                    <p>GridDialog样例</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" id="gridDialogId">GridDialog</button>
+                    </div>
+                </div>
+                <div class="bs-docs-section">
+                    <h1 id="TreeAndGridDialogDemo" class="page-header">TreeAndGridDialogDemo</h1>
+                    <p>TreeAndGridDialogDemo样例</p>
+                    <div class="bs-example">
+                        <button type="button" class="btn btn-primary" id="treeAndGridDialogId">TreeAndGridDialogDemo</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top" role="complementary" id="affix">
+                    <ul class="nav bs-docs-sidenav">
+                        <li class="">
+                            <a href="#SidebarDemo">侧边栏</a>
+                        </li>
+                        <li>
+                            <a href="#tabDemo">Tab页签</a>
+                        </li>
+                        <li class="">
+                            <a href="#TypeaheadDemo">Typeahead</a>
+                        </li>
+                        <li class="">
+                            <a href="#gridDemo">Grid</a>
+                        </li>
+                        <li class="">
+                            <a href="#treeDemo">Tree</a>
+                        </li>
+                        <li class="">
+                            <a href="#baseDialogDemo">BaseDialog</a>
+                        </li>
+                        <li class="">
+                            <a href="#alertDemo">Alert弹出框</a>
+                        </li>
+                        <li class="">
+                            <a href="#confirmDemo">Confirm弹出框</a>
+                        </li>
+                        <li class="">
+                            <a href="#TreeDialogDemo">TreeDialog</a>
+                        </li>
+                        <li class="">
+                            <a href="#GridDialogDemo">GridDialog</a>
+                        </li>
+                        <li class="">
+                            <a href="#TreeAndGridDialogDemo">TreeAndGridDialog</a>
+                        </li>
+                    </ul>
+                    <a class="back-to-top" href="#top">
+                        返回顶部
+                    </a>
+
+                    <a href="#" class="bs-docs-theme-toggle">
+                        主题预览
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/modules/requirejs/require.js" type="text/javascript"></script>
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        require.config({paths:{"jquery":"modules/jquery/jquery.min"}});
+    </script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+        require.config({paths:{"jquery":"modules/jquery/jquery1x.min"}});
+    </script>
+    <![endif]-->
+
+    <!-- 页面加载总入口 -->
+    <script src="lib/main.js"></script>
+</body>
+</html>
