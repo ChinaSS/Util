@@ -63,7 +63,7 @@
     /**
      * 弹出侧边编辑栏组件
      */
-    util.sidebarDetial = (function(){
+    util.slidebar = (function(){
         var cache = {};
         return function(config){
             var param = $.extend({
