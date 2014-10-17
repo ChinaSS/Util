@@ -87,21 +87,21 @@
             var init = function($Panel){
                 //设置弹出面板样式
                 $Panel.css({
-                    "width":param.width,
-                    "right":"-"+param.width,
+                    "width":0,
                     "border":"1px solid rgba(0,0,0,.2)",
-                    "position":"absolute",
-                    "z-index":"3000",
+                    "position":"fixed",
+                    "z-index":"1001",
                     "top":0,
+                    "bottom":0,
+                    "right":0,
                     "padding":"10px",
                     "background-color":"white",
                     "overflow-y":"scroll",
                     "overflow-x":"hidden",
-                    "height":document.body.clientHeight,
                     "display":""
                 });
                 //弹出侧边编辑栏
-                $Panel.animate({right: 0}, 300);
+                $Panel.animate({width : param.width}, 300);
                 //回调函数执行
                 typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听
@@ -118,24 +118,18 @@
                 });
             };
 
-            //如果已经有缓存则直接加载
             var $Panel = cache[param.id || param.url];
+            //如果已经有缓存则直接加载
             if($Panel){
                 init($Panel);
                 return;
-            }
-            //如果已经把模板放在了页面上，则通过id取得
-            if(param.id){
-                $Panel = $("#"+param.id);
-                init($Panel);
-                cache[param.id] = $Panel;
             }else{
                 require(['text!'+param.url],function(panel){
-                    var $Panel = $("<div>"+panel+"</div>");
+                    $Panel = $("<div>"+panel+"</div>");
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
                     init($Panel);
-                    cache[param.url] = $Panel;
+                    cache[param.id || param.url] = $Panel;
                 })
             }
         };
