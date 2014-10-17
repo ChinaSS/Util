@@ -77,12 +77,13 @@ require.config({
     });
     
     //侧边栏
-    $("#sidebarButtonID").bind('click',function(){
+    $("#sidebarButtonID").bind('click',function(e){
         require(['Util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
                 url:'app/example/views/EditArtistInfo.html',
                 width:'800px',
+                allowClick:[e.target],
                 'afterLoad':function(){
                     //日期组件事件绑定
                     $(".form-date").datetimepicker({format: 'yyyy-mm-dd',language: 'cn',autoclose: true,minView:2});

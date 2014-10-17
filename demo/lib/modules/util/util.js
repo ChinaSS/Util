@@ -105,7 +105,7 @@
                 //回调函数执行
                 typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听
-                $(document.body).mouseup(function(e){
+                $(document.body).unbind("mouseup").mouseup(function(e){
                     //不是目标区域且不是子元素,且不是自定义允许点击节点
                     if((!$Panel.is(e.target) && $Panel.has(e.target).length === 0) && !isAllowTarget(e)){
                         //关闭页面
