@@ -1,0 +1,31 @@
+{
+  "name": "Util",
+  "version": "1.0.0",
+  "description": "公共组件",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChinaSS/Util.git"
+  },
+  "keywords": [
+    "公共组件"
+  ],
+  "author": "YiYing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChinaSS/Util/issues"
+  },
+  "homepage": "https://github.com/ChinaSS/Util",
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.4.1",
+    "gulp-minify-css": "^0.3.11",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "^3.0.1"
+  }
+}
