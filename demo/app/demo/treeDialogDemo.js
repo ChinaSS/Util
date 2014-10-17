@@ -1,4 +1,4 @@
-define(["BaseDialog","TreeDialog","ZTree","css!modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(baseDialog,treeDialog){
+define(["util/baseDialog","util/treeDialog","ZTree","css!modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(baseDialog,treeDialog){
     
     var nodeObj=[
         {id:1,pId:0,name:"父节点1",t:"我有子节点",open:true},

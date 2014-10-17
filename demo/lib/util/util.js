@@ -34,7 +34,7 @@
      * @param message
      */
     util.alert =function(message){
-        require(["BaseDialog"],function(baseDialog){
+        require(["util/baseDialog"],function(baseDialog){
             var dialog = baseDialog({id:"system_dialog_alert",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             dialog.css({"margin-top":"13%"});
@@ -49,7 +49,7 @@
      * @param cancelCallback
      */
     util.confirm = function(message,okCallback,cancelCallback){
-        require(["BaseDialog"],function(baseDialog){
+        require(["util/baseDialog"],function(baseDialog){
             var dialog = baseDialog({id:"system_dialog_confirm",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             dialog.css({"margin-top":"13%"});
@@ -87,13 +87,13 @@
             var init = function($Panel){
                 //设置弹出面板样式
                 $Panel.css({
-                    "width":0,
+                    "width":param.width,
                     "border":"1px solid rgba(0,0,0,.2)",
                     "position":"fixed",
                     "z-index":"1001",
                     "top":0,
                     "bottom":0,
-                    "right":0,
+                    "right":"-"+param.width,
                     "padding":"10px",
                     "background-color":"white",
                     "overflow-y":"scroll",
@@ -101,7 +101,7 @@
                     "display":""
                 });
                 //弹出侧边编辑栏
-                $Panel.animate({width : param.width}, 300);
+                $Panel.animate({right : 0}, 300);
                 //回调函数执行
                 typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听

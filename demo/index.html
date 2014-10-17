@@ -5,7 +5,7 @@
     <title>常用组件样例</title>
     <link rel="stylesheet" href="lib/modules/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/docs.min.css" />
-    <link rel="stylesheet" href="lib/modules/util/css/util.css" />
+    <link rel="stylesheet" href="lib/util/css/util.css" />
     <link rel="stylesheet" href="lib/modules/Font-Awesome/css/font-awesome.min.css" />
     <!--[if lte IE 9]>
     <script src="lib/modules/bootstrap/js/respond.min.js"></script>
@@ -108,21 +108,21 @@
                     <h1 id="baseDialogDemo" class="page-header">BaseDialog</h1>
                     <p>弹出模态框样例</p>
                     <div class="bs-example">
-                        <button type="button" class="btn btn-primary" onclick="require(['demo/dialogDemo'],function(demo){demo.createDialog()})">BaseDialog</button>
+                        <button type="button" class="btn btn-primary" onclick="require(['app/demo/dialogDemo'],function(demo){demo.createDialog()})">BaseDialog</button>
                     </div>
                 </div>
                 <div class="bs-docs-section">
                     <h1 id="alertDemo" class="page-header">Alert</h1>
                     <p>Alert弹出框</p>
                     <div class="bs-example">
-                        <button type="button" class="btn btn-primary" onclick="require(['Util'],function(u){u.alert('alert弹出框！')})">Alert</button>
+                        <button type="button" class="btn btn-primary" onclick="require(['util/util'],function(u){u.alert('alert弹出框！')})">Alert</button>
                     </div>
                 </div>
                 <div class="bs-docs-section">
                     <h1 id="confirmDemo" class="page-header">Comfirm</h1>
                     <p>Confirm弹出框</p>
                     <div class="bs-example">
-                        <button type="button" class="btn btn-primary" onclick="require(['Util'],function(u){u.confirm('confirm弹出框！')})">Confirm</button>
+                        <button type="button" class="btn btn-primary" onclick="require(['util/util'],function(u){u.confirm('confirm弹出框！')})">Confirm</button>
                     </div>
                 </div>
                 <div class="bs-docs-section">
@@ -198,20 +198,13 @@
             </div>
         </div>
     </div>
-
-    <script src="lib/modules/requirejs/require.js" type="text/javascript"></script>
-    <!--[if !IE]> -->
-    <script type="text/javascript">
-        require.config({paths:{"jquery":"modules/jquery/jquery.min"}});
-    </script>
-    <!-- <![endif]-->
-    <!--[if IE]>
-    <script type="text/javascript">
-        require.config({paths:{"jquery":"modules/jquery/jquery1x.min"}});
-    </script>
-    <![endif]-->
+    <!-- requireJS Load -->
+    <script src="lib/modules/requirejs/require.js"></script>
+    <script src="lib/require-config.js"></script>
 
     <!-- 页面加载总入口 -->
-    <script src="lib/main.js"></script>
+    <script>
+    require(["app/index.js"]);
+    </script>
 </body>
 </html>

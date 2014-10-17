@@ -1,54 +1,23 @@
-require.config({
-    baseUrl:"lib",
-    paths:{
-        "Bootstrap":"modules/bootstrap/js/bootstrap.min",
-        "ZTree":"modules/zTree/js/jquery.ztree.all-3.5.min",
-        "Date":"modules/bootstrap/plugins/datetimepicker/js/datetimepicker.min",
-        "DateCN":"modules/bootstrap/plugins/datetimepicker/js/datetimepicker.cn",
-        "Json2":"modules/json2/json2",
-        "Base":"app/base",
-        "Util":"modules/util/util",
-        "Demo":"app/example",
-        "BaseDialog":"modules/util/dialog/baseDialog",
-        "GridDialog":"modules/util/dialog/gridDialog",
-        "TreeDialog":"modules/util/dialog/treeDialog",
-        "TreeAndGridDialog":"modules/util/dialog/treeAndGridDialog",
-        "Grid":"modules/util/grid/grid",
-        "Typeahead":"modules/util/typeahead/typeahead"
-    },
-    shim:{
-        "Bootstrap":["jquery"],
-        "ZTree":["jquery"],
-        "Json2":{}
-    },
-    map:{
-        '*':{
-            'css': 'modules/requirejs/plugin/css.min',
-            'text':'modules/requirejs/plugin/text'
-        }
-    }
-});
-
- require(["jquery","Bootstrap"],function(){
-    require(["Base"],function(){
+define(["jquery","Bootstrap"],function(){
+    require(["app/affix"],function(){
         console.log("base loaded");
     });
 
     //table初始化
-    require(["Demo/gridDemo"],function(grid){
+    require(["app/demo/gridDemo"],function(grid){
         grid.init();
     });
 
     //初始化zTree
-    require(["Demo/treeDemo"],function(tree){
+    require(["app/demo/treeDemo"],function(tree){
         tree.init();
     });
 
     //初始化typeahead
-    require(["Typeahead","css!modules/util/typeahead/typeahead.css"],function(typeahead){
+    require(["util/typeahead","css!util/css/typeahead.css"],function(typeahead){
         typeahead.init({
             id:"TypeaheadId",
-            data : "lib/app/example/data/typeahead.json",
+            data : "lib/util/data/typeahead.json",
             callback:function(data){
                 //do something
             }
@@ -57,31 +26,31 @@ require.config({
 
     //初始化treeDialog 点击事件
     $("#treeDialogId").on("click",function(){
-        require(["Demo/treeDialogDemo"],function(treeDialog){
+        require(["app/demo/treeDialogDemo"],function(treeDialog){
             treeDialog.init();
         });
     });
 
     //初始化gridDialog 点击事件
     $("#gridDialogId").on("click",function(){
-        require(["Demo/gridDialogDemo"],function(gridDialog){
+        require(["app/demo/gridDialogDemo"],function(gridDialog){
             gridDialog.init();
         });
     });
 
     //初始化treeAndGridDialog 点击事件
     $("#treeAndGridDialogId").on("click",function(){
-        require(["Demo/treeAndGridDialogDemo"],function(treeAndGridDialog){
+        require(["app/demo/treeAndGridDialogDemo"],function(treeAndGridDialog){
             treeAndGridDialog.init();
         });
     });
     
     //侧边栏
     $("#sidebarButtonID").bind('click',function(e){
-        require(['Util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
+        require(['util/util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
-                url:'app/example/views/EditArtistInfo.html',
+                url:'util/views/EditArtistInfo.html',
                 width:'800px',
                 allowClick:[e.target],
                 'afterLoad':function(){
