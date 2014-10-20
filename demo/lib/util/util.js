@@ -70,6 +70,7 @@
                 "id":"",            //直接把模板放页面上
                 "url":"",           //URL远程获取模板
                 "width":"",
+                "cache":true,
                 "allowClick":[]
             },config);
 
@@ -111,6 +112,8 @@
                         //关闭页面
                         $Panel.animate({right: "-"+param.width}, 300,function(){
                             $Panel.attr("style","").hide();
+                            //如果不缓存,且侧边栏的DOM来自于远程连接，则删除DOM
+                            (!param.cache && param.url) && $Panel.remove();
                         });
                         //取消事件
                         $(document.body).unbind("mouseup");
@@ -120,112 +123,26 @@
 
             var $Panel = cache[param.id || param.url];
             //如果已经有缓存则直接加载
-            if($Panel){
+            if(param.cache && $Panel){
                 init($Panel);
                 return;
+            }
+            //如果已经把模板放在了页面上，则通过id取得
+            if(param.id){
+                $Panel = $("#"+param.id);
+                init($Panel);
+                param.cache && (cache[param.id] = $Panel);
             }else{
                 require(['text!'+param.url],function(panel){
                     $Panel = $("<div>"+panel+"</div>");
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
                     init($Panel);
-                    cache[param.id || param.url] = $Panel;
+                    param.cache && (cache[param.url] = $Panel);
                 })
             }
         };
     })();
 
-
-    /***
-    * TreeDialog
-    * @param config
-    * config = {
-    *   id : id,                    //用于生成 zTree ID
-    *   isCache : true,             //是否缓存ztree数据,默认为true;不缓存则显示即时数据
-    *   data:{},                    //json对象数据(object)或者是url地址(string)
-    *   selectMuti:false,           //是否多选,默认为false
-    *   callback:function(data){}   //回调函数,接收JSON类型数据
-    * }
-    ***/
-    /*util.treeDialog = function(config){
-        config = $.extend({
-            treeId : "",
-            isCache : true,
-            data : null,
-            selectMulti : false,
-            callback : null
-        },config);
-        //zTree setting
-        config.setting={
-                view: {
-                    selectedMulti: config.selectMulti,
-                    showLine:false,
-                    dblClickExpand:false
-                },
-                data: {
-                    key: {
-                        title:"t"
-                    },
-                    simpleData: {
-                        enable : true
-                    }
-                }
-        };
-        //data为url时,设置ztree异步读取数据
-        if (typeof config.data === "string") {
-            config.setting.async={
-                enable : true,
-                url : config.data
-            };
-            config.data=null;
-            config.isCache=false;//异步读取数据时,不缓存ztree
-        }
-        require(["/dialog/TreeDialog"],function(treeDialog){
-            treeDialog.init(config);
-        });
-    };*/
-
-    /*util.gridDialog = function(config){
-        if (typeof config.setting.data === "string") {
-            config.setting.data = {
-                type : "URL",
-                value : config.setting.data
-            }
-        }
-        require(["/dialog/GridDialog"],function(gridDialog){
-            gridDialog.init(config);
-        });
-    };*/
-
-   /* util.treeAndGridDialog = function(config){
-        config.tree.setting={
-                view: {
-                    selectedMulti: false,
-                    showLine:false,
-                    dblClickExpand:false
-                },
-                data: {
-                    key: {
-                        title:"t"
-                    },
-                    simpleData: {
-                        enable : true
-                    }
-                }
-        };
-        if (typeof config.tree.data === "string") {
-            config.tree.setting.async={
-                enable : true,
-                url : config.data
-            };
-            config.tree.data=null;
-            config.tree.isCache=false;//异步读取数据时,不缓存ztree
-        }
-
-
-        require(["/dialog/TreeAndGridDialog"],function(treeAndGridDialog){
-            treeAndGridDialog.init(config);
-        });
-    };*/
     return util;
 });
