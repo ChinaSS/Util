@@ -1,27 +1,15 @@
 ﻿/**
  * 弹出框组件
- Example：
- require(["baseDialog"],function(baseDialog){
-     //为弹出框增加操作按钮
-     var buttons = [];
-     buttons.push(
-         {name:"确定",callback:function(){
-             //此处写扩展代码
-
-         }}
-     );
-     var dialog = baseDialog({
-                id:"TestDialog",
-                cache:false,                        //是否缓存，默认为true
-                title:"测试窗口",
-                width:"400px",
-                height:"100px",
-                dialogSize:"",                      //modal-lg或modal-sm
-                body:"窗口中间内容",
-                buttons:buttons
-            });
-     dialog.setBody("修改内容");
- })
+config = {
+    id:"TestDialog",
+    cache:false,                        //是否缓存，默认为true
+    title:"测试窗口",
+    width:"400px",
+    height:"100px",
+    dialogSize:"",                      //modal-lg或modal-sm
+    body:"窗口中间内容",
+    buttons:buttons
+};
 **/
 define(["jquery"],function($){
     var cache={};
@@ -103,7 +91,14 @@ define(["jquery"],function($){
         }
     };
     //模块通用方法(扩展)
-    baseDialog.fn = baseDialog.prototype;
+    baseDialog.fn = baseDialog.prototype = {
+        //对象方法扩展API
+        extend : function(object){
+            if (typeof object === "object" && object.constructor === "Object"){
+                $.extend(baseDialogInit.fn,object);
+            }
+        }
+    };
 
     return baseDialog;
 });
