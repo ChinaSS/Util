@@ -50,7 +50,7 @@ define(["jquery","Bootstrap"],function(){
         require(['util/util',"Date","DateCN","css!bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
-                url:'/Util/demo/modules/util/views/EditArtistInfo.html',
+                url:'/Util/demo/app/views/EditArtistInfo.html',
                 width:'800px',
                 allowClick:[e.target],
                 'afterLoad':function(){

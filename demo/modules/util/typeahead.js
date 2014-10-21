@@ -140,7 +140,7 @@ define(["jquery"],function($){
             }
         };
         if (count==0) {
-            $suggest.append("<p>no suggest</p>");
+            $suggest.append("<p>没有内容</p>");
         }
         $suggest.show();
     }

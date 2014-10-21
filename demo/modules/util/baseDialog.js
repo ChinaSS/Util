@@ -24,15 +24,21 @@
  })
  */
 define(["jquery"],function($){
-    var cache;
-    return function(param){
-        var config = $.extend({
+    var cache={};
+    function baseDialog(config){
+        //合并参数
+        config = $.extend({
             cache:true
-        },param);
-        //缓存控制
-        if(cache[config.id] && config.cache){
+        },config);
+        //判断是否已缓存
+        if (cache[config.id] && config.cache) {
             return cache[config.id].modal("show");
-        }
+        };
+        //创建并返回新dialog
+        return new baseDialogInit(config);
+    }
+
+    function baseDialogInit(config){
         //Dialog HTML字符串
         var dialogHTML = [];
         dialogHTML.push('<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="'+ config.id +'">');
@@ -48,77 +54,58 @@ define(["jquery"],function($){
         var footStyle = 'style="border-bottom-right-radius:6px;border-bottom-left-radius:6px;padding:10px 20px 10px;background-color:#eff3f8;"';
         dialogHTML.push('<div class="modal-footer" '+footStyle+'></div>');
         dialogHTML.push('</div></div></div>');
-        var $root   = $(dialogHTML.join(""));
-
-        /**
-         * 设置窗口按钮
-         * @param buttons 按钮列表
-         * @param defaultClose  boolean是否默认设置关闭按钮
-         * @returns {*}
-         */
-        var setFoot = function(buttons,defaultClose){
-            var close = typeof(defaultClose)=="undefined" ? true: defaultClose;
-            if(buttons && buttons.length){
-                var $foot = $root.find("div[class='modal-footer']").empty();
-                for(var i= 0,b;b=buttons[i++];){
-                    $foot.append($('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'') +'>'+ b.name +'</button>').bind("click", b.callback));
-                }
-                return $foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");
-            }
-        };
-
-        //增加body内容
-        var $body   = $root.find("div[class='modal-body']").append(config.body || "");
-        //增加操作按钮
-        setFoot(config.buttons);
-        //把dialog的DOM放到body上
-        $("body").append($root);
+        //生成dialog元素
+        this.$dialog = $(dialogHTML.join(""));
+        //生成body内容
+        this.setBody(config.body||"");
+        //生成底部buttons
+        this.setFoot(config.buttons||[]);
+        //将dialog添加到DOM页面
+        $("body").append(this.$dialog);
         //dialog初始化
-        var dialog = $("#"+config.id).modal(config.modal || 'show');
+        this.$dialog.modal(config.modal||'show');
         //如果不缓存，关闭dialog时需要销毁Dom
         if(config.cache){
-            cache[config.id] = dialog;
+            cache[config.id] = this.$dialog;
         }else{
-            dialog.on('hidden.bs.modal', function (e) {
-                dialog.remove();
+            this.$dialog.on('hidden.bs.modal', function (e) {
+                this.remove();
             })
         }
-
-        //==========================Dialog操作相关方法=====================
-        /**
-         * 取得body
-         * @returns {*}
-         */
-        dialog.getBody = function(){
-            return $body;
-        };
-        /**
-         * 设置body
-         * @param body
-         */
-        dialog.setBody = function(body){
-            $body.empty().append(body);
-        };
-        /**
-         * 取得foot
-         * @returns {*}
-         */
-        dialog.getFoot = function(){
-            return $root.find("div[class='modal-footer']");
-        };
-        /**
-         * foot操作栏
-         * @type {setFoot}
-         */
-        dialog.setFoot = setFoot;
-        /**
-         * 设置title
-         * @param title
-         */
-        dialog.setTitle = function(title){
-            $root.find("h4[class='modal-title']").empty().append(title);
-        };
-        return dialog;
     };
+
+    baseDialogInit.prototype = {
+        setTitle : function(title){
+            if (!this.$title) {
+                this.$title =  this.$dialog.find("h4[class='modal-title']");
+            };
+            this.$title.empty().append(title);
+        },
+        setBody : function(body){
+            if (!this.$body) {
+                this.$body = this.$dialog.find("div[class='modal-body']");
+            };
+            this.$body.empty().append(body);
+        },
+        setFoot : function(buttons,defaultClose){
+            if (!this.$foot) {
+                this.$foot = this.$dialog.find("div[class='modal-footer']");
+            };
+            var close = typeof(defaultClose)=="undefined" ? true: defaultClose;
+            this.$foot.empty();
+            if(buttons && buttons.length){
+                for(var i= 0,b;b=buttons[i++];){
+                    this.$foot.append($('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'') +'>'+ b.name +'</button>').bind("click", b.callback));
+                }
+            }
+            this.$foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");
+        }
+    }
+
+    baseDialog.fn = baseDialog.prototype = {
+
+    }
+
+    return baseDialog;
 });
 //@ sourceURL=baseDialog.js

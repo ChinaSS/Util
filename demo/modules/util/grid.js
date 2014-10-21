@@ -29,7 +29,7 @@
  */
 
 define(["jquery"],function($){
-    var result={}, cache={}, test="global test";
+    var result={}, cache={};
     /**
      * 表格初始化
      * @param confg
@@ -51,7 +51,6 @@ define(["jquery"],function($){
      * @constructor
      */
     function Grid(config){
-        this.test = " test ";
         this.config = config;
         this.selected = {};
         //真分页时，后端返回数据类型结构为此结构即可
@@ -67,7 +66,6 @@ define(["jquery"],function($){
      * 渲染表格
      */
     Grid.prototype.render = function(){
-        alert(this.test);
         var config = this.config;
         //得到容器对象
         var $gridPanel = $("#"+config.placeAt).addClass("s_grid").empty();
