@@ -22,9 +22,10 @@
             });
      dialog.setBody("修改内容");
  })
- */
+**/
 define(["jquery"],function($){
     var cache={};
+
     function baseDialog(config){
         //合并参数
         config = $.extend({
@@ -72,9 +73,9 @@ define(["jquery"],function($){
                 this.remove();
             })
         }
-    };
-
-    baseDialogInit.prototype = {
+    }
+    //对象原型方法
+    baseDialogInit.fn = baseDialogInit.prototype = {
         setTitle : function(title){
             if (!this.$title) {
                 this.$title =  this.$dialog.find("h4[class='modal-title']");
@@ -100,11 +101,9 @@ define(["jquery"],function($){
             }
             this.$foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");
         }
-    }
-
-    baseDialog.fn = baseDialog.prototype = {
-
-    }
+    };
+    //模块通用方法(扩展)
+    baseDialog.fn = baseDialog.prototype;
 
     return baseDialog;
 });
