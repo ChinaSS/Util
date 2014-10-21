@@ -3,13 +3,13 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>常用组件样例</title>
-    <link rel="stylesheet" href="lib/modules/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="modules/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/docs.min.css" />
-    <link rel="stylesheet" href="lib/util/css/util.css" />
-    <link rel="stylesheet" href="lib/modules/Font-Awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="modules/util/css/util.css" />
+    <link rel="stylesheet" href="modules/Font-Awesome/css/font-awesome.min.css" />
     <!--[if lte IE 9]>
-    <script src="lib/modules/bootstrap/js/respond.min.js"></script>
-    <script src="lib/modules/bootstrap/js/html5.js"></script>
+    <script src="modules/bootstrap/js/respond.min.js"></script>
+    <script src="modules/bootstrap/js/html5.js"></script>
     <![endif]-->
 </head>
 <body>
@@ -199,11 +199,12 @@
         </div>
     </div>
     <!-- requireJS Load -->
-    <script src="lib/modules/requirejs/require.js"></script>
-    <script src="lib/require-config.js"></script>
+    <script src="modules/requirejs/require.js"></script>
+    <script src="require-config.js"></script>
 
     <!-- 页面加载总入口 -->
     <script>
+    require.config({baseUrl:"modules"});
     require(["app/index.js"]);
     </script>
 </body>

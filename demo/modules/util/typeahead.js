@@ -122,7 +122,7 @@ define(["jquery"],function($){
         status=setTimeout(function(){
             status=null;
             cur=-1;
-            doMatch();
+            getData();
         },400);
     }
     //匹配数据并填充推荐列表
@@ -145,23 +145,24 @@ define(["jquery"],function($){
         $suggest.show();
     }
     
-    //获取数据,执行匹配,显示推荐列表
-    function doMatch () {
-        if (typeof typeahead.param.data === "string") {
+    //获取数据
+    function getData() {
+        if (typeof typeahead.param.data === "array") {
+            return typeahead.param.data;
+        }else{
             $.ajax({
                 type : "GET",
                 url : typeahead.param.data,
                 data : lastContent,
                 dataType : "json",
                 success : function(data){
-                    fillSuggest(data);
+                    return data;
                 },
                 error : function(){
                     console.log("ajax error");
+                    return null;
                 }
             });
-        }else{
-            fillSuggest(typeahead.param.data);
         }
     }
 

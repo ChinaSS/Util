@@ -1,0 +1,23 @@
+require.config({
+    baseUrl:"../modules",
+    paths:{
+        "Bootstrap":"bootstrap/js/bootstrap.min",
+        "ZTree":"zTree/js/jquery.ztree.all-3.5.min",
+        "Date":"bootstrap/plugins/datetimepicker/js/datetimepicker.min",
+        "DateCN":"bootstrap/plugins/datetimepicker/js/datetimepicker.cn",
+        "Json2":"json2/json2",
+        "jquery":"jquery/jquery1x.min",
+        "app":"../app/"
+    },
+    shim:{
+        "Bootstrap":["jquery"],
+        "ZTree":["jquery"],
+        "Json2":{}
+    },
+    map:{
+        '*':{
+            'css': 'requirejs/plugin/css.min',
+            'text':'requirejs/plugin/text'
+        }
+    }
+});

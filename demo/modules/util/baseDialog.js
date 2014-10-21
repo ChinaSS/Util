@@ -23,15 +23,8 @@
      dialog.setBody("修改内容");
  })
  */
-(function(factory) {
-    if (typeof define === "function" && define.amd) {
-        define(["jquery"],factory);
-    }else{
-        var u = window.util || (window.util = {});
-        u.baseDialog || (u.baseDialog = factory(jQuery));
-    }
-})(function($){
-    var cache = {};
+define(["jquery"],function($){
+    var cache;
     return function(param){
         var config = $.extend({
             cache:true

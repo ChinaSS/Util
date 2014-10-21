@@ -20,20 +20,15 @@
 define([],function(){
 
     function treeAndGridDialog(config){
-
         config.tree.setting={
             view: {
                 selectedMulti: false,
                 showLine:false,
                 dblClickExpand:false
             },
-            data: {
-                key: {
-                    title:"t"
-                },
-                simpleData: {
-                    enable : true
-                }
+            data: { 
+                key: { title:"t" },
+                simpleData: { enable : true }
             }
         };
         if (typeof config.tree.data === "string") {
@@ -44,9 +39,9 @@ define([],function(){
             config.tree.data=null;
             config.tree.isCache=false;//异步读取数据时,不缓存ztree
         }
-
         return new treeAndGridDialog.fn.init(config);
     }
+
     treeAndGridDialog.fn = treeAndGridDialog.prototype = {
         init : function(config){
             var baseDialog  = config.depend.baseDialog;

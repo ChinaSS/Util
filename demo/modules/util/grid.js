@@ -28,12 +28,11 @@
  }
  */
 
-define([],function(){
-    var result = {}, cache = {};
-
+define(["jquery"],function($){
+    var result={}, cache={}, test="global test";
     /**
      * 表格初始化
-     * @param config
+     * @param confg
      * @return Grid对象
      */
     result.init = function(config){
@@ -46,13 +45,13 @@ define([],function(){
         cache[config.id] = grid;
         return grid;
     };
-
     /**
      * 表格对象
      * @param config
      * @constructor
      */
     function Grid(config){
+        this.test = " test ";
         this.config = config;
         this.selected = {};
         //真分页时，后端返回数据类型结构为此结构即可
@@ -68,6 +67,7 @@ define([],function(){
      * 渲染表格
      */
     Grid.prototype.render = function(){
+        alert(this.test);
         var config = this.config;
         //得到容器对象
         var $gridPanel = $("#"+config.placeAt).addClass("s_grid").empty();

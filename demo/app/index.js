@@ -17,7 +17,7 @@ define(["jquery","Bootstrap"],function(){
     require(["util/typeahead","css!util/css/typeahead.css"],function(typeahead){
         typeahead.init({
             id:"TypeaheadId",
-            data : "lib/util/data/typeahead.json",
+            data : "/Util/demo/app/data/typeahead.json",
             callback:function(data){
                 //do something
             }
@@ -47,10 +47,10 @@ define(["jquery","Bootstrap"],function(){
     
     //侧边栏
     $("#sidebarButtonID").bind('click',function(e){
-        require(['util/util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
+        require(['util/util',"Date","DateCN","css!bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
-                url:'util/views/EditArtistInfo.html',
+                url:'/Util/demo/modules/util/views/EditArtistInfo.html',
                 width:'800px',
                 allowClick:[e.target],
                 'afterLoad':function(){
