@@ -14,7 +14,7 @@ config = {
 define(["jquery"],function($){
     var cache={};
 
-    function baseDialog(config){
+    function Dialog(config){
         //合并参数
         config = $.extend({
             cache:true
@@ -24,10 +24,10 @@ define(["jquery"],function($){
             return cache[config.id].modal("show");
         };
         //创建并返回新dialog
-        return new baseDialogInit(config);
+        return new DialogInit(config);
     }
 
-    function baseDialogInit(config){
+    function DialogInit(config){
         //Dialog HTML字符串
         var dialogHTML = [];
         dialogHTML.push('<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="'+ config.id +'">');
@@ -62,8 +62,21 @@ define(["jquery"],function($){
             })
         }
     }
+    //模块通用方法(扩展)
+    DialogInit.fn = DialogInit.prototype = {
+        //对象方法扩展API
+        extend : function(object){
+            if (typeof object === "object" && object.constructor === Object){
+                $.extend(DialogInit.fn,object);
+            }
+        },
+        $getDom : function(){
+            return this.$dialog;
+        }
+    };
+
     //对象原型方法
-    baseDialogInit.fn = baseDialogInit.prototype = {
+    DialogInit.fn.extend({
         setTitle : function(title){
             if (!this.$title) {
                 this.$title =  this.$dialog.find("h4[class='modal-title']");
@@ -89,17 +102,8 @@ define(["jquery"],function($){
             }
             this.$foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");
         }
-    };
-    //模块通用方法(扩展)
-    baseDialog.fn = baseDialog.prototype = {
-        //对象方法扩展API
-        extend : function(object){
-            if (typeof object === "object" && object.constructor === "Object"){
-                $.extend(baseDialogInit.fn,object);
-            }
-        }
-    };
+    });
+    
 
-    return baseDialog;
+    return Dialog;
 });
-//@ sourceURL=baseDialog.js

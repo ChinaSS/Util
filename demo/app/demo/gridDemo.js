@@ -57,8 +57,8 @@ define(["util/grid","css!util/css/grid.css"],function(grid){
     };
 
     return {
-        init : function init(){
-            grid.init(config);
+        init : function(){
+            grid(config);
         }
     }
 });

@@ -37,8 +37,9 @@
         require(["util/baseDialog"],function(baseDialog){
             var dialog = baseDialog({id:"system_dialog_alert",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
-            dialog.css({"margin-top":"13%"});
-            dialog.find(".modal-header .close").css({"margin-top":"-10px"});
+            $dialog = dialog.$getDom();
+            $dialog.css({"margin-top":"13%"});
+            $dialog.find(".modal-header .close").css({"margin-top":"-10px"});
         });
     };
 
@@ -52,11 +53,12 @@
         require(["util/baseDialog"],function(baseDialog){
             var dialog = baseDialog({id:"system_dialog_confirm",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
-            dialog.css({"margin-top":"13%"});
-            dialog.find(".modal-header .close").css({"margin-top":"-10px"});
-            dialog.find(".modal-footer").css({"padding":"5px 20px 5px"});
+            $dialog = dialog.$getDom();
+            $dialog.css({"margin-top":"13%"});
+            $dialog.find(".modal-header .close").css({"margin-top":"-10px"});
+            $dialog.find(".modal-footer").css({"padding":"5px 20px 5px"});
             dialog.setFoot([{"name":"是","callback":okCallback,close:true},{"name":"否","callback":cancelCallback,close:true}],false);
-            dialog.find(".modal-footer .btn").css({"padding":"2px 5px"});
+            $dialog.find(".modal-footer .btn").css({"padding":"2px 5px"});
         });
     };
 
