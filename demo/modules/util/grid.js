@@ -51,7 +51,7 @@ define(["jquery"],function($){
         };
     })();
 
-    function Grid(config){
+    function GridInit(config){
         config = $.extend({
             pageSize:10
         },config);
@@ -60,10 +60,10 @@ define(["jquery"],function($){
             return cache[config.id].render();
         };
         //创建并返回新dialog
-        return new GridInit(config);
+        return new Grid(config);
     }
 
-    function GridInit(config){
+    function Grid(config){
         this.config = config;
         this.selected = {};
         //真分页时，后端返回数据类型结构为此结构即可
@@ -77,21 +77,21 @@ define(["jquery"],function($){
         cache[config.id] = this;
     }
      //模块通用方法(扩展)
-    GridInit.fn = GridInit.prototype = {
+    Grid.fn = Grid.prototype = {
         //对象方法扩展API
         extend : function(object){
             if (typeof object === "object" && object.constructor === Object){
-                $.extend(GridInit.fn,object);
+                $.extend(Grid.fn,object);
             }
         },
         //获取$dom对象
-        $getDom : function(){
+        $getGrid : function(){
             return this.$dialog;
         }
     };
 
     //扩展Grid渲染方法
-    GridInit.fn.extend({
+    Grid.fn.extend({
         render : function(){
             if (!this.$gridPanel) {
                 this.$gridPanel = $("#"+this.config.placeAt).addClass("s_grid");
@@ -343,7 +343,7 @@ define(["jquery"],function($){
         }
     });
 
-    GridInit.fn.extend({
+    Grid.fn.extend({
         getSelectedRow : function(){
             var selected = [];
             for(var key in this.selected){
@@ -467,5 +467,5 @@ define(["jquery"],function($){
         }
     });
 
-    return Grid;
+    return GridInit;
 });

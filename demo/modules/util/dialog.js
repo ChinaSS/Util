@@ -14,7 +14,7 @@ config = {
 define(["jquery"],function($){
     var cache={};
 
-    function Dialog(config){
+    function DialogInit(config){
         //合并参数
         config = $.extend({
             cache:true
@@ -24,10 +24,10 @@ define(["jquery"],function($){
             return cache[config.id].modal("show");
         };
         //创建并返回新dialog
-        return new DialogInit(config);
+        return new Dialog(config);
     }
 
-    function DialogInit(config){
+    function Dialog(config){
         //Dialog HTML字符串
         var dialogHTML = [];
         dialogHTML.push('<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="'+ config.id +'">');
@@ -63,20 +63,20 @@ define(["jquery"],function($){
         }
     }
     //模块通用方法(扩展)
-    DialogInit.fn = DialogInit.prototype = {
+    Dialog.fn = Dialog.prototype = {
         //对象方法扩展API
         extend : function(object){
             if (typeof object === "object" && object.constructor === Object){
-                $.extend(DialogInit.fn,object);
+                $.extend(Dialog.fn,object);
             }
         },
-        $getDom : function(){
+        $getDialog : function(){
             return this.$dialog;
         }
     };
 
     //对象原型方法
-    DialogInit.fn.extend({
+    Dialog.fn.extend({
         setTitle : function(title){
             if (!this.$title) {
                 this.$title =  this.$dialog.find("h4[class='modal-title']");
@@ -105,5 +105,5 @@ define(["jquery"],function($){
     });
     
 
-    return Dialog;
+    return DialogInit;
 });

@@ -1,4 +1,4 @@
-define(["jquery","ZTree","css!modules/zTree/css/zTreeStyle/zTreeStyle.css"],function($){
+define(["jquery","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],function($){
     var setting = {
         view: {
             selectedMulti:false,

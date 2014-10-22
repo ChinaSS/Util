@@ -1,4 +1,4 @@
-define(["util/baseDialog","util/grid","util/gridDialog"],function(baseDialog,grid,gridDialog){
+define(["util/gridDialog"],function(gridDialog){
     
     var config = {
         id:"DemoOne",
@@ -41,13 +41,9 @@ define(["util/baseDialog","util/grid","util/gridDialog"],function(baseDialog,gri
 
     return {
         init : function(){
-            gridDialog.init({
+            gridDialog({
                 title : "GridDialog",
-                gridConfig : config,
-                depend:{
-                    baseDialog:baseDialog,
-                    grid:grid
-                },
+                setting : config,
                 callback : function(data){
                     for(var i=data.length;i--;){
                         console.log(data[i]);

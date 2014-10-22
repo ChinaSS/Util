@@ -1,8 +1,8 @@
 require.config({
-    baseUrl:"../modules",
+    baseUrl:"./modules",
     paths:{
         "Bootstrap":"bootstrap/js/bootstrap.min",
-        "ZTree":"zTree/js/jquery.ztree.all-3.5.min",
+        "zTree":"ztree/js/jquery.ztree.all-3.5.min",
         "Date":"bootstrap/plugins/datetimepicker/js/datetimepicker.min",
         "DateCN":"bootstrap/plugins/datetimepicker/js/datetimepicker.cn",
         "Json2":"json2/json2",
@@ -11,7 +11,7 @@ require.config({
     },
     shim:{
         "Bootstrap":["jquery"],
-        "ZTree":["jquery"],
+        "zTree":["jquery"],
         "Json2":{}
     },
     map:{

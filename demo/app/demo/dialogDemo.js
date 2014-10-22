@@ -1,4 +1,4 @@
-define(["util/baseDialog"],function(baseDialog){
+define(["util/dialog"],function(Dialog){
     return {
         createDialog : function(){
             //为弹出框增加操作按钮
@@ -9,7 +9,7 @@ define(["util/baseDialog"],function(baseDialog){
 
                 }}
             );
-            var dialog = baseDialog({
+            var dialog = Dialog({
                 id:"BaseDialog",
                 cache:false,                 //是否缓存，默认为true
                 title:"BaseDialog",

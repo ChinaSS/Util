@@ -1,4 +1,4 @@
-define(["util/baseDialog","util/treeDialog","ZTree","css!modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(baseDialog,treeDialog){
+define(["util/treeDialog"],function(treeDialog){
     
     var nodeObj=[
         {id:1,pId:0,name:"父节点1",t:"我有子节点",open:true},
@@ -13,13 +13,10 @@ define(["util/baseDialog","util/treeDialog","ZTree","css!modules/zTree/css/zTree
     ];
 
     function init(){
-        treeDialog.init({
+        treeDialog({
             title : "TreeDialog",
             data : nodeObj,
             selectMulti : true,
-            depend:{
-                baseDialog:baseDialog
-            },
             callback : function(data){
                 for(var i=data.length;i--;){
                     console.log(data[i]);
@@ -30,5 +27,5 @@ define(["util/baseDialog","util/treeDialog","ZTree","css!modules/zTree/css/zTree
     
     return {
         init : init
-    }
+    };
 });
