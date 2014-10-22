@@ -15,11 +15,12 @@ define(["jquery","Bootstrap"],function(){
 
     //初始化typeahead
     require(["util/typeahead","css!util/css/typeahead.css"],function(typeahead){
-        typeahead.init({
+        typeahead({
             id:"TypeaheadId",
             data : "/Util/demo/app/data/typeahead.json",
             callback:function(data){
                 //do something
+                alert("test");
             }
         });
     });
