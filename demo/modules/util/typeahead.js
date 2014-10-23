@@ -17,6 +17,7 @@ define(["jquery"],function($){
             console.log(data);
         }
     };
+
     function TypeaheadInit(config){
         config = $.extend(_param,config);
         return new Typeahead(config);
@@ -120,7 +121,8 @@ define(["jquery"],function($){
                 modal.$suggest.hide();
             }
         });
-    };
+    }
+
     EventModal.fn = EventModal.prototype = {
     	keyEvent : function(event){	//键盘事件
     		var modal = this,cur;
@@ -230,7 +232,7 @@ define(["jquery"],function($){
 	    endTimeout : function(){	//清除当前延迟匹配
 	        if(this.status){clearTimeout(this.status)}
 	    }
-    }
+    };
     //设置键盘事件
     
     
