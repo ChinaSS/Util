@@ -125,7 +125,6 @@ define(["jquery"],function($){
                 $title.remove();
                 return
             }
-
             $title.append(config.title || '数据列表');
             if(typeof(config.hidden)!="undefined"){
                 var $switch = $('<i class="glyphicon"></i>');

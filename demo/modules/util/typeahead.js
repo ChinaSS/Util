@@ -22,8 +22,8 @@ define(["jquery"],function($){
         return new Typeahead(config);
     }
     function Typeahead(config){
-        this.status,
-        this.lastContent,
+        this.status=null,
+        this.lastContent="",
         this.cur=-1,
         this.config = config;
 
@@ -49,8 +49,9 @@ define(["jquery"],function($){
         //获取元素
         this.$input = this.$typeahead.find(".typeahead-input");
         this.$suggest = this.$typeahead.find(".typeahead-suggest");
+        this.$submit = this.$typeahead.find(".typeahead-submit");
 
-        bindEvent(this);
+        this.bindEvent();
         
     }
 
@@ -65,156 +66,173 @@ define(["jquery"],function($){
         },
         $getSuggest : function(){
             return this.$suggest;
+        },
+        //绑定内部事件
+        bindEvent : function(){
+        	new EventModal(this);
         }
     };
 
     Typeahead.fn.extend({
-        
+
     });
-    function bindEvent(obj){
+
+    //内部事件对象构造函数
+    function EventModal(obj){
+    	this.status=obj.status,
+        this.lastContent=obj.lastContent,
+        this.cur=obj.cur,
+        this.config=obj.config;
+
+        this.$input = obj.$input,
+        this.$suggest = obj.$suggest,
+        this.$submit = obj.$submit;
+
+        var modal = this;
         //绑定事件
-        if (obj.config.btn) {
-            obj.$typeahead.find(".typeahead-submit").on("click",function(event){
-                doEnd(event,obj);
+        if (modal.config.btn) {
+            modal.$submit.on("click",function(){
+            	modal.doEnd();
             });
         };
-        obj.$input.on("keyup",function(){
-            inputValidation(obj);
+        modal.$input.on("keyup",function(){
+        	modal.inputValidation();
         }).on("focus",function(){
-            if(obj.lastContent&&!obj.status){
-               inputValidation(obj);
+            if(modal.lastContent&&!modal.status){
+               modal.inputValidation();
             }
-        });
-        obj.$suggest.on("mouseover",function(){
+    	});
+        modal.$suggest.on("mouseover",function(){
             $(this).children("a:focus").blur();
-            obj.cur=-1;
+            modal.cur=-1;
         }).delegate("a","click",function(){
             //console.log(event.target==this)
             var val = $(event.target).text();
-            fillInput(val,obj);
-            doEnd(event,obj);
+            modal.fillInput(val);
+            modal.doEnd();
         });
 
         //绑定键盘事件,额外鼠标事件
         $(document).on("keydown",function(event){
-            keyEvent(event,obj);
+        	modal.keyEvent(event);
         }).on("click",function(event){
-            if(event.target!=obj.$input[0]){
-                obj.$suggest.hide();
+            if(event.target!=modal.$input[0]){
+                modal.$suggest.hide();
             }
         });
     };
+    EventModal.fn = EventModal.prototype = {
+    	keyEvent : function(event){	//键盘事件
+    		var modal = this,cur;
+	        if(event.which=="13"){
+	            if (event.target==modal.$input[0]) {
+	                modal.doEnd();
+	            }else if(event.target==modal.$suggest.children("a:focus")[0]){
+	                modal.fillInput($(event.target).text());
+	            }
+	        }
+	        else if (event.which=="40"||event.which=="38") {
+	            event.preventDefault();
+	            event.stopPropagation();
+	            cur = modal.cur;
+	            if(modal.$suggest.is(":visible")){
+	                var $list = modal.$suggest.children("a");
+	                var length = $list.length;
+	                if(!length){return false;}
+	                if (event.which=="40") {
+	                    cur = (++cur+length)%length;
+	                }else{
+	                    if (cur===0) {
+	                        modal.cur=-1;
+	                        modal.$suggest.children("a:focus").blur();
+	                        modal.$input.focus();
+	                        modal.fillInput(modal.lastContent);
+	                        return false;
+	                    }else if (cur===-1) {
+	                        cur = cur+length;
+	                    }else{
+	                        cur = (--cur+length)%length;
+	                    }
+	                }
+	                modal.cur = cur;
+	                modal.$suggest.children("a:focus").blur();
+	                var val = ($($list[cur]).focus()).text();
+	                modal.fillInput(val);
+	            }
+
+	        };
+	    },
+	    inputValidation : function(){	//检查输入
+	    	var modal = this;
+	        var content = $.trim(modal.$input.val());
+	        modal.lastContent=content;
+	        modal.endTimeout();
+	        if (content=="") {modal.$suggest.empty().hide();return false;}
+	        modal.status=setTimeout(function(){
+	            modal.status=null;
+	            modal.cur=-1;
+	            modal.getData();
+	        },400);
+	    },
+	    fillSuggest : function(data){	//匹配数据并填充推荐列表
+	        var modal = this,
+	        	count = 0,
+	        	lastContent= this.lastContent;
+	        data = data ? data : [];
+	        modal.$suggest.empty();
+	        for (var i = data.length; --i>-1&&count<10;) {
+	            var content = data[i];
+	            if(content.indexOf(lastContent)>-1){
+	                //var reg = eval("/"+lastContent+"/ig");
+	                content = content.replace(lastContent,"<span>"+lastContent+"</span>");
+	                modal.$suggest.append("<a href='#'>"+content+"</a>");
+	                count++;
+	            }
+	        };
+	        if (count==0) {
+	            modal.$suggest.append("<p>no suggest</p>");
+	        }
+	        modal.$suggest.show();
+	    },
+	    getData : function() {	//获取数据
+	    	var modal = this,
+	        	data = this.config.data;
+	        if (typeof data !== "string") {
+	            modal.fillSuggest(data);
+	        }else{
+	            $.ajax({
+	                type : "GET",
+	                url : data,
+	                data : modal.lastContent,
+	                dataType : "json",
+	                success : function(data){
+	                    modal.fillSuggest(data);
+	                },
+	                error : function(){
+	                    console.log("ajax error");
+	                    return null;
+	                }
+	            });
+	        }
+	    },
+	    doEnd : function(){	//结束后,执行回调任务,并隐藏推荐列表
+	        var data = $.trim(this.$input.val());
+	        if (data) {
+	            this.endTimeout();
+	            this.$suggest.hide();
+	            this.config.callback(data)
+	        }
+	    },
+	    fillInput : function(val){	//回填input
+	        val = $.trim(val);
+	        this.$input.val(val);
+	    },
+	    endTimeout : function(){	//清除当前延迟匹配
+	        if(this.status){clearTimeout(this.status)}
+	    }
+    }
     //设置键盘事件
-    function keyEvent(event,obj){
-        if(event.which=="13"){
-            if (event.target==obj.$input[0]) {
-                doEnd(event,obj);
-            }else if(event.target==obj.$suggest.children("a:focus")[0]){
-                fillInput($(event.target).text(),obj);
-            }
-        }
-        else if (event.which=="40"||event.which=="38") {
-            event.preventDefault();
-            event.stopPropagation();
-            if(obj.$suggest.is(":visible")){
-                var $list = obj.$suggest.children("a");
-                var length = $list.length;
-                if(!length){return false;}
-                if (event.which=="40") {
-                    obj.cur = (++obj.cur+length)%length;
-                }else{
-                    if (obj.cur===0) {
-                        obj.cur=-1;
-                        obj.$suggest.children("a:focus").blur();
-                        obj.$input.focus();
-                        fillInput(obj.lastContent,obj);
-                        return false;
-                    }else if (obj.cur===-1) {
-                        obj.cur=obj.cur+length;
-                    }else{
-                        obj.cur = (--obj.cur+length)%length;
-                    }
-                }
-                obj.$suggest.children("a:focus").blur();
-                var val = ($($list[obj.cur]).focus()).text();
-                fillInput(val,obj);
-            }
-        };
-    }
-
-    //检查输入
-    function inputValidation(obj){
-        var content = $.trim(obj.$input.val());
-        obj.lastContent=content;
-        endTimeout(obj.status);
-        if (content=="") {obj.$suggest.empty().hide();return false;}
-        obj.status=setTimeout(function(){
-            obj.status=null;
-            obj.cur=-1;
-            getData(obj);
-        },400);
-    }
-
-    //匹配数据并填充推荐列表
-    function fillSuggest(data,obj){
-        var count = 0;
-        data = data ? data : [];
-        obj.$suggest.empty();
-        for (var i = data.length; --i>-1&&count<10;) {
-            var content = data[i];
-            if(content.indexOf(obj.lastContent)>-1){
-                //var reg = eval("/"+lastContent+"/ig");
-                content = content.replace(obj.lastContent,"<span>"+obj.lastContent+"</span>");
-                obj.$suggest.append("<a href='#'>"+content+"</a>");
-                count++;
-            }
-        };
-        if (count==0) {
-            obj.$suggest.append("<p>no suggest</p>");
-        }
-        obj.$suggest.show();
-    }
     
-    //获取数据
-    function getData(obj) {
-        var data = obj.config.data;
-        if (typeof data !== "string") {
-            fillSuggest(data,obj);
-        }else{
-            $.ajax({
-                type : "GET",
-                url : data,
-                data : obj.lastContent,
-                dataType : "json",
-                success : function(data){
-                    fillSuggest(data,obj);
-                },
-                error : function(){
-                    console.log("ajax error");
-                    return null;
-                }
-            });
-        }
-    }
-    //结束后,执行回调任务,并隐藏推荐列表
-    function doEnd(event,obj) {
-        var data = $.trim(obj.$input.val());
-        if (data) {
-            endTimeout(obj.status);
-            obj.$suggest.hide();
-            obj.config.callback(data)
-        }
-    }
-
-    //回填input
-    function fillInput(val,obj){
-        val = $.trim(val);
-        obj.$input.val(val);
-    }
-    //清除当前延迟匹配
-    function endTimeout(status){
-        if(status){clearTimeout(status);}
-    }
     
     return TypeaheadInit;
 });
