@@ -22,7 +22,7 @@ define(["jquery"],function($){
         //判断是否已缓存
         if (cache[config.id] && config.cache) {
             return cache[config.id];
-        };
+        }
         //创建并返回新dialog
         return new Dialog(config);
     }
@@ -84,19 +84,19 @@ define(["jquery"],function($){
         setTitle : function(title){
             if (!this.$title) {
                 this.$title =  this.$dialog.find("h4[class='modal-title']");
-            };
+            }
             this.$title.empty().append(title);
         },
         setBody : function(body){
             if (!this.$body) {
                 this.$body = this.$dialog.find("div[class='modal-body']");
-            };
+            }
             this.$body.empty().append(body);
         },
         setFoot : function(buttons,defaultClose){
             if (!this.$foot) {
                 this.$foot = this.$dialog.find("div[class='modal-footer']");
-            };
+            }
             var close = typeof(defaultClose)=="undefined" ? true: defaultClose;
             this.$foot.empty();
             if(buttons && buttons.length){

@@ -59,7 +59,7 @@ define(["jquery"],function($){
         //判断是否已缓存
         if (cache[config.id] && config.cache) {
             return cache[config.id];
-        };
+        }
         //创建并返回新dialog
         return new Grid(config);
     }
@@ -102,7 +102,7 @@ define(["jquery"],function($){
         render : function(){
             if (!this.$gridPanel) {
                 this.$gridPanel = $("#"+this.config.placeAt).addClass("s_grid");
-            };
+            }
             //得到容器对象
             this.$gridPanel.empty();
             //填充html
