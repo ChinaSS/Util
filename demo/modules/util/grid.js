@@ -10,6 +10,7 @@
     title:'<i class="fa fa-table" style="color:#2898e0"></i>&nbsp;人员信息列表',
     hidden:false,                       //表格是否可隐藏，只显示标题
     index:"checkbox",                   //首列为单选[radio]还是多选[checkbox],默认checkbox
+    cache:false,
     layout:[
         {name:"姓名",field:"Name",click:function(e){}},
         {name:"性别",field:"Sex"},
@@ -57,7 +58,7 @@ define(["jquery"],function($){
         },config);
         //判断是否已缓存
         if (cache[config.id] && config.cache) {
-            return cache[config.id].render();
+            return cache[config.id];
         };
         //创建并返回新dialog
         return new Grid(config);
@@ -86,7 +87,13 @@ define(["jquery"],function($){
         },
         //获取$dom对象
         $getGrid : function(){
-            return this.$dialog;
+            return this.$gridPanel;
+        },
+        show : function(){
+            this.$gridPanel.show();
+        },
+        hide : function(){
+            this.$gridPanel.hide();
         }
     };
 
@@ -115,7 +122,6 @@ define(["jquery"],function($){
             this.renderGridContent();
             //渲染分页栏
             this.renderPagination();
-            return this;
         },
         /** 渲染表格Title **/
         renderTitle : function(){
@@ -171,13 +177,12 @@ define(["jquery"],function($){
                        $(target).parents("table").find("tr td:first-child :checkbox").each(function(index,element){
                            element.checked = target.checked;
                            //除去title行,修改Selected
-                           index>0 && this.modifySelected(_this,index,element.checked);
+                           index>0 && _this.modifySelected(_this,index,element.checked);
                        });
                    }
                }) : "<td width='20px'></td>";
             }
             var $head = $('<tr></tr>').append(index);
-
             for(var i= 0,item;item=config.layout[i++];){
                 //列排序相关
                 var sort = typeof(item.sort)!="undefined"?'&nbsp;&nbsp;<i class="fa fa-sort"></i>':"";
@@ -217,8 +222,8 @@ define(["jquery"],function($){
         renderGridContent : function(){
             //初始化渲染数据
             this.initRenderInfo();
-            var grid = this;
-            var config = grid.config,data=grid.pageInfo.curPageData;
+            var _this = this;
+            var config = this.config,data=this.pageInfo.curPageData;
 
             var $dataContent = $('#'+this.config.placeAt).find('tbody').empty();
 
@@ -226,7 +231,7 @@ define(["jquery"],function($){
             for(var i= 0,row;row=data[i++];){
                 //判断当前行是否为选中状态
                 var $index = $(index);
-                if(grid.selected[grid.pageInfo.curPage+"_"+i]){
+                if(this.selected[this.pageInfo.curPage+"_"+i]){
                     $index.find(":checkbox")[0].checked = true;
                 }
                 var $tr = $('<tr></tr>').append($index);
@@ -253,14 +258,14 @@ define(["jquery"],function($){
                         $tr.is(item) && (trIndex = i);
                     }
                     //从selected中添加或删除
-                    this.modifySelected(grid,trIndex,index.checked);
+                    _this.modifySelected(_this,trIndex,index.checked);
                 });
                 $dataContent.append($tr);
             }
             //最后一页时，添加空行填充满表格
-            if(data.length<grid.config.pageSize){
-                var emptyTrIndex = grid.config.index ? '<td></td>' : '';
-                for(var m=0;m<grid.config.pageSize-data.length;m++){
+            if(data.length<_this.config.pageSize){
+                var emptyTrIndex = _this.config.index ? '<td></td>' : '';
+                for(var m=0;m<_this.config.pageSize-data.length;m++){
                     var $emptyTr = $("<tr "+(m>0? "class='emptyRow'" :"height='39px'")+"></tr>").append(emptyTrIndex);
                     for(var n=0,col;col=config.layout[n++];){
                         $emptyTr.append('<td>&nbsp;</td>');

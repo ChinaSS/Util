@@ -24,22 +24,24 @@ define(["util/dialog","util/grid"],function(Dialog,Grid){
     }
 
     function GridDialog(config,setting){
-        var gridId = setting.gridId?setting.gridId:"system_dialogGrid";
+        this.callback = config.callback;
+        var _this = this,
+            gridId = setting.gridId?setting.gridId:"system_dialogGrid";
         //初始化dialog
         this.dialog = Dialog({id:"system_dialog_gridDialog",title:config.title,dialogSize:"modal-lg",modal:"hide"});
         this.dialog.setBody("<div id='"+gridId+"'></div>");
+        //初始化grid
+        this.grid = Grid($.extend(setting,{placeAt:gridId}));
         this.dialog.setFoot([
             {
                 name:"确认",
                 callback:function(){
-                    this.gridId = gridId; 
-                    config.callback(Grid({id:this.gridId}).getSelectedRow());
-                    dialog.modal("hide");
+                    var that = _this;
+                    that.callback(that.grid.getSelectedRow());
+                    that.dialog.$getDialog().modal("hide");
                 }
             }
         ],true);
-        //初始化grid
-        this.grid = Grid($.extend(setting,{placeAt:gridId}));
         this.dialog.$getDialog().modal("show");
     }
 

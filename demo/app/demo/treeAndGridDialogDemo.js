@@ -1,4 +1,4 @@
-define(["util/baseDialog","util/grid","util/treeAndGridDialog","ZTree","css!modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(baseDialog,grid,treeAndGridDialog){
+define(["util/treeAndGridDialog"],function(treeAndGridDialog){
     var gridConfig = {
         id:"DemoOne",
         placeAt:"DemoGirdDivId",                    //存放Grid的容器ID
@@ -53,14 +53,10 @@ define(["util/baseDialog","util/grid","util/treeAndGridDialog","ZTree","css!modu
     };
     
     function init(){
-        treeAndGridDialog.init({
+        treeAndGridDialog({
             title : "TreeAndGridDialog",
             grid : gridConfig,
             tree : tree,
-            depend:{
-                baseDialog:baseDialog,
-                grid:grid
-            },
             callback : function(data){
                 for(var i=data.length;i--;){
                     console.log(data[i]);

@@ -5,8 +5,7 @@ define(["util/dialog"],function(Dialog){
             var buttons = [];
             buttons.push(
                 {name:"确定",callback:function(){
-                    //此处写扩展代码
-
+                    dialog.hide();
                 }}
             );
             var dialog = Dialog({
@@ -21,6 +20,7 @@ define(["util/dialog"],function(Dialog){
             });
             //可以通过返回的dialog对象调用相关方法
             dialog.setBody("修改内容");
+            dialog.show();
         }
     }
 });

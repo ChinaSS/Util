@@ -70,7 +70,7 @@ define(["jquery"],function($){
         },
         //绑定内部事件
         bindEvent : function(){
-        	new EventModal(this);
+        	this.EventModal = new EventModal(this);
         }
     };
 
@@ -232,9 +232,7 @@ define(["jquery"],function($){
 	    endTimeout : function(){	//清除当前延迟匹配
 	        if(this.status){clearTimeout(this.status)}
 	    }
-    };
-    //设置键盘事件
-    
+    }; 
     
     return TypeaheadInit;
 });

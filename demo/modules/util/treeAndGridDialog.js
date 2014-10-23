@@ -11,15 +11,11 @@
         isCache : true,
         setting : {}               //ztree 参数对象
     }
-    depend:{
-       baseDialog:baseDialog,
-       grid:grid
-    }
 * }
 ***/
-define([],function(){
+define(["util/dialog","util/grid","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],function(Dialog,Grid,zTree){
 
-    function treeAndGridDialog(config){
+    function TreeAndGridDialogInit(config){
         config.tree.setting={
             view: {
                 selectedMulti: false,
@@ -39,55 +35,55 @@ define([],function(){
             config.tree.data=null;
             config.tree.isCache=false;//异步读取数据时,不缓存ztree
         }
-        return new treeAndGridDialog.fn.init(config);
+        return new TreeAndGridDialog(config);
     }
 
-    treeAndGridDialog.fn = treeAndGridDialog.prototype = {
-        init : function(config){
-            var baseDialog  = config.depend.baseDialog;
-            var grid        = config.depend.grid;
+    function TreeAndGridDialog(config){
+        var _this = this;
+        var treeId = config.Id?"system_dialogTreeAndGrid_"+config.Id:"system_dialogTreeAndGrid_treeId";
+        var gridId = config.Id?"system_dialogTreeAndGrid_"+config.Id:"system_dialogTreeAndGrid_gridId";
 
-            var treeId = config.Id?"system_dialogTreeAndGrid_"+config.Id:"system_dialogTreeAndGrid_treeId";
-            var gridId = config.Id?"system_dialogTreeAndGrid_"+config.Id:"system_dialogTreeAndGrid_gridId";
-            var dialog = baseDialog({id:"system_dialog_treeAndGridDialog",title:config.title,dialogSize:"modal-lg",modal:"hide"});
-            dialog.setBody("<div id='"+treeId+"' style='width:20%;display:inline-block;vertical-align:top;' class='ztree'></div><div id='"+gridId+"' style='width:80%;display:inline-block;vertical-align:top;' class='grid'></div>");
-
-            config.grid.id = gridId;
-            var gridInstance = grid.init($.extend(config.grid,{placeAt:gridId}));
-            dialog.setFoot([
-                {
-                    name:"确定",
-                    callback:function(){
-                        config.callback(gridInstance.getSelectedRow());
-                        dialog.modal("hide");
-                    }
+        this.callback = config.callback;
+        this.dialog = Dialog({id:"system_dialog_treeAndGridDialog",title:config.title,dialogSize:"modal-lg",modal:"hide"});
+        this.dialog.setBody("<div id='"+treeId+"' style='width:20%;display:inline-block;vertical-align:top;' class='ztree'></div><div id='"+gridId+"' style='width:80%;display:inline-block;vertical-align:top;' class='grid'></div>");
+        this.grid = Grid($.extend(config.grid,{placeAt:gridId,id:gridId}));
+        this.dialog.setFoot([
+            {
+                name:"确定",
+                callback:function(){
+                    var that = _this;
+                    that.callback(that.grid.getSelectedRow());
+                    that.dialog.$getDialog().modal("hide");
                 }
-            ],true);
+            }
+        ],true);
+        this.tree = $.fn.zTree.init($("#"+treeId),config.tree.setting,config.tree.data);
+        this.dialog.$getDialog().modal("show");
+    }
 
-            /*var tree = ztree.init({
-             treeId : treeId,
-             setting : config.tree.setting,
-             data : config.tree.data,
-             isCache : config.tree.isCache
-             });*/
-            var tree =  $.fn.zTree.init($("#"+treeId),config.tree.setting,config.tree.data);
-
-
-            dialog.modal("show");
-            $.extend(this,{
-                tree : tree,
-                dialog : dialog,
-                grid : grid
-            });
+    TreeAndGridDialog.fn = TreeAndGridDialog.prototype = {
+        //对象方法扩展API
+        extend : function(object){
+            if (typeof object === "object" && object.constructor === Object){
+                $.extend(TreeAndGridDialog.fn,object);
+            }
         },
-        destroy : function(){
-            $("#system_dialog_treeAndGridDialog").remove();
+        //获取$dom对象
+        getDialog : function(){
+            return this.dialog;
+        },
+        //获取zTree对象
+        getGrid : function(){
+            return this.grid;
+        },
+        getTree : function(){
+            return this.tree;
         }
     };
 
-    treeAndGridDialog.fn.init.prototype = treeAndGridDialog.fn;
+    TreeAndGridDialog.fn.extend({
+        //扩展方法
+    });
 
-    return {
-        init : treeAndGridDialog
-    }
+    return TreeAndGridDialogInit;
 });

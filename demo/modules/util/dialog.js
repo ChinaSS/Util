@@ -21,7 +21,7 @@ define(["jquery"],function($){
         },config);
         //判断是否已缓存
         if (cache[config.id] && config.cache) {
-            return cache[config.id].modal("show");
+            return cache[config.id];
         };
         //创建并返回新dialog
         return new Dialog(config);
@@ -51,11 +51,9 @@ define(["jquery"],function($){
         this.setFoot(config.buttons||[]);
         //将dialog添加到DOM页面
         $("body").append(this.$dialog);
-        //dialog初始化
-        this.$dialog.modal(config.modal||'show');
         //如果不缓存，关闭dialog时需要销毁Dom
         if(config.cache){
-            cache[config.id] = this.$dialog;
+            cache[config.id] = this;
         }else{
             this.$dialog.on('hidden.bs.modal', function (e) {
                 this.remove();
@@ -72,6 +70,12 @@ define(["jquery"],function($){
         },
         $getDialog : function(){
             return this.$dialog;
+        },
+        show : function(){
+            this.$dialog.modal("show");
+        },
+        hide : function(){
+            this.$dialog.modal("hide");
         }
     };
 
@@ -97,7 +101,7 @@ define(["jquery"],function($){
             this.$foot.empty();
             if(buttons && buttons.length){
                 for(var i= 0,b;b=buttons[i++];){
-                    this.$foot.append($('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'') +'>'+ b.name +'</button>').bind("click", b.callback));
+                    this.$foot.append($('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'') +'>'+ b.name +'</button>').bind("click",b.callback));
                 }
             }
             this.$foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");

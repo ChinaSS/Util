@@ -40,6 +40,7 @@
             $dialog = dialog.$getDialog();
             $dialog.css({"margin-top":"13%"});
             $dialog.find(".modal-header .close").css({"margin-top":"-10px"});
+            dialog.show();
         });
     };
 
@@ -59,6 +60,7 @@
             $dialog.find(".modal-footer").css({"padding":"5px 20px 5px"});
             dialog.setFoot([{"name":"是","callback":okCallback,close:true},{"name":"否","callback":cancelCallback,close:true}],false);
             $dialog.find(".modal-footer .btn").css({"padding":"2px 5px"});
+            dialog.show();
         });
     };
 

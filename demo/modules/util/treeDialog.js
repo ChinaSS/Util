@@ -55,7 +55,9 @@ define(["util/dialog","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],functio
     }
 
     function TreeDialog(config,setting){
-        var treeId = config.treeId?config.treeId:"system_zTree_dialogTree";
+        var _this = this;
+            treeId = config.treeId?config.treeId:"system_zTree_dialogTree";
+        this.callback = config.callback;
         //初始化dialog
         this.dialog = Dialog({id:"system_dialog_treeDialog",title:config.title,dialogSize:"modal-sm",modal:"hide"});
         this.dialog.setBody("<div id='"+treeId+"' class='ztree'></div>");
@@ -63,13 +65,13 @@ define(["util/dialog","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],functio
             { 
                 name:"保存",
                 callback:function(){
-                    var ztree = $.fn.zTree.getZTreeObj(treeId);
+                    var that = _this;
                     var data=null;
-                    if (ztree!=undefined) {
-                        data = ztree.getSelectedNodes();
+                    if (that.tree!=undefined) {
+                        data = that.tree.getSelectedNodes();
                     }
-                    dialog.modal("hide");
-                    config.callback(data);
+                    that.dialog.$getDialog().modal("hide");
+                    that.callback(data);
                 }
             }
         ],true);
