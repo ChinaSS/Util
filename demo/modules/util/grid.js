@@ -237,7 +237,7 @@ define(["jquery"],function($){
                 var $tr = $('<tr></tr>').append($index);
                 for(var j=0,item;item=config.layout[j++];){
                     var tdValue = row[item.field]=="undefined"?"":row[item.field];
-                    var param = {"value":tdValue,"config":config,"data":data,"rowIndex":i,"cellIndex":j};
+                    var param = {"row":row,"value":tdValue,"config":config,"data":data,"rowIndex":i,"cellIndex":j};
                     //单元格支持format
                     if(typeof(item.format)=="function"){
                         tdValue = item.format.apply(this,[param])

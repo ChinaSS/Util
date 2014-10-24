@@ -95,7 +95,7 @@ define(["jquery"],function($){
             modal.$submit.on("click",function(){
             	modal.doEnd();
             });
-        };
+        }
         modal.$input.on("keyup",function(){
         	modal.inputValidation();
         }).on("focus",function(){
@@ -162,7 +162,7 @@ define(["jquery"],function($){
 	                modal.fillInput(val);
 	            }
 
-	        };
+	        }
 	    },
 	    inputValidation : function(){	//检查输入
 	    	var modal = this;
@@ -190,7 +190,7 @@ define(["jquery"],function($){
 	                modal.$suggest.append("<a href='#'>"+content+"</a>");
 	                count++;
 	            }
-	        };
+	        }
 	        if (count==0) {
 	            modal.$suggest.append("<p>no suggest</p>");
 	        }

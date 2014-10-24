@@ -95,7 +95,7 @@
                     "width":param.width,
                     "border":"1px solid rgba(0,0,0,.2)",
                     "position":"fixed",
-                    "z-index":"1001",
+                    "z-index":"5001",
                     "top":0,
                     "bottom":0,
                     "right":"-"+param.width,
