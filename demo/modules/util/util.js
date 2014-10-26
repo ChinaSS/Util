@@ -111,17 +111,18 @@
                     typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 });
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听
-                $(document.body).unbind("mouseup").mouseup(function(e){
+                $(document.body).unbind("click").bind("click",function(e){
                     //不是目标区域且不是子元素,且不是自定义允许点击节点
                     if((!$Panel.is(e.target) && $Panel.has(e.target).length === 0) && !isAllowTarget(e)){
                         //关闭页面
                         $Panel.animate({right: "-"+param.width}, 150,function(){
-                            $Panel.attr("style","").hide();
+                            //取消该回调里的所有操作，避免多次点击时，先弹出第二次的侧边栏，再回调执行第一次的如下代码
+                            //$Panel.attr("style","").hide();
                             //如果不缓存,且侧边栏的DOM来自于远程连接，则删除DOM
-                            (!param.cache && param.url) && $Panel.remove();
+                            //(!param.cache && param.url) && $Panel.remove();
                         });
                         //取消事件
-                        $(document.body).unbind("mouseup");
+                        $(document.body).unbind("click");
                     }
                 });
             };
@@ -138,12 +139,14 @@
                 init($Panel);
                 param.cache && (cache[param.id] = $Panel);
             }else{
+                //删除之前的元素(不需要缓存时，从关闭面板时的回调函数处挪到这里)
+                cache[param.url] && cache[param.url].remove();
                 require(['text!'+param.url],function(panel){
                     $Panel = $("<div>"+panel+"</div>");
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
                     init($Panel);
-                    param.cache && (cache[param.url] = $Panel);
+                    cache[param.url] = $Panel;
                 })
             }
         };

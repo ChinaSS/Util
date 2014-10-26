@@ -53,7 +53,8 @@ define(["jquery","Bootstrap"],function(){
             util.slidebar({
                 url:'/Util/demo/app/views/EditArtistInfo.html',
                 width:'800px',
-                allowClick:[e.target],
+                //cache:false,
+                //allowClick:[e.target],
                 'afterLoad':function(){
                     //日期组件事件绑定
                     $(".form-date").datetimepicker({format: 'yyyy-mm-dd',language: 'cn',autoclose: true,minView:2});
