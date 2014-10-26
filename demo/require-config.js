@@ -6,6 +6,7 @@ require.config({
         "Date":"bootstrap/plugins/datetimepicker/js/datetimepicker.min",
         "DateCN":"bootstrap/plugins/datetimepicker/js/datetimepicker.cn",
         "Json2":"json2/json2",
+        "Dialog":"util/dialog",
         "jquery":"jquery/jquery1x.min",
         "app":"../app/"
     },

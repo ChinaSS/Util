@@ -34,7 +34,7 @@
      * @param message
      */
     util.alert =function(message){
-        require(["util/dialog"],function(Dialog){
+        require(["Dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_alert",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
@@ -51,7 +51,7 @@
      * @param cancelCallback
      */
     util.confirm = function(message,okCallback,cancelCallback){
-        require(["util/dialog"],function(Dialog){
+        require(["Dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_confirm",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
