@@ -52,16 +52,16 @@ define(["jquery"],function($){
         };
     })();
 
-    function GridInit(config){
-        config = $.extend({
+    function init(config){
+        //创建表格对象
+        var grid = new Grid($.extend({
             pageSize:10
-        },config);
-        //判断是否已缓存
-        if (cache[config.id] && config.cache) {
-            return cache[config.id];
-        }
-        //创建并返回新dialog
-        return new Grid(config);
+        },config));
+        //渲染表格
+        grid.render();
+        //添加缓存
+        cache[config.id] = grid;
+        return grid;
     }
 
     function Grid(config){
@@ -74,9 +74,8 @@ define(["jquery"],function($){
             allDataCount:0,                 //所有数据总条数
             pageCount:0                     //总页数
         };
-        this.render();
-        cache[config.id] = this;
     }
+
      //模块通用方法(扩展)
     Grid.fn = Grid.prototype = {
         //对象方法扩展API
@@ -84,16 +83,6 @@ define(["jquery"],function($){
             if (typeof object === "object" && object.constructor === Object){
                 $.extend(Grid.fn,object);
             }
-        },
-        //获取$dom对象
-        $getGrid : function(){
-            return this.$gridPanel;
-        },
-        show : function(){
-            this.$gridPanel.show();
-        },
-        hide : function(){
-            this.$gridPanel.hide();
         }
     };
 
@@ -471,5 +460,18 @@ define(["jquery"],function($){
         }
     });
 
-    return GridInit;
+
+    /**
+     * 获取表格对象
+     * @param id
+     * @returns grid
+     */
+    var getGrid = function(id){
+        return cache[id];
+    };
+
+    return {
+        "init":init,
+        "getGrid":getGrid
+    }
 });
