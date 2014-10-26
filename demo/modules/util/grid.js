@@ -311,13 +311,13 @@ define(["jquery"],function($){
                 var target = event.target;
                 var nodeName = target.nodeName.toLowerCase();
                 var curPage = parseInt($(this).find("input").val());
-                if((nodeName=="i" && target.className=="fa fa-step-backward") || (nodeName=="a" && target.className=="GoToFirst")){
+                if((nodeName=="i" && target.className=="glyphicon glyphicon-step-backward") || (nodeName=="a" && target.className=="GoToFirst")){
                     curPage = 1;
-                }else if((nodeName=="i" && target.className=="fa fa-caret-left") || (nodeName=="a" && target.className=="GoToPrev")){
+                }else if((nodeName=="i" && target.className=="glyphicon glyphicon-chevron-left") || (nodeName=="a" && target.className=="GoToPrev")){
                     curPage = curPage>1 ? curPage-1 : 1;
-                }else if((nodeName=="i" && target.className=="fa fa-caret-right") || (nodeName=="a" && target.className=="GoToNext")){
+                }else if((nodeName=="i" && target.className=="glyphicon glyphicon-chevron-right") || (nodeName=="a" && target.className=="GoToNext")){
                     curPage = curPage==pageCount ? curPage : (curPage+1);
-                }else if((nodeName=="i" && target.className=="fa fa-step-forward") || (nodeName=="a" && target.className=="GoToEnd")){
+                }else if((nodeName=="i" && target.className=="glyphicon glyphicon-step-forward") || (nodeName=="a" && target.className=="GoToEnd")){
                     curPage = pageCount;
                 }else{
                     return;
