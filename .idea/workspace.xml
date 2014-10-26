@@ -44,11 +44,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gridDemo.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="gridDemo.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demo/app/demo/gridDemo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7383721" vertical-offset="692" max-vertical-offset="1380">
-              <caret line="60" column="23" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1380">
+              <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="19" />
               <folding>
                 <marker date="1414344675167" expanded="false" signature="302:315" placeholder="..." />
               </folding>
@@ -66,16 +66,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="grid.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="grid.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/demo/modules/util/grid.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1385" max-vertical-offset="9640">
-              <caret line="86" column="6" selection-start-line="86" selection-start-column="6" selection-end-line="86" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.73333335" vertical-offset="1385" max-vertical-offset="9920">
+              <caret line="94" column="57" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="57" />
               <folding>
-                <marker date="1414344622779" expanded="false" signature="12460:12474" placeholder="..." />
-                <marker date="1414344622779" expanded="false" signature="12523:12568" placeholder="..." />
-                <marker date="1414344622779" expanded="false" signature="12744:12758" placeholder="..." />
-                <marker date="1414344622779" expanded="false" signature="12917:12928" placeholder="..." />
+                <marker date="1414345445168" expanded="false" signature="12839:12853" placeholder="..." />
+                <marker date="1414345445168" expanded="false" signature="12902:12947" placeholder="..." />
+                <marker date="1414345445168" expanded="false" signature="13123:13137" placeholder="..." />
+                <marker date="1414345445168" expanded="false" signature="13296:13307" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -644,25 +644,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/modules/util/grid.js">
+    <entry file="file://$PROJECT_DIR$/demo/app/demo/gridDemo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1385" max-vertical-offset="9640">
-          <caret line="86" column="6" selection-start-line="86" selection-start-column="6" selection-end-line="86" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1380">
+          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="19" />
           <folding>
-            <marker date="1414344622779" expanded="false" signature="12460:12474" placeholder="..." />
-            <marker date="1414344622779" expanded="false" signature="12523:12568" placeholder="..." />
-            <marker date="1414344622779" expanded="false" signature="12744:12758" placeholder="..." />
-            <marker date="1414344622779" expanded="false" signature="12917:12928" placeholder="..." />
+            <marker date="1414344675167" expanded="false" signature="302:315" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demo/app/demo/gridDemo.js">
+    <entry file="file://$PROJECT_DIR$/demo/modules/util/grid.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7383721" vertical-offset="692" max-vertical-offset="1380">
-          <caret line="60" column="23" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.73333335" vertical-offset="1385" max-vertical-offset="9920">
+          <caret line="94" column="57" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="57" />
           <folding>
-            <marker date="1414344675167" expanded="false" signature="302:315" placeholder="..." />
+            <marker date="1414345445168" expanded="false" signature="12839:12853" placeholder="..." />
+            <marker date="1414345445168" expanded="false" signature="12902:12947" placeholder="..." />
+            <marker date="1414345445168" expanded="false" signature="13123:13137" placeholder="..." />
+            <marker date="1414345445168" expanded="false" signature="13296:13307" placeholder="..." />
           </folding>
         </state>
       </provider>

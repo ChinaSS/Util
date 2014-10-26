@@ -86,6 +86,20 @@ define(["jquery"],function($){
         }
     };
 
+    /**
+     * 表格刷新
+     */
+    Grid.prototype.refresh = function(){
+        this.selected = {};
+        this.pageInfo = {
+            curPage:1,                      //默认当前为表格的第一页
+            curPageData:[],                 //当前页数据
+            allDataCount:0,                 //所有数据总条数
+            pageCount:0                     //总页数
+        };
+        this.render();
+    };
+
     //扩展Grid渲染方法
     Grid.fn.extend({
         render : function(){
