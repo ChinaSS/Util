@@ -126,18 +126,16 @@
                     }
                 });
             };
-
-            var $Panel = cache[param.id || param.url];
-            //如果已经有缓存则直接加载
-            if(param.cache && $Panel){
-                init($Panel);
-                return;
-            }
             //如果已经把模板放在了页面上，则通过id取得
             if(param.id){
                 $Panel = $("#"+param.id);
                 init($Panel);
-                param.cache && (cache[param.id] = $Panel);
+                return false;
+            }
+            var $Panel = cache[param.id || param.url];
+            //如果已经有缓存则直接加载
+            if(param.cache && $Panel){
+                init($Panel);
             }else{
                 //删除之前的元素(不需要缓存时，从关闭面板时的回调函数处挪到这里)
                 cache[param.url] && cache[param.url].remove();

@@ -343,7 +343,6 @@ define(["jquery"],function($){
                 }
                 _this.pageInfo.curPage = curPage;
                 //重新渲染表格
-                _this.initRenderInfo();
                 _this.renderGridContent();
                 _this.renderPagination();
             });
@@ -424,11 +423,10 @@ define(["jquery"],function($){
                 async: false,
                 url: (grid.config.data.type=="URL" ? grid.config.data.value : "/util/v1/gird"),
                 dataType: "json",
-                data:{"data":JSON.stringify({
-                    pageSize:grid.config.pageSize,
-                    curPage:grid.pageInfo.curPage,
-                    sort:sort
-                })},
+                data:{
+                    "pageSize": grid.config.pageSize,
+                    "pageNumber": grid.pageInfo.curPage
+                },
                 success: function(returnData){
                     result = returnData;
                 },
@@ -436,7 +434,7 @@ define(["jquery"],function($){
                     console.log(errorThrown);
                 }
             });
-            return result;
+            return transferData(result);
         },
 
         /**
@@ -483,6 +481,25 @@ define(["jquery"],function($){
     var getGrid = function(id){
         return cache[id];
     };
+
+    /*
+     * 转换数据格式
+     * pageInfo
+     */
+    function transferData(data){
+        var i = null, list = {
+            "total" : "allDataCount",
+            "rows" : "curPageData"
+        };
+        //遍历替换列表
+        for (i in list ){
+            if (list.hasOwnProperty(i)) {
+                data[list[i]] = data[i];
+                delete data[i];
+            }
+        }
+        return data;
+    }
 
     return {
         "init":init,
