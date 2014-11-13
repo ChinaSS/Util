@@ -26,6 +26,12 @@
     ],
     data:[{Name:"张三",Sex:"男",Phone:"123456",Email:"",Address:"BJ"},{Name:"张三",Sex:"男",Phone:"123456",Email:"",Address:"BJ"}]
     //data:{type:"URL",value:""}                                //只要data值的类型数组都视为假分页，为对象视为真分页
+    formData:{                                  //数据请求的额外参数
+        name : 'value'
+    },
+    dataFormat:{                                //前后台字段名转换
+        'data':'format'
+    }
  }
  */
 
@@ -395,10 +401,10 @@ define(["jquery"],function($){
             }else{
                 switch (config.data.type){
                     case "URL":
-                        this.pageInfo = this.getRealData(this);
+                        $.extend(this.pageInfo,this.getRealData(this));
                         break;
                     case "SQL":
-                        this.pageInfo = this.getRealData(this);
+                        $.extend(this.pageInfo,this.getRealData(this));
                         break;
                     default :
                         return [];
@@ -423,10 +429,10 @@ define(["jquery"],function($){
                 async: false,
                 url: (grid.config.data.type=="URL" ? grid.config.data.value : "/util/v1/gird"),
                 dataType: "json",
-                data:{
+                data: $.extend({
                     "pageSize": grid.config.pageSize,
                     "pageNumber": grid.pageInfo.curPage
-                },
+                },this.config.formData),
                 success: function(returnData){
                     result = returnData;
                 },
@@ -434,7 +440,11 @@ define(["jquery"],function($){
                     console.log(errorThrown);
                 }
             });
-            return transferData(result);
+            result.pageCount = Math.ceil(result.allDataCount/grid.config.pageSize);
+            if(typeof this.config.dataFormat!="undefined"){
+                result = formatData(result,this.config.dataFormat);
+            }
+            return result;
         },
 
         /**
@@ -486,16 +496,24 @@ define(["jquery"],function($){
      * 转换数据格式
      * pageInfo
      */
-    function transferData(data){
+    function formatData(data,format){
         var i = null, list = {
             "total" : "allDataCount",
-            "rows" : "curPageData"
+            "data" : "curPageData"
         };
         //遍历替换列表
-        for (i in list ){
-            if (list.hasOwnProperty(i)) {
-                data[list[i]] = data[i];
-                delete data[i];
+        for (i in format ){
+            if (format.hasOwnProperty(i)) {
+                if(format[i].indexOf('.')>-1){
+                    var arr = format[i].split('.'), j,transferData;
+                    for(j=1,transferData=data[arr[0]];j<arr.length;j++){
+                        transferData = transferData[arr[j]];
+                    }
+                    data[list[i]] = transferData;
+                }else{
+                    data[list[i]] = data[format[i]];
+                }
+                delete data[format[i]];
             }
         }
         return data;

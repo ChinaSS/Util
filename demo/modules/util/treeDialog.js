@@ -6,12 +6,13 @@
 *   treeId : id,                       //用于生成 zTree ID
 *   isCache : true,                //是否缓存ztree数据,默认为true;不缓存则显示即时数据
 *   data : {},                     //json对象数据(object)或者是url地址(string)
-*   selectMulti : false,
+*   dataModal : "",         //值为"checked"时,向回调函数中返回所有选中状态被改变的数据,仅在选择方式为checked时生效,,
+*                                   "changed"返回状态被改变的数据
 *   callback : function(data){},   //回调函数,接收JSON类型数据
 *   setting : {}
 * }
 ***/
-define(["util/dialog","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],function(Dialog,zTree){
+define(["Dialog","ZTree","css!"+getStaticPath()+"modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(Dialog,zTree){
     //tree setting
     var _setting = {
         view: {
@@ -29,15 +30,13 @@ define(["util/dialog","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],functio
         treeId : "",
         isCache : true,
         data : null,
-        selectMulti : false,
+        dataModal : "",
         callback : null,
         setting : {}
     };
 
     function DialogInit(config){
-        var setting = {
-            view : { selectedMulti: config.selectMulti }
-        };
+        var setting = {};
         //处理url地址
         if (typeof config.data === "string") {
             setting.async={
@@ -68,7 +67,16 @@ define(["util/dialog","zTree","css!ztree/css/zTreeStyle/zTreeStyle.css"],functio
                     var that = _this;
                     var data=null;
                     if (that.tree!=undefined) {
-                        data = that.tree.getSelectedNodes();
+                        if(setting.check&&setting.check.enable){
+                            if(config.dataModal==="changed"){
+                                data = that.tree.getChangeCheckedNodes();
+                            }else{
+                                data = that.tree.getCheckedNodes();
+                            }
+                        }
+                        else{
+                            data = that.tree.getSelectedNodes();
+                        }
                     }
                     that.dialog.$getDialog().modal("hide");
                     that.callback(data);
