@@ -1,0 +1,68 @@
+input,body,ul,li{
+    padding: 0;
+    margin: 0;
+}
+ul,li{
+    list-style: none;
+}
+#inputTest{
+    cursor: pointer;
+    width: 120px;
+    height: 24px;
+    line-height: 24px;
+    padding: 2px 5px;
+    border: 1px solid #ccc;
+}
+#inputPanel{
+    overflow-x : hidden;
+    background-color : #ffffff;
+    border : 1px solid #ccc;
+    border-top: none;
+    font-size: 13px;
+}
+
+#panelSearch{
+    display: block;
+    margin: 2px auto;
+}
+#panelData > ul ul{
+    display: none;
+}
+#panelData .top > ul{
+    display: block;
+}
+
+#inputPanel .item, #inputPanel .node{
+    padding: 2px 5px;
+    display: block;
+    cursor: pointer;
+}
+
+#inputPanel a:hover{
+    background-color: #eee;
+}
+
+#inputPanel .text, #inputPanel .pic{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#inputPanel input[type="checkbox"], #inputPanel .pic{
+    vertical-align: middle;
+    margin-right: 4px;
+    height: 16px;
+    width: 16px;
+}
+
+#inputPanel .pic{
+    background: url("../images/icons.png") no-repeat -39px 0;
+}
+
+#inputPanel .node > .pic{
+    background: url("../images/icons.png") no-repeat 0 0;
+}
+#inputPanel .node.open > .pic{
+    background: url("../images/icons.png") no-repeat -19px 0;
+}
+
+

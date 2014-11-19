@@ -1,13 +1,5 @@
-(function(factory) {
-    if (typeof define === "function" && define.amd) {
-        define(["jquery"],factory);
-    }else{
-        var u = window.util || (window.util = {});
-        $.extend(u,factory(jQuery));
-    }
-})(function($){
+define(["jquery","css!"+getStaticPath()+"modules/util/css/util.css"],function($){
     var util = {};
-
     /**
      * 简单模板引擎
      */
@@ -95,7 +87,7 @@
                     "width":param.width,
                     "border":"1px solid rgba(0,0,0,.2)",
                     "position":"fixed",
-                    "z-index":"5001",
+                    "z-index":"1040",
                     "top":0,
                     "bottom":0,
                     "right":"-"+param.width,
