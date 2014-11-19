@@ -10,6 +10,7 @@ function initTree($tree){
 		$(this).siblings("ul").toggle();
 	});
 }
+
 //延迟搜索
 function listener($elem){
 	var $tree=$elem.siblings("div");

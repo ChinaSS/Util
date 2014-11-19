@@ -12,7 +12,7 @@
     }
  }
 **/
-define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,search){
+define(["jquery","./treeSearch"],function($,search){
     function init(config){
         return new Input(config);
     }
@@ -27,6 +27,7 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
             searchAble : false,
             panelID : "inputPanel",
             key : {
+                id : "id",
                 name : "name",
                 data : "data",
                 checked : "checked"
@@ -36,7 +37,7 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
         bindEvent(this);
         this.getData();
     }
-
+    
     function bindEvent(input){
         //输入框点击事件
         input.$input.on("mouseup",function(event){
@@ -56,18 +57,17 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
             input.$panel.on("mouseup",".item",function(event){
                 if (event.target.nodeName!="INPUT") {
                     input.setCheckbox(this);
-                    input.fillInput($(this).children(".text").text(),true);
+                    input.fillInput($(this).children(".text").text(),$(this).children(".text").data("id"));
                 }
             }).on("change","input[type='checkbox']",function(event){
                 if (event.target.nodeName=="INPUT") {
-                    input.fillInput($(this).siblings(".text").text(),true);
+                    input.fillInput($(this).siblings(".text").text(),$(this).siblings(".text").data("id"));
                 }
             });
         } else if (input.config.type=="select") {
             input.$panel.on("mouseup",".item",function(event){
-                var val = $(this).children(".text").text();
                 input.clearInput();
-                input.fillInput(val,true);
+                input.fillInput($(this).children(".text").text(),$(this).children(".text").data("id"));
                 input.hidePanel();
             });
         }
@@ -132,7 +132,8 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
         },
         initItem : function(items,lvl){
             var i,length,cur,li="",html="";
-            var name = this.config.key.name,
+            var id = this.config.key.id,
+                name = this.config.key.name,
                 data = this.config.key.data,
                 checked = this.config.key.checked;
             lvl = (lvl&&lvl>0)?parseInt(lvl):0;
@@ -142,15 +143,15 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
                 if (this.config.type=="select"||cur[data]) {
                     li =  "<a class='"+(cur[data]?"node":"item")+(lvl==0&&cur[data]?" open":"")+"' style='padding-left:"+20*lvl+"px'>"+
                             "<span class='pic'></span>"+
-                            "<span class='text'>"+cur[name]+"</span>"+
+                            "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
                 } else if (this.config.type=="checkbox") {
                     li =  "<a class='item' style='padding-left:"+20*lvl+"px'>"+
                             "<input type='checkbox'"+(cur[checked]?" checked":"")+">"+
-                            "<span class='text'>"+cur[name]+"</span>"+
+                            "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
                     if (cur[checked]) {
-                        this.fillInput(cur[name],true);
+                        this.fillInput(cur[name],cur[id]);
                     }
                 }
                 if (cur[data]) {
@@ -160,27 +161,43 @@ define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,se
             }
             return "<ul>"+html+"</ul>";
         },
-        fillInput : function(val,append){  //回填input
-            var oldValue = this.$input.val();
-            val = $.trim(val);
-            if (oldValue&&append) {
-                if(oldValue.indexOf(val)>-1){
-                    var oldArray = oldValue.split(","),
-                        newArray = [],i;
-                    for (i = 0; i < oldArray.length; i++) {
-                        if (oldArray[i]!=val) {
-                            newArray.push(oldArray[i]);
+        fillInput : function(val,id){  //回填input
+            var oldValue = this.$input.val(),
+                oldIds = this.$input.data("ids");
+            if (this.config.type=="select") { //单选
+                this.$input.data("ids",$.trim(id));
+                this.$input.val($.trim(val));
+            } else if (this.config.type=="checkbox") { //多选
+                id?this.$input.data("ids",this.toggleData(id,oldIds)):null;
+                val?this.$input.val(this.toggleData(val,oldValue)):null;
+            }
+        },
+        toggleData : function(data,oldData){
+            data = $.trim(data);
+            if (!oldData) {
+                return data;
+            } else {
+                if(oldData.indexOf(data)>-1){
+                    var dataArr = oldData.split(","),
+                        cur="",
+                        i;
+                    for (i = 0; i < dataArr.length; i++) {
+                        cur = $.trim(dataArr[i]);
+                        if (cur==data) {
+                            dataArr.splice(i,1);
+                            data="";
+                            break;
                         };
                     };
-                    if (oldArray.length==newArray.length) {
-                        newArray.push(val);
+                    if (data) {
+                        dataArr.push(data);
                     };
-                    val = newArray.join(",");
+                    data = dataArr.join(",");
                 } else {
-                    val = this.$input.val()+","+val;
+                    data = oldData+","+data;
                 }
-            }
-            this.$input.val(val);
+            }            
+            return data;
         },
         clearInput : function(){
             this.$input.val("");
