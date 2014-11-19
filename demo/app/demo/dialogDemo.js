@@ -1,4 +1,4 @@
-define(["Dialog"],function(Dialog){
+define(["Util/dialog"],function(Dialog){
     return {
         createDialog : function(){
             //为弹出框增加操作按钮

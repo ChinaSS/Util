@@ -12,7 +12,7 @@
     }
  }
 **/
-define(["jquery","./treeSearch"],function($,search){
+define(["jquery","Util/treeSearch","css!Util/css/inputSelect.css"],function($,search){
     function init(config){
         return new Input(config);
     }

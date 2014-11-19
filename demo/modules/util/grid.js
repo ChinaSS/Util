@@ -35,7 +35,7 @@
  }
  */
 
-define(["jquery","css!"+getStaticPath()+"modules/util/css/grid.css"],function($){
+define(["jquery","css!Util/css/grid.css"],function($){
     var cache={};
     /**
      * 简单模板引擎

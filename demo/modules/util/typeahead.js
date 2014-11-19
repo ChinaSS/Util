@@ -7,7 +7,7 @@
         lazyMatch : true,   //延迟匹配,默认为true
     }
 */
-define(["jquery","css!"+getStaticPath()+"modules/util/css/typeahead.css"],function($){
+define(["jquery","css!Util/css/typeahead.css"],function($){
     var _param = {
         id : null,
         btn : null,

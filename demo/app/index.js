@@ -14,10 +14,10 @@ define(["jquery","Bootstrap"],function(){
     });
 
     //初始化typeahead
-    require(["util/typeahead","css!util/css/typeahead.css"],function(typeahead){
+    require(["Util/typeahead"],function(typeahead){
         typeahead({
             id:"TypeaheadId",
-            data : "/Util/demo/app/data/typeahead.json",
+            data : getStaticPath()+"app/data/typeahead.json",
             callback:function(data){
                 //do something
                 alert("test");
@@ -48,10 +48,10 @@ define(["jquery","Bootstrap"],function(){
     
     //侧边栏
     $("#sidebarButtonID").bind('click',function(e){
-        require(['util/util',"Date","DateCN","css!bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
+        require(['Util/util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
-                url:'/Util/demo/app/views/EditArtistInfo.html',
+                url:getStaticPath()+'app/views/EditArtistInfo.html',
                 width:'800px',
                 //cache:false,
                 //allowClick:[e.target],

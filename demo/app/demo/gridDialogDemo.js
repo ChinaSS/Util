@@ -1,4 +1,4 @@
-define(["util/gridDialog"],function(gridDialog){
+define(["Util/gridDialog"],function(gridDialog){
     
     var config = {
         id:"DemoOne",

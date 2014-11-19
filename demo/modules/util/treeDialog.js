@@ -12,7 +12,7 @@
 *   setting : {}
 * }
 ***/
-define(["Dialog","ZTree","css!"+getStaticPath()+"modules/zTree/css/zTreeStyle/zTreeStyle.css"],function(Dialog,zTree){
+define(["Util/dialog","ZTree","css!ZTreeCss"],function(Dialog,zTree){
     //tree setting
     var _setting = {
         view: {

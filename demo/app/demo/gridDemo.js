@@ -1,7 +1,7 @@
 /**
  * Created by YiYing on 2014/9/14.
  */
-define(["util/grid","css!util/css/grid.css"],function(grid){
+define(["Util/grid"],function(grid){
     var config = {
         id:"DemoOne",
         placeAt:"DemoGirdDivId",            //存放Grid的容器ID

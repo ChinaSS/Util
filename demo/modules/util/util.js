@@ -1,4 +1,4 @@
-define(["jquery","css!"+getStaticPath()+"modules/util/css/util.css"],function($){
+define(["jquery","css!Util/css/util.css"],function($){
     var util = {};
     /**
      * 简单模板引擎
@@ -22,11 +22,11 @@ define(["jquery","css!"+getStaticPath()+"modules/util/css/util.css"],function($)
     })();
 
     /**
-     * 用法：require(["util"],function(u){u.alert("请填写基本信息！")})
+     * 用法：require(["Util/util"],function(u){u.alert("请填写基本信息！")})
      * @param message
      */
     util.alert =function(message){
-        require(["Dialog"],function(Dialog){
+        require(["Util/dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_alert",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
@@ -37,13 +37,13 @@ define(["jquery","css!"+getStaticPath()+"modules/util/css/util.css"],function($)
     };
 
     /**
-     * 用法：require(["util"],function(u){u.confirm("确认提交？",function(){console.log("是")},function(){console.log("否")})})
+     * 用法：require(["Util/util"],function(u){u.confirm("确认提交？",function(){console.log("是")},function(){console.log("否")})})
      * @param message
      * @param okCallback
      * @param cancelCallback
      */
     util.confirm = function(message,okCallback,cancelCallback){
-        require(["Dialog"],function(Dialog){
+        require(["Util/dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_confirm",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
