@@ -28,12 +28,12 @@ define(["jquery","Bootstrap"],function(){
         });
     });
 
-    //初始化gridDialog 点击事件
+    //初始化contentDialog 点击事件
     $("#contentDialog").on("click",function(){
         require(["Util/util"],function(util){
            util.contentDialog({
-                template : "app/template.html",
-                callback : function(dialog){
+                template : getStaticPath()+"app/views/contentDialog.html",
+                afterLoad : function(dialog){
                     console.log(dialog);
                 }
            })
