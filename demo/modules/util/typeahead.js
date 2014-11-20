@@ -1,11 +1,11 @@
 /**
     config = {
         id : null,          //页面锚id
-        btn : null,        //button名称, 通过是否有值判断是否启用button
-        data : data,          //数据地址
-        callback : null,    //绑定功能函数
+        btn : null,         //button名称, 通过是否有值判断是否启用button
+        data : data,        //数据地址
         lazyMatch : true,   //延迟匹配,默认为true
-        dataFormat : null //处理数据格式,并需返回html结构
+        dataFormat : null,  //用于自定义每列数据的格式化输出,接受一个数据参数
+        callback : null     //绑定功能函数
     }
 */
 define(["jquery","css!Util/css/typeahead"],function($){
