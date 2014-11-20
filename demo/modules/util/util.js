@@ -55,6 +55,28 @@ define(["jquery","css!Util/css/util.css"],function($){
             dialog.show();
         });
     };
+    /**
+     * config = {
+     *   setting : {},                   //dialogSetting
+     *   template : templateURL,         //dialogBodyTemplate
+     *   afterLoad : function(dialog){},   //afterDialogLoaded callback
+     * }
+     */
+    util.contentDialog = function(config){
+        $.extend({
+            cache : true,
+            dialogSize: "modal-lg",
+            title : "Dialog",
+            id : "system_dialog_contentDialog",
+            modal : "hide"
+        },config.setting);
+        require(["Util/dialog","text!"+config.template],function(Dialog,template){
+            dialog = Dialog(config.setting);
+            dialog.setBody(template);
+            config.afterLoad(dialog);
+            dialog.show();
+        });
+    };
 
     /**
      * 弹出侧边编辑栏组件

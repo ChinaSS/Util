@@ -20,8 +20,23 @@ define(["jquery","Bootstrap"],function(){
             data : getStaticPath()+"app/data/typeahead.json",
             callback:function(data){
                 //do something
-                alert("test");
+                alert("[ "+data+" ] Selected!");
+            },
+            dataFormat:function(data){
+                return data+" Formated";
             }
+        });
+    });
+
+    //初始化gridDialog 点击事件
+    $("#contentDialog").on("click",function(){
+        require(["Util/util"],function(util){
+           util.contentDialog({
+                template : "app/template.html",
+                callback : function(dialog){
+                    console.log(dialog);
+                }
+           })
         });
     });
 
