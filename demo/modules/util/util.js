@@ -27,11 +27,10 @@ define(["jquery","css!Util/css/util.css"],function($){
      */
     util.alert =function(message){
         require(["Util/dialog"],function(Dialog){
-            var dialog = Dialog({id:"system_dialog_alert",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
+            var dialog = Dialog({id:"system_dialog_alert",title:"AlertDialog",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
             $dialog.css({"margin-top":"13%"});
-            $dialog.find(".modal-header .close").css({"margin-top":"-10px"});
             dialog.show();
         });
     };
@@ -44,11 +43,10 @@ define(["jquery","css!Util/css/util.css"],function($){
      */
     util.confirm = function(message,okCallback,cancelCallback){
         require(["Util/dialog"],function(Dialog){
-            var dialog = Dialog({id:"system_dialog_confirm",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
+            var dialog = Dialog({id:"system_dialog_confirm",title:"ConfirmDialog",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
             $dialog.css({"margin-top":"13%"});
-            $dialog.find(".modal-header .close").css({"margin-top":"-10px"});
             $dialog.find(".modal-footer").css({"padding":"5px 20px 5px"});
             dialog.setFoot([{"name":"是","callback":okCallback,close:true},{"name":"否","callback":cancelCallback,close:true}],false);
             $dialog.find(".modal-footer .btn").css({"padding":"2px 5px"});
