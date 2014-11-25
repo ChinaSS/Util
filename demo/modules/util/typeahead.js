@@ -33,26 +33,18 @@ define(["jquery","css!Util/css/typeahead"],function($){
         this.config = config;
 
         var $elem = $("#"+config.id);
-        //写入html,清除锚点
-        var html = '<div class="typeahead">';
-        if(!config.btn){
-            html += '<input type="text" class="form-control typeahead-input">';
-        }
-        else{
-            html += '<div class="input-group">'+
-                    '<input type="text" class="form-control typeahead-input">'+
-                    '<span class="input-group-btn">'+
+        this.$typeahead = $elem.wrap('<div class="typeahead"></div>').parent(".typeahead");
+        $elem.after('<div class="typeahead-suggest"></div>');
+        if(!!config.btn){
+            $elem.
+                wrap('<div class="input-group"></div>').
+                after('<span class="input-group-btn">'+
                     '<button class="btn btn-primary typeahead-submit" type="button">'+config.btn+'</button>'+
-                    '</span>'+
-                    '</div>';
+                    '</span>');
         }
-        html += '<div class="typeahead-suggest"></div></div>';
-        this.$typeahead = $(html);
-        $elem.before(this.$typeahead);
-        $elem.remove();
 
         //获取元素
-        this.$input = this.$typeahead.find(".typeahead-input");
+        this.$input = $elem;
         this.$suggest = this.$typeahead.find(".typeahead-suggest");
         this.$submit = this.$typeahead.find(".typeahead-submit");
 
