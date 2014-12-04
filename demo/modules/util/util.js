@@ -87,8 +87,12 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
                 "url":"",           //URL远程获取模板
                 "width":"",
                 "cache":true,
+                "close":false,      //点击侧边栏之外的区域是否能关闭侧边栏
                 "allowClick":[]
             },config);
+
+            //侧边栏对象
+            var $Panel;
 
             var isAllowTarget = function(e){
                 //增加对boostrap date组件的支持(由于该组件的HTML自动追加在body上)
@@ -101,7 +105,7 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
                 return false;
             };
 
-            var init = function($Panel){
+            var init = function(){
                 //设置弹出面板样式
                 $Panel.css({
                     "width":param.width,
@@ -123,52 +127,62 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
                     typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 });
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听
-                $Panel.find(".btn").has(".fa-close,.fa-save").on("click",function(e){
-                    //关闭页面
-                    $Panel.animate({right: "-"+param.width}, 150,function(){
-                    });
+                param.close && $(document.body).unbind("mouseup").bind("mouseup",function(e) {
+                    //不是目标区域且不是子元素,且不是自定义允许点击节点
+                    if ((!$Panel.is(e.target) && $Panel.has(e.target).length === 0) && !isAllowTarget(e)) {
+                        //关闭页面
+                        closeSlidebar();
+                        //取消事件
+                        $(document.body).unbind("mouseup");
+                    }
                 });
+                //增加以添加样式即可关闭侧边栏的方法
                 $Panel.find(".closeBtn").on("click",function(e){
-                    //关闭页面
-                    $Panel.animate({right: "-"+param.width}, 150,function(){
-                    });
+                    closeSlidebar();
                 });
             };
+
+            //关闭侧边栏方法
+            var closeSlidebar = function(){
+                $Panel.animate({right: "-"+param.width}, 150,function(){
+                    typeof(param.afterClose)=="function" && param.afterClose.apply(this);
+                });
+            };
+            //增加左侧关闭
+            var addClose = function(){
+                var $left = $("<div class='cs-slidebar-left'><i class='glyphicon glyphicon-chevron-right cs-slidebar-close'></i></div>");
+                //添加关闭侧边栏的事件
+                $left.bind("click",function(){
+                    closeSlidebar($Panel);
+                });
+                return $left;
+            };
+
+
             //如果已经把模板放在了页面上，则通过id取得
             if(param.id){
-                $Panel = $("#"+param.id);
-                init($Panel);
+                $Panel = $("#"+param.id).append(addClose());
+                init();
                 return false;
             }
-            var $Panel = cache[param.id || param.url];
+            //-------如果为远程获取侧边栏中的内容--------
+            $Panel = cache[param.id || param.url];
             //如果已经有缓存则直接加载
             if(param.cache && $Panel){
-                init($Panel);
+                init();
             }else{
                 //删除之前的元素(不需要缓存时，从关闭面板时的回调函数处挪到这里)
                 cache[param.url] && cache[param.url].remove();
                 require(['text!'+param.url],function(panel){
-                    var $left = $("<div></div>").css({
-                        "position": 'absolute',
-                        "height": '100%',
-                        "width":"18px",
-                        "left": 0,
-                        "top": 0
-                    });
-                    var $close = $("<i class='glyphicon glyphicon-chevron-right'></i>").css({
-                        "top": "50%"
-                    });
-                    $left.append($close);
-                    $Panel = $("<div></div>").append($left).append(panel);
+                    $Panel = $("<div></div>").append(addClose()).append(panel);
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
-                    init($Panel);
+                    init();
                     cache[param.url] = $Panel;
                 })
             }
         };
     })();
-
 
     return util;
 });

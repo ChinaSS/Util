@@ -45,3 +45,19 @@ label{
     line-height: 2em;
 }
 
+/*侧边栏相关*/
+.cs-slidebar-left{
+    position: absolute;
+    height: 100%;
+    width:18px;
+    left: 0;
+    top: 0
+}
+.cs-slidebar-left:hover{
+    background-color: #E9E9E9;
+    cursor: pointer;
+}
+.cs-slidebar-close{
+    color: #428BCA;
+    top: 50%
+}
