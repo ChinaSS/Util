@@ -14,7 +14,7 @@ define(["jquery","Bootstrap"],function(){
     });
 
     //初始化typeahead
-    require(["Util/typeahead"],function(typeahead){
+    require(["UtilDir/typeahead"],function(typeahead){
         typeahead({
             id:"TypeaheadId",
             data : getStaticPath()+"app/data/typeahead.json",
@@ -30,7 +30,7 @@ define(["jquery","Bootstrap"],function(){
 
     //初始化contentDialog 点击事件
     $("#contentDialog").on("click",function(){
-        require(["Util/util"],function(util){
+        require(["UtilDir/util"],function(util){
            util.contentDialog({
                 template : getStaticPath()+"app/views/contentDialog.html",
                 afterLoad : function(dialog){
@@ -63,7 +63,7 @@ define(["jquery","Bootstrap"],function(){
     
     //侧边栏
     $("#sidebarButtonID").bind('click',function(e){
-        require(['Util/util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
+        require(['UtilDir/util',"Date","DateCN","css!modules/bootstrap/plugins/datetimepicker/css/datetimepicker.min.css"],function(util){
             //弹出侧边栏
             util.slidebar({
                 url:getStaticPath()+'app/views/EditArtistInfo.html',

@@ -7,7 +7,7 @@
 *   setting : {}                   //grid config
 * }
 ***/
-define(["Util/dialog","Util/grid"],function(Dialog,Grid){
+define(["UtilDir/dialog","UtilDir/grid"],function(Dialog,Grid){
     var _setting = {};
     var _config = {
         title : "Grid Dialog"

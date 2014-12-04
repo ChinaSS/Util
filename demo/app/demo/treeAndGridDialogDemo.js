@@ -1,4 +1,4 @@
-define(["Util/treeAndGridDialog"],function(treeAndGridDialog){
+define(["UtilDir/treeAndGridDialog"],function(treeAndGridDialog){
     var gridConfig = {
         id:"DemoOne",
         placeAt:"DemoGirdDivId",                    //存放Grid的容器ID

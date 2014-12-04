@@ -1,4 +1,4 @@
-define(["jquery","css!Util/css/util.css"],function($){
+define(["jquery","css!UtilDir/css/util.css"],function($){
     var util = {};
     /**
      * 简单模板引擎
@@ -22,11 +22,11 @@ define(["jquery","css!Util/css/util.css"],function($){
     })();
 
     /**
-     * 用法：require(["Util/util"],function(u){u.alert("请填写基本信息！")})
+     * 用法：require(["UtilDir/util"],function(u){u.alert("请填写基本信息！")})
      * @param message
      */
     util.alert =function(message,type){
-        require(["Util/dialog"],function(Dialog){
+        require(["UtilDir/dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_alert",title:(type?type:"系统信息"),modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
@@ -36,13 +36,13 @@ define(["jquery","css!Util/css/util.css"],function($){
     };
 
     /**
-     * 用法：require(["Util/util"],function(u){u.confirm("确认提交？",function(){console.log("是")},function(){console.log("否")})})
+     * 用法：require(["UtilDir/util"],function(u){u.confirm("确认提交？",function(){console.log("是")},function(){console.log("否")})})
      * @param message
      * @param okCallback
      * @param cancelCallback
      */
     util.confirm = function(message,okCallback,cancelCallback){
-        require(["Util/dialog"],function(Dialog){
+        require(["UtilDir/dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_confirm",title:"提示信息",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
@@ -68,7 +68,7 @@ define(["jquery","css!Util/css/util.css"],function($){
             id : "system_dialog_contentDialog",
             modal : "hide"
         },config.setting);
-        require(["Util/dialog","text!"+config.template],function(Dialog,template){
+        require(["UtilDir/dialog","text!"+config.template],function(Dialog,template){
             dialog = Dialog(config.setting);
             dialog.setBody(template);
             config.afterLoad(dialog);
@@ -111,7 +111,7 @@ define(["jquery","css!Util/css/util.css"],function($){
                     "top":0,
                     "bottom":0,
                     "right":"-"+param.width,
-                    "padding":"10px",
+                    "padding":"10px 10px 0 20px",
                     "background-color":"white",
                     "overflow-y":"scroll",
                     "overflow-x":"hidden",
@@ -148,7 +148,18 @@ define(["jquery","css!Util/css/util.css"],function($){
                 //删除之前的元素(不需要缓存时，从关闭面板时的回调函数处挪到这里)
                 cache[param.url] && cache[param.url].remove();
                 require(['text!'+param.url],function(panel){
-                    $Panel = $("<div>"+panel+"</div>");
+                    var $left = $("<div></div>").css({
+                        "position": 'absolute',
+                        "height": '100%',
+                        "width":"18px",
+                        "left": 0,
+                        "top": 0
+                    });
+                    var $close = $("<i class='glyphicon glyphicon-chevron-right'></i>").css({
+                        "top": "50%"
+                    });
+                    $left.append($close);
+                    $Panel = $("<div></div>").append($left).append(panel);
                     //如果是URL方式获取模板，则把模板追加到body上
                     $Panel.appendTo($(document.body));
                     init($Panel);

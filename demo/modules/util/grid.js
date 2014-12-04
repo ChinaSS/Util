@@ -38,7 +38,7 @@
  }
  */
 
-define(["jquery","css!Util/css/grid.css"],function($){
+define(["jquery","css!UtilDir/css/grid.css"],function($){
     var cache={};
     /**
      * 简单模板引擎

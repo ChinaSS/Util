@@ -8,7 +8,7 @@
         callback : null     //绑定功能函数
     }
 */
-define(["jquery","css!Util/css/typeahead"],function($){
+define(["jquery","css!UtilDir/css/typeahead"],function($){
     var _param = {
         id : null,
         btn : null,

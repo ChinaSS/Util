@@ -1,19 +1,15 @@
 require.config({
     baseUrl: getStaticPath(),
     paths:{
-        "Angular":"modules/angular/angular.min",
-        "Angular-route":"modules/angular/angular-route.min",
-        "JQuery.validate":"modules/jquery/plugins/validate/jquery.validate.min",
-        "JQuery.validate.extra":"modules/jquery/plugins/validate/additional-methods",
-        "JQuery.validate.message":"modules/jquery/plugins/validate/localization/messages_zh",
         "ZTree":"modules/zTree/js/jquery.ztree.all-3.5.min",
-        "ZTreeCss":"modules/zTree/css/zTreeStyle/zTreeStyle",
-        "WebUploader":"modules/webuploader/webuploader.nolog.min",
         "Bootstrap":"modules/bootstrap/js/bootstrap.min",
         "Date":"modules/bootstrap/plugins/datetimepicker/js/datetimepicker.min",
         "DateCN":"modules/bootstrap/plugins/datetimepicker/js/datetimepicker.cn",
-        "Util":"modules/util",
-        "Json2":"modules/json2/json2"
+        "Json2":"modules/json2/json2",
+        /*目录地址映射*/
+        "UtilDir":"modules/util",
+        /*CSS文件路径映射*/
+        "ZTreeCss":"modules/zTree/css/zTreeStyle/zTreeStyle"
     },
     shim:{
         "Bootstrap":["jquery"],
@@ -27,7 +23,7 @@ require.config({
         }
     }
 });
+
 function getStaticPath(){
     return "/Util/demo/";
-    //return "";
 }

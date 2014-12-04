@@ -13,7 +13,7 @@
     }
 * }
 ***/
-define(["Util/dialog","Util/grid","ZTree","css!ZTreeCss"],function(Dialog,Grid,zTree){
+define(["UtilDir/dialog","UtilDir/grid","ZTree","css!ZTreeCss"],function(Dialog,Grid,zTree){
 
     function TreeAndGridDialogInit(config){
         config.tree.setting={

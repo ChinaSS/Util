@@ -1,4 +1,4 @@
-define(["Util/treeDialog"],function(treeDialog){
+define(["UtilDir/treeDialog"],function(treeDialog){
     
     var nodeObj=[
         {id:1,pId:0,name:"父节点1",t:"我有子节点",open:true},

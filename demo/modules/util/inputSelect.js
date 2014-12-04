@@ -14,7 +14,7 @@
     initData:[]
  }
 **/
-define(["jquery","./treeSearch","css!Util/css/inputSelect.css"],function($,search){
+define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,search){
     var cache = {};
     function init(config){
         return new Input(config);
