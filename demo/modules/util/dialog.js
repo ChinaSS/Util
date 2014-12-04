@@ -76,6 +76,9 @@ define(["jquery"],function($){
         },
         hide : function(){
             this.$dialog.modal("hide");
+        },
+        save : function(){
+            //保存Dialog信息的扩展api, 需用户自定义扩展功能
         }
     };
 
