@@ -81,14 +81,25 @@
 /*空行不显示边框*/
 .s_grid .emptyRow td{
     border:0;
-    height:39px;
+    height:38px;
+}
+.s_grid .emptyRow:hover td{
+    background: transparent;
 }
 
+/* 导航栏定位处理 */
+.s_grid_content{
+    position: relative;
+}
 
 /*分页样式*/
 .s_grid_pagination{
+    position: absolute;
+    bottom: -40px;
+    left: 0;
     border-bottom:#DDDDDD 1px solid;
     border-top:#DDDDDD 1px solid;
+    background-color: #fff;
     padding:5px;
     height:40px;
     line-height:28px;

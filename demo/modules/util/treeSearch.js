@@ -81,7 +81,8 @@ function hasContent(elem,data){
 
 return {
 	treeInit : initTree,
-	listen : listener
+	listen : listener,
+	reset : resetTree
 }
 
 });

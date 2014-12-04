@@ -31,6 +31,9 @@
     },
     dataFormat:{                                //前后台字段名转换
         'data':'format'
+    },
+    trEvent:{
+        'mouseup':function(){}
     }
  }
  */
@@ -61,7 +64,8 @@ define(["jquery","css!Util/css/grid.css"],function($){
     function init(config){
         //创建表格对象
         var grid = new Grid($.extend({
-            pageSize:10
+            pageSize: 10,
+            trEvent: {}
         },config));
         //渲染表格
         grid.render();
@@ -118,7 +122,7 @@ define(["jquery","css!Util/css/grid.css"],function($){
             var html = '<div class="s_grid_title"></div>'+
                        '<div class="s_grid_content'+(this.config.hidden?' hide':'')+'">'+
                        '<div class="s_grid_toolbar"></div>'+     //操作栏面板
-                       '<div><table class="table table-hover"><thead></thead><tbody></tbody></table></div>'+
+                       '<div class="s_grid_data"><table class="table table-hover"><thead></thead><tbody></tbody></table></div>'+
                        '<div class="s_grid_pagination"></div></div>';
             this.$gridPanel.append(html);
             //渲染表格Title
@@ -232,12 +236,13 @@ define(["jquery","css!Util/css/grid.css"],function($){
             //初始化渲染数据
             this.initRenderInfo();
             var _this = this;
-            var config = this.config,data=this.pageInfo.curPageData;
+            var config = this.config,
+                data=this.pageInfo.curPageData;
 
             var $dataContent = $('#'+this.config.placeAt).find('tbody').empty();
 
             var index = this.createIndex(config);
-            for(var i= 0,row;row=data[i++];){
+            for(var i= 0,row;row = data[i++];){
                 //判断当前行是否为选中状态
                 var $index = $(index);
                 if(this.selected[this.pageInfo.curPage+"_"+i]){
@@ -269,13 +274,25 @@ define(["jquery","css!Util/css/grid.css"],function($){
                     //从selected中添加或删除
                     _this.modifySelected(_this,trIndex,index.checked);
                 });
+                $tr[0].index=i-1;
                 $dataContent.append($tr);
+            }
+            var eventArr = this.config.trEvent;
+            if(!!eventArr){
+                for(var type in eventArr){
+                    if(eventArr.hasOwnProperty(type)){
+                        $dataContent.on(type,"tr",function (e) {
+                            var eventType = type;
+                            eventArr[eventType](data[this.index]);
+                        });
+                    }
+                }
             }
             //最后一页时，添加空行填充满表格
             if(data.length<_this.config.pageSize){
                 var emptyTrIndex = _this.config.index ? '<td></td>' : '';
                 for(var m=0;m<_this.config.pageSize-data.length;m++){
-                    var $emptyTr = $("<tr "+(m>0? "class='emptyRow'" :"height='39px'")+"></tr>").append(emptyTrIndex);
+                    var $emptyTr = $("<tr "+(m>0? "class='emptyRow'" :"height='38px'")+"></tr>").append(emptyTrIndex);
                     for(var n=0,col;col=config.layout[n++];){
                         $emptyTr.append('<td>&nbsp;</td>');
                     }

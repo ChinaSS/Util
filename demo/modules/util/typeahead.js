@@ -15,6 +15,11 @@ define(["jquery","css!Util/css/typeahead"],function($){
         lazyMatch : true,
         data : null,
         MAX_RESULT : 10,
+        key:{
+            id : "id",
+            data : "data"
+        },
+        initValue : "",
         dataFormat : null, //function(data){处理数据格式,并返回html结构}
         callback : function(data){
             console.log(data);
@@ -27,9 +32,9 @@ define(["jquery","css!Util/css/typeahead"],function($){
     }
 
     function Typeahead(config){
-        this.status=null,
-        this.lastContent="",
-        this.cur=-1,
+        this.status = null,
+        this.lastContent = config.initValue,
+        this.cur = -1,
         this.config = config;
 
         var $elem = $("#"+config.id);
@@ -47,6 +52,8 @@ define(["jquery","css!Util/css/typeahead"],function($){
         this.$input = $elem;
         this.$suggest = this.$typeahead.find(".typeahead-suggest");
         this.$submit = this.$typeahead.find(".typeahead-submit");
+
+        $elem.val(this.lastContent);
 
         this.bindEvent();
     }
@@ -78,18 +85,13 @@ define(["jquery","css!Util/css/typeahead"],function($){
         this.status = obj.status,
         this.lastContent = obj.lastContent,
         this.cur = obj.cur,
-        this.config = obj.config;
+        this.config = obj.config,
         this.$input = obj.$input,
         this.$suggest = obj.$suggest,
         this.$submit = obj.$submit;
 
         var modal = this;
         //绑定事件
-        if (modal.config.btn) {
-            modal.$submit.on("click",function(){
-                modal.doEnd();
-            });
-        }
         modal.$input.on("keyup",function(){
             modal.inputValidation();
         }).on("focus",function(){
@@ -100,11 +102,11 @@ define(["jquery","css!Util/css/typeahead"],function($){
         modal.$suggest.on("mouseover",function(){
             $(this).children("a:focus").blur();
             modal.cur=-1;
-        }).delegate("a","click",function(){
+        }).delegate("a","click",function(event){
             //console.log(event.target==this)
             var val = $(event.target).text();
             modal.fillInput(val);
-            modal.doEnd();
+            modal.doEnd(event,$(this));
         });
 
         //绑定键盘事件,额外鼠标事件
@@ -121,11 +123,9 @@ define(["jquery","css!Util/css/typeahead"],function($){
         keyEvent : function(event){ //键盘事件
             var modal = this,cur;
             if(event.which=="13"){
-                if (event.target==modal.$input[0]) {
-                    modal.doEnd();
-                }else if(event.target==modal.$suggest.children("a:focus")[0]){
-                    modal.fillInput($(event.target).text());
-                }
+               if(event.target==modal.$suggest.children("a:focus")[0]){
+                    modal.doEnd(event,$(event.target));
+               }
             }
             else if (event.which=="40"||event.which=="38") {
                 event.preventDefault();
@@ -173,21 +173,23 @@ define(["jquery","css!Util/css/typeahead"],function($){
         fillSuggest : function(data){   //匹配数据并填充推荐列表
             var modal = this,
                 cur = "",
+                id = "",
                 lastContent= this.lastContent;
             modal.$suggest.empty();
             if (!!data.length) {
                 for (var i = data.length; --i>-1;) {
+                    var $cur = null;
                     cur = data[i];
-                    //var reg = eval("/"+lastContent+"/ig");
+                    cur = (typeof cur == "object")?cur[this.config.key.data]:cur;
+                    //格式化输出内容
                     if (!!modal.config.dataFormat) {
                         cur = modal.config.dataFormat(cur);
-                        if (!cur) {
-                            cur = data[i];
-                        };
                     } else {
                         cur = cur.replace(lastContent,"<span class='match'>"+lastContent+"</span>");
                     }
-                    modal.$suggest.append("<a href='#'>"+cur+"</a>");
+                    $cur = $("<a href='#'>"+cur+"</a>");
+                    $cur.data("originData",data[i]);
+                    modal.$suggest.append($cur);
                 }
             } else {
                 modal.$suggest.append("<p>没有结果</p>");
@@ -195,10 +197,13 @@ define(["jquery","css!Util/css/typeahead"],function($){
             modal.$suggest.show();
         },
         dataFilter : function(data){
-            var dataArr = [],cur="",count = 0;
+            var dataArr = [],cur="",count = 0, value = "";
             for (var i = data.length; --i>-1&&count<this.config.MAX_RESULT;) {
                 cur = data[i];
-                if(cur.indexOf(this.lastContent)>-1){
+                if((typeof cur == "object")&&cur[this.config.key.data].indexOf(this.lastContent)>-1){
+                    dataArr.push(cur);
+                    count++;
+                } else if((typeof cur == "string")&&cur.indexOf(this.lastContent)>-1){
                     dataArr.push(cur);
                     count++;
                 }
@@ -209,7 +214,7 @@ define(["jquery","css!Util/css/typeahead"],function($){
             var modal = this,
                 data = this.config.data;
             if (typeof data !== "string") {
-                modal.fillSuggest(data);
+                modal.dataFilter(data);
             }else{
                 $.ajax({
                     type : "GET",
@@ -226,13 +231,11 @@ define(["jquery","css!Util/css/typeahead"],function($){
                 });
             }
         },
-        doEnd : function(){ //结束后,执行回调任务,并隐藏推荐列表
-            var data = $.trim(this.$input.val());
-            if (data) {
-                this.endTimeout();
-                this.$suggest.hide();
-                this.config.callback(data)
-            }
+        doEnd : function(event,$elem){ //结束后,执行回调任务,并隐藏推荐列表
+            event.preventDefault();
+            this.fillInput($elem.text());
+            this.$input.attr("id",$elem[0].id);
+            this.config.callback($elem.data("originData"));
         },
         fillInput : function(val){  //回填input
             val = $.trim(val);

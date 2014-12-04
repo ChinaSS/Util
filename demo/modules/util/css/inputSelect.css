@@ -5,63 +5,71 @@ input,body,ul,li{
 ul,li{
     list-style: none;
 }
-#inputTest{
+.csInput{
+    position: relative;
+}
+.inputSelect{
+    position: relative;
+    z-index: 5;
     cursor: pointer;
-    width: 120px;
-    height: 24px;
-    line-height: 24px;
-    padding: 2px 5px;
+    padding: 3px 10px;
     border: 1px solid #ccc;
 }
-#inputPanel{
+.inputPanel{
+    display : none;
+    position : absolute;
+    z-index : 1;
     overflow-x : hidden;
     background-color : #ffffff;
     border : 1px solid #ccc;
-    border-top: none;
     font-size: 13px;
+    padding-top: 2px;
+    margin-top: -2px;
 }
-
-#panelSearch{
-    display: block;
-    margin: 2px auto;
+.panelSearch{
+    display : block;
+    height: 22px;
+    margin : 2px auto;
+    border : 1px solid #ccc;
 }
-#panelData > ul ul{
+.panelData > ul ul{
     display: none;
 }
-#panelData .top > ul{
+.panelData .top > ul{
     display: block;
 }
 
-#inputPanel .item, #inputPanel .node{
-    padding: 2px 5px;
+.inputPanel .item, #inputPanel .node{
+    padding: 4px 5px;
     display: block;
     cursor: pointer;
 }
 
-#inputPanel a:hover{
+.inputPanel a:hover{
     background-color: #eee;
 }
 
-#inputPanel .text, #inputPanel .pic{
+.inputPanel .text, #inputPanel .pic{
     display: inline-block;
     vertical-align: middle;
 }
 
-#inputPanel input[type="checkbox"], #inputPanel .pic{
+.inputPanel input[type="checkbox"], #inputPanel .pic{
     vertical-align: middle;
-    margin-right: 4px;
+    margin: 0 5px;
+    margin-left: 10px;
     height: 16px;
     width: 16px;
 }
 
-#inputPanel .pic{
+.inputPanel .pic{
     background: url("../images/icons.png") no-repeat -39px 0;
 }
 
-#inputPanel .node > .pic{
+.inputPanel .node > .pic{
     background: url("../images/icons.png") no-repeat 0 0;
 }
-#inputPanel .node.open > .pic{
+.inputPanel .node.open > .pic{
     background: url("../images/icons.png") no-repeat -19px 0;
 }
 
