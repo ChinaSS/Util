@@ -47,11 +47,11 @@ label{
 
 /*侧边栏相关*/
 .cs-slidebar-left{
-    position: absolute;
+    position: fixed;
     height: 100%;
-    width:18px;
-    left: 0;
-    top: 0
+    width: 18px;
+    margin-left: -20px;
+    top: 0;
 }
 .cs-slidebar-left:hover{
     background-color: #E9E9E9;
