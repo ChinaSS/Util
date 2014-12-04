@@ -94,6 +94,7 @@ define(["jquery"],function($){
             this.$body.empty().append(body);
         },
         setFoot : function(buttons,defaultClose){
+            var dialog = this;
             if (!this.$foot) {
                 this.$foot = this.$dialog.find("div[class='modal-footer']");
             }
@@ -101,7 +102,15 @@ define(["jquery"],function($){
             this.$foot.empty();
             if(buttons && buttons.length){
                 for(var i= 0,b;b=buttons[i++];){
-                    this.$foot.append($('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'') +'>'+ b.name +'</button>').bind("click",b.callback));
+                    this.$foot.append(
+                        $('<button type="button" class="btn btn-primary" >'+ b.name +'</button>')
+                            .bind("click",(function(){
+                                var callback = b.callback;
+                                return function () {
+                                    callback(dialog);
+                                }
+                            })())
+                    );
                 }
             }
             this.$foot.append(close?'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>':"");
