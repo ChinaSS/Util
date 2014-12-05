@@ -3,6 +3,7 @@
         id : null,          //页面锚id
         btn : null,         //button名称, 通过是否有值判断是否启用button
         data : data,        //数据地址
+        filter : false,     //是否对数据启用前端匹配
         lazyMatch : true,   //延迟匹配,默认为true
         dataFormat : null,  //用于自定义每列数据的格式化输出,接受一个数据参数
         callback : null     //绑定功能函数
@@ -13,8 +14,9 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
         id : null,
         btn : null,
         lazyMatch : true,
-        data : null,
-        MAX_RESULT : 10,
+        data : [],
+        filter : true,
+        MAX_RESULT : 100,
         key:{
             id : "id",
             data : "data"
@@ -64,12 +66,6 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
                 $.extend(Typeahead.fn,object);
             }
         },
-        $getInput : function(){
-            return this.$input;
-        },
-        $getSuggest : function(){
-            return this.$suggest;
-        },
         //绑定内部事件
         bindEvent : function(){
             this.EventModal = new EventModal(this);
@@ -114,7 +110,7 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
             modal.keyEvent(event);
         }).on("click",function(event){
             if(event.target!=modal.$input[0]){
-                modal.$suggest.hide();
+                modal.hideSuggest();
             }
         });
     }
@@ -163,19 +159,25 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
             var content = $.trim(modal.$input.val());
             modal.lastContent=content;
             modal.endTimeout();
-            if (content=="") {modal.$suggest.empty().hide();return false;}
+            if (content=="") {
+                modal.hideSuggest();
+                return false;
+            }
             modal.status=setTimeout(function(){
                 modal.status=null;
                 modal.cur=-1;
                 modal.getData();
             },400);
         },
-        fillSuggest : function(data){   //匹配数据并填充推荐列表
+        fillSuggest : function(data){   //处理匹配数据并填充推荐列表
             var modal = this,
                 cur = "",
                 id = "",
                 lastContent= this.lastContent;
             modal.$suggest.empty();
+            if(this.config.filter){
+                data = modal.dataFilter(data);
+            }
             if (!!data.length) {
                 for (var i = data.length; --i>-1;) {
                     var $cur = null;
@@ -196,7 +198,7 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
             }
             modal.$suggest.show();
         },
-        dataFilter : function(data){
+        dataFilter : function(data){    //过滤匹配数据
             var dataArr = [],cur="",count = 0, value = "";
             for (var i = data.length; --i>-1&&count<this.config.MAX_RESULT;) {
                 cur = data[i];
@@ -208,13 +210,13 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
                     count++;
                 }
             }
-            this.fillSuggest(dataArr);
+            return dataArr;
         },
         getData : function() {  //获取数据
             var modal = this,
                 data = this.config.data;
             if (typeof data !== "string") {
-                modal.dataFilter(data);
+                modal.fillSuggest(data);
             }else{
                 $.ajax({
                     type : "GET",
@@ -222,7 +224,7 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
                     data : modal.lastContent,
                     dataType : "json",
                     success : function(data){
-                        modal.dataFilter(data);
+                        modal.fillSuggest(data);
                     },
                     error : function(){
                         console.log("ajax error");
@@ -234,8 +236,11 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
         doEnd : function(event,$elem){ //结束后,执行回调任务,并隐藏推荐列表
             event.preventDefault();
             this.fillInput($elem.text());
-            this.$input.attr("id",$elem[0].id);
+            this.hideSuggest();
             this.config.callback($elem.data("originData"));
+        },
+        hideSuggest : function(){
+            this.$suggest.hide();
         },
         fillInput : function(val){  //回填input
             val = $.trim(val);
