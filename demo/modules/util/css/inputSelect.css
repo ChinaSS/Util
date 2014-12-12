@@ -9,8 +9,6 @@ ul,li{
     position: relative;
 }
 .inputSelect{
-    position: relative;
-    z-index: 5;
     cursor: pointer;
     padding: 3px 10px;
     border: 1px solid #ccc;
@@ -39,8 +37,8 @@ ul,li{
     display: block;
 }
 
-.inputPanel .item, #inputPanel .node{
-    padding: 4px 5px;
+.inputPanel .item, .inputPanel .node{
+    padding: 2px 5px;
     display: block;
     cursor: pointer;
 }
@@ -49,12 +47,12 @@ ul,li{
     background-color: #eee;
 }
 
-.inputPanel .text, #inputPanel .pic{
+.inputPanel .text, .inputPanel .pic{
     display: inline-block;
     vertical-align: middle;
 }
 
-.inputPanel input[type="checkbox"], #inputPanel .pic{
+.inputPanel input[type="checkbox"], .inputPanel .pic{
     vertical-align: middle;
     margin: 0 5px;
     margin-left: 10px;

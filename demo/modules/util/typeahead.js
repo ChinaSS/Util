@@ -10,32 +10,31 @@
     }
 */
 define(["jquery","css!UtilDir/css/typeahead"],function($){
-    var _param = {
-        id : null,
-        btn : null,
-        lazyMatch : true,
-        data : [],
-        filter : true,
-        MAX_RESULT : 100,
-        key:{
-            id : "id",
-            data : "data"
-        },
-        initValue : "",
-        dataFormat : null, //function(data){处理数据格式,并返回html结构}
-        callback : function(data){
-            console.log(data);
-        }
-    };
-
     function TypeaheadInit(config){
+        var _param = {
+            id : null,
+            btn : null,
+            lazyMatch : true,
+            data : [],
+            filter : true,
+            MAX_RESULT : 100,
+            key:{
+                id : "id",
+                data : "data"
+            },
+            dataFormat : null, //function(data){处理数据格式,并返回html结构}
+            callback : function(data){
+                console.log(data);
+            }
+        };
+        config.key = $.extend(_param.key,config.key);
         config = $.extend(_param,config);
         return new Typeahead(config);
     }
 
     function Typeahead(config){
         this.status = null,
-        this.lastContent = config.initValue,
+        this.lastContent = "",
         this.cur = -1,
         this.config = config;
 
@@ -54,8 +53,6 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
         this.$input = $elem;
         this.$suggest = this.$typeahead.find(".typeahead-suggest");
         this.$submit = this.$typeahead.find(".typeahead-submit");
-
-        $elem.val(this.lastContent);
 
         this.bindEvent();
     }
@@ -217,7 +214,7 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
                 data = this.config.data;
             if (typeof data !== "string") {
                 modal.fillSuggest(data);
-            }else{
+            } else {
                 $.ajax({
                     type : "GET",
                     url : data,

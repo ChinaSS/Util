@@ -106,7 +106,7 @@ define(["jquery"],function($){
             if(buttons && buttons.length){
                 for(var i= 0,b;b=buttons[i++];){
                     this.$foot.append(
-                        $('<button type="button" class="btn btn-primary" >'+ b.name +'</button>')
+                        $('<button type="button" class="btn btn-primary" '+ (b.close?'data-dismiss="modal"':'')+'>'+ b.name +'</button>')
                             .bind("click",(function(){
                                 var callback = b.callback;
                                 return function () {

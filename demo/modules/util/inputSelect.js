@@ -15,7 +15,8 @@
  }
 **/
 define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,search){
-    var cache = {};
+    var cache = {},
+        selectEvent = "mouseup";
     function init(config){
         return new Input(config);
     }
@@ -51,19 +52,19 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
     
     function bindEvent(input){
         //输入框点击事件
-        input.$input.on("mouseup",function(event){
+        input.$input.on(selectEvent,function(event){
             input.togglePanel();
-            $(document).bind("mouseup",function(event){
+            $(document).bind(selectEvent,function(event){
                 if ($(event.target).is("."+input.config.inputClass)||$(event.target).is("."+input.config.panelClass)||$(event.target).parents("."+input.config.panelClass).length>0) {return false};
                 input.hidePanel();
-                $(document).unbind("mouseup");
+                $(document).unbind(selectEvent);
             })
         }).on("focus",function(){
             $(this).blur();
         });
         //面板点击事件
         if (input.config.type=="checkbox") {
-            input.$panel.on("mouseup",".item",function(event){
+            input.$panel.on(selectEvent,".item",function(event){
                 var id = $(this).children(".text").data("id"),
                     value = $(this).children(".text").text(),
                     obj={};
@@ -75,7 +76,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 input.config.onSelect(obj);
             });
         } else if (input.config.type=="select") {
-            input.$panel.on("mouseup",".item",function(event){
+            input.$panel.on(selectEvent,".item",function(event){
                 var id = $(this).children(".text").data("id"),
                     value = $(this).children(".text").text(),
                     obj={};
@@ -93,6 +94,19 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             if (typeof object === "object" && object.constructor === Object){
                 $.extend(Input.fn,object);
             }
+        },
+        dataInit : function(data){ //data 为id数组
+            var dataObj = {},
+                i,length;
+            for(i=0,length=data.length;i<length;i++){
+                dataObj[data[i]]=true;
+            }
+            this.clearInput();
+            this.$panel.find(".item .text").each(function(){
+                if(dataObj[$(this).data("id")]){
+                    $(this)[selectEvent]();
+                }
+            });
         }
     };
 
@@ -137,28 +151,30 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             var id = this.config.key.id,
                 name = this.config.key.name,
                 data = this.config.key.data,
-                initData = this.config.initData;
+                initData = this.config.initData,
+                hasData = false;
             lvl = (lvl&&lvl>0)?parseInt(lvl):0;
             for(i=0,length=items.length;i<length;i++){
                 cur = items[i];
+                hasData = cur[data]&&cur[data].length>0;
                 if(!cur){continue;}
                 if (initData.indexOf(cur[id])>-1) {
                     cur.checked = true;
                     this.fillInput(cur[name],cur[id]);
                 }
-                if (this.config.type=="select"||cur[data]) {
-                    li =  "<a class='"+(cur[data]?"node":"item")+(lvl==0&&cur[data]?" open":"")+"' style='padding-left:"+(20*lvl+5)+"px'>"+
+                if (this.config.type=="select"||hasData) {
+                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"' style='padding-left:"+(10*lvl)+"px'>"+
                             "<span class='pic'></span>"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
                 } else if (this.config.type=="checkbox") {
-                    li =  "<a class='item' style='padding-left:"+20*lvl+"px'>"+
+                    li =  "<a class='item' style='padding-left:"+10*lvl+"px'>"+
                             "<input type='checkbox'"+(cur.checked?" checked":"")+">"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
 
                 }
-                if (cur[data]) {
+                if (hasData) {
                     li += this.initItem(cur[data],lvl+1);
                 }                
                 html = html + "<li"+(lvl==0?" class='top'":"")+">"+li+"</li>";
