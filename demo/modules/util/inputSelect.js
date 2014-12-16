@@ -37,7 +37,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 name : "name",
                 data : "data"
             },
-            initData : []
+            initData : null
         },config);
 
         if(!cache[config.id]||!this.$input.siblings(".inputPanel").length){
@@ -68,7 +68,8 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 var id = $(this).children(".text").data("id"),
                     value = $(this).children(".text").text(),
                     obj={};
-                obj[id]=value;
+                obj[input.config.key.id]=id;
+                obj[input.config.key.name]=value;
                 if (event.target.nodeName!="INPUT") {
                     input.setCheckbox(this);
                 }
@@ -80,7 +81,8 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 var id = $(this).children(".text").data("id"),
                     value = $(this).children(".text").text(),
                     obj={};
-                obj[id]=value;
+                obj[input.config.id]=id;
+                obj[input.config.name]=value;
                 input.clearInput();
                 input.fillInput(value,id);
                 input.config.onSelect(obj);
@@ -98,15 +100,22 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
         dataInit : function(data){ //data 为id数组
             var dataObj = {},
                 i,length;
+            this.config.initData = data;
             for(i=0,length=data.length;i<length;i++){
                 dataObj[data[i]]=true;
             }
             this.clearInput();
+            if(this.config.type=="checkbox") {
+                this.resetPanel();
+            }
             this.$panel.find(".item .text").each(function(){
                 if(dataObj[$(this).data("id")]){
                     $(this)[selectEvent]();
                 }
             });
+        },
+        refreshPanel : function(data){
+            this.$panel.children(".panelData").empty().append(this.initItem(data));
         }
     };
 
@@ -151,17 +160,12 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             var id = this.config.key.id,
                 name = this.config.key.name,
                 data = this.config.key.data,
-                initData = this.config.initData,
                 hasData = false;
             lvl = (lvl&&lvl>0)?parseInt(lvl):0;
             for(i=0,length=items.length;i<length;i++){
                 cur = items[i];
                 hasData = cur[data]&&cur[data].length>0;
                 if(!cur){continue;}
-                if (initData.indexOf(cur[id])>-1) {
-                    cur.checked = true;
-                    this.fillInput(cur[name],cur[id]);
-                }
                 if (this.config.type=="select"||hasData) {
                     li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"' style='padding-left:"+(10*lvl)+"px'>"+
                             "<span class='pic'></span>"+
@@ -169,10 +173,9 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                             "</a>";
                 } else if (this.config.type=="checkbox") {
                     li =  "<a class='item' style='padding-left:"+10*lvl+"px'>"+
-                            "<input type='checkbox'"+(cur.checked?" checked":"")+">"+
+                            "<input type='checkbox'>"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
-
                 }
                 if (hasData) {
                     li += this.initItem(cur[data],lvl+1);
@@ -223,10 +226,17 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             this.$input.val("");
             this.$input.data("ids","");
         },
+        resetPanel : function(){
+            this.$panel.find("input:checked").removeAttr("checked");
+        },
         showPanel : function(){
             if(!this.$panel[0].style.width){
+                this.$panel.parent().css({
+                    "position" : "relative"
+                });
                 this.$panel.css({
-                    "top" : this.$input.outerHeight(),
+                    "top" : this.$input.outerHeight()*1+this.$input.parent().css("padding-top")*1,
+                    "left" : this.$input.parent().css("padding-left"),
                     "width" : this.$input.outerWidth(),
                     "max-height" : this.$input.height()*10
                 });

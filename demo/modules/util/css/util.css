@@ -61,3 +61,55 @@ label{
     color: #428BCA;
     top: 50%
 }
+
+/*附件上传*/
+.cs-upload{
+    border: 1px #DDD solid;
+}
+
+.cs-upload table td i:hover{
+    color: #2898e0;
+    cursor: pointer;
+}
+.cs-upload-toobar ul{
+    list-style: none;
+    float: left;
+    margin: 10px 0;
+    padding: 0;
+}
+.cs-upload-toobar ul li.first
+{
+    border-left:0;
+    padding-left: 5px;
+}
+.cs-upload-toobar ul li{
+    float: left;
+    font-size: 14px;
+    line-height: 15px;
+    border-left: 1px solid #c9c9c9;
+    margin-left: 15px;
+    padding-left: 15px;
+    font-family: Arial, "微软雅黑", "宋体", Tahoma, Helvetica, sans-serif;
+}
+.cs-upload-toobar ul li a{
+    padding: 5px;
+    display: inline-block;
+    margin: -5px 0;
+    border-radius: 5px;
+}
+.cs-upload-toobar ul li a:hover {
+    background-color: #2898e0!important;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cs-upload-status{
+    padding: 5px;
+    color: #d9534f;
+}
+/*修改样式，解决高宽1px无法点击上传按钮的问题*/
+.webuploader-pick +div{
+    width: 55px!important;
+    height: 20px!important;
+}

@@ -10,8 +10,11 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
             placeAt:"",                                                     //附件上传组件所放位置
             auto: false,                                                    //是否自动上传
             swf: getStaticPath() + 'modules/webuploader/Uploader.swf',      //flash地址
+            server: getServer() +"/file/upload",
+            formData:{},                                                    //向服务器额外发送的数据
             pick: ''                                                        //上传按钮所在位置
         };
+
         return new Upload($.extend(settings,options)).render();
     };
 
@@ -22,6 +25,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
      * @param settings
      */
     function Upload(settings){
+        this.webUploader    = null;         //WebUploader对象
         this.queuedFiles    = [];           //待上传文件数组
         this.savedFiles     = [];           //已上传文件数组
         this.$container     = "";           //整个上传组件DOM对象
@@ -40,14 +44,22 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.renderStatus();
 
         //添加附件上传组件到指定位置
-        var placeAt = this.settings.placeAt;
-        var $placeAt = typeof(placeAt)=="string" ? $("#"+placeAt) : $(placeAt);
+        var placeAt     = this.settings.placeAt;
+        var $placeAt    = typeof(placeAt)=="string" ? $("#"+placeAt) : $(placeAt);
         $placeAt.append(this.container);
 
         //设置添加按钮
-        this.settings.pick = this.container.find("li:contains('添加')");
+        this.settings.pick  = this.container.find("li:contains('添加')");
         //初始化WebUploader
-        InitUploader(this,this.settings);
+        this.webUploader    = InitUploader(this,this.settings);
+
+        //渲染已上传的附件
+        var data = this.settings.data;
+        if(data.length){
+            for(var i= 0,file;file=data[i++];){
+                this.savedFiles.push(new File(this,this.webUploader,file,true));
+            }
+        }
     };
 
     /**
@@ -57,10 +69,16 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         var html = '<div class="cs-upload-toobar">'+
                         '<ul>'+
                             '<li class="first"><a><i class="fa fa-plus-circle">&nbsp;</i>添加</a></li>'+
-                            '<li><a><i class="fa fa-trash-o">&nbsp;</i>删除</a></li>'+
+                            /*'<li><a><i class="glyphicon glyphicon-upload">&nbsp;</i>开始上传</a></li>'+*/
                         '</ul>'+
                     '</div>';
         this.$toolbar = $(html);
+        var _this = this;
+        //添加上传事件
+        var $startUpload = $('<li><a><i class="fa fa-cloud-upload">&nbsp;</i>开始上传</a></li>').bind('click',function(){
+            _this.webUploader.upload();
+        });
+        this.$toolbar.find("ul").append($startUpload);
 
         //把操作栏添加到上传组件面板中
         this.container.append(this.$toolbar);
@@ -72,19 +90,13 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
     Upload.prototype.renderContent = function(){
         var html = '<table class="table table-hover">'+
                         '<tr>'+
-                            '<td style="width:30px"><input type="checkbox"></td>'+
+                            /*'<td style="width:30px"><input type="checkbox"></td>'+*/
                             '<td>附件名称</td>'+
                             '<td>上传日期</td>'+
                             '<td>大小</td>'+
                             '<td>状态</td>'+
+                            '<td>操作</td>'+
                         '</tr>'+
-                        /*'<tr>'+
-                            '<td><input type="checkbox"></td>'+
-                            '<td>客户调查表.doc</td>'+
-                            '<td>2014-11-11</td>'+
-                            '<td>19.4M</td>'+
-                            '<td>已上传</td>'+
-                        '</tr>'+*/
                     '</table>';
         this.$table = $(html);
         this.container.append(this.$table);
@@ -99,19 +111,35 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.container.append(this.$status);
     };
 
+    /**
+     * 设置状态栏内容
+     */
+    Upload.prototype.setStatus = function(msg){
+        this.$status.html(msg);
+    };
+
 
     /********************************File对象**********************************/
     /**
      * 文件对象
      * @param upload        文件上传组件对象
-     * @param file          Webuploader中的file对象
+     * @param webUploader   Webuploader对象
+     * @param file          Webuploader中的file对象，包含文件名称、大小等信息
+     * @param saved         标识是新上传还是已上传的文件
      * @constructor
      */
-    function File(upload,file){
-        this.Upload = upload;
-        this.file   = file;
-
-        this.render();
+    function File(upload,webUploader,file,saved){
+        this.Upload     = upload;               //附件上传组件对象
+        this.webUploader= webUploader;          //WebUploader对象
+        this.file       = file;                 //Webuploader中的file对象
+        this.saved      = saved;                //标识当前文件的状态已上传
+        this.backEndData= null;                 //文件所对应的后端数据信息
+        this.$tr        = "";                   //文件行DOM对象
+        this.$status    = "";                   //状态DOM对象
+        this.$operation = null;                 //操作DOM对象
+        this.$del       = null;
+        this.$download  = null;
+        saved ? this.renderSavedFiles() : this.render();
     }
 
     /**
@@ -120,17 +148,74 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
     File.prototype.render = function(){
         var file = this.file;
         var html = '<tr>'+
-                        '<td><input type="checkbox"></td>'+
+                        /*'<td><input type="checkbox"></td>'+*/
                         '<td>'+ file.name +'</td>'+
                         '<td>'+ new Date().format("yyyy-MM-dd")  +'</td>'+
                         '<td>'+ WebUploader.Base.formatSize(file.size, 2, ['B', 'K', 'M', 'G', 'TB'] ) +'</td>'+
-                        '<td>待上传</td>'+
+                        /*'<td>待上传</td>'+*/
                     '</tr>';
-        this.Upload.$table.append(html);
+        this.$tr = $(html);
+
+        var _this       = this;
+        //状态栏
+        this.$status    = $('<td>待上传</td>');
+        this.$tr.append(this.$status);
+        //操作栏
+        this.$operation = $('<td></td>');
+        this.$del       = $('<i class="glyphicon glyphicon-trash"></i>').bind('click',function(){_this.remove()});
+        this.$download  = $('<i class="fa fa-cloud-download" style="display:none"></i>').bind('click',function(){_this.download()});
+        this.$operation.append(this.$del).append('&nbsp;&nbsp;').append(this.$download);
+        this.$tr.append(this.$operation);
+
+        this.Upload.$table.append(this.$tr);
+    };
+    /**
+     * 渲染已经上传的附件，适用于已保存的表单编辑
+     */
+    File.prototype.renderSavedFiles = function(){
+        this.backEndData  = this.file.backEndData;
+
+        var file = this.file;
+        var html = '<tr>'+
+            '<td>'+ file.name +'</td>'+
+            '<td>'+ file.uploadDate +'</td>'+
+            '<td>'+ file.size +'</td>'+
+            '</tr>';
+        this.$tr = $(html);
+
+        var _this       = this;
+        //状态栏
+        this.$status    = $('<td>已上传</td>');
+        this.$tr.append(this.$status);
+        //操作栏
+        this.$operation = $('<td></td>');
+        this.$del       = $('<i class="glyphicon glyphicon-trash"></i>').bind('click',function(){_this.remove()});
+        this.$download  = $('<i class="fa fa-cloud-download"></i>').bind('click',function(){_this.download()});
+        this.$operation.append(this.$del).append('&nbsp;&nbsp;').append(this.$download);
+        this.$tr.append(this.$operation);
+
+        this.Upload.$table.append(this.$tr);
     };
 
-    File.prototype.del  =function(){
-
+    /**
+     * 文件删除
+     */
+    File.prototype.remove = function(){
+        if(this.saved){
+            //已上传的文件删除时，调用回调
+            this.Upload.settings.delFile.apply(this,[this]);
+        }else{
+            //从待上传队列中移除
+            delFileFormList(this.file.name,this.Upload.queuedFiles);
+            this.webUploader.removeFile(this.file,true);
+        }
+        this.$tr.remove();
+    };
+    /**
+     * 文件下载
+     */
+    File.prototype.download  =function(){
+        this.Upload.settings.downloadFile.apply(this,[this]);
     };
 
 
@@ -145,42 +230,75 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         uploader.on( 'filesQueued', function( files ) {
             //判断待上传列表中是否已经存在相同的待上传附件
             var queuedFiles = Upload.queuedFiles;
-            //getFileFromList(files.name,queuedFiles);
             for(var i= 0,file;file=files[i++];){
-                queuedFiles.push(new File(Upload,file));
+                //判断是否在待上传列表中
+                /*if(getFileFromList(file.name,queuedFiles)){
+                    Upload.setStatus(file.name+'已在待上传列表中.');
+                    return;
+                }*/
+                queuedFiles.push(new File(Upload,uploader,file));
             }
         });
         /**
          * 当开始上传流程时触发。
          */
         uploader.on( 'uploadStart', function( file ) {
-
+            //找到当前待上传文件对象
+            var queuedFile = getFileFromList(file.name, Upload.queuedFiles);
+            var progress = '<div class="progress">'+
+                                '<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">'+
+                                    '0%'+
+                                '</div>'+
+                            '</div>';
+            queuedFile.$status.empty().append(progress);
         });
         /**
          * 上传过程中触发，携带上传进度。
          */
         uploader.on( 'uploadProgress', function( file, percentage ) {
-            //$("#progress_"+file.id).css( 'width', percentage * 100 + '%' );
+            var queuedFile = getFileFromList(file.name, Upload.queuedFiles);
+            queuedFile.$status.find('div[class="progress-bar"]').css('width', percentage*100 +'%').html((percentage*100).toFixed(2) +'%');
         });
         /**
          * 当文件上传出错时触发。
          */
         uploader.on( 'uploadError', function( file, reason ) {
-            /*$("#progress_"+file.id).parent().hide();
-            $("#status_"+file.id).css("color","#C00").html("上传失败").show();
-            setOperation(file.id,['icon_att_del']);*/
+            var queuedFile = getFileFromList(file.name, Upload.queuedFiles);
+            queuedFile.$status.empty().append('上传失败');
         });
         /**
          * 当文件上传成功时触发。
          */
         uploader.on( 'uploadSuccess', function( file, response ) {
-            /*$("#progress_"+file.id).parent().hide();
-            $("#status_"+file.id).css("color","#999999").html("完成").show();
-            setOperation(file.id,['icon_att_finish']);
-            file.size = WebUploader.Base.formatSize(file.size, 2, ['B', 'K', 'M', 'G', 'TB']);
-            file.path = file.name;
-            uploader["successList"].push(file);*/
+            if(response.status=="200"){
+                var queuedFile = getFileFromList(file.name, Upload.queuedFiles);
+                //保存后端返回的数据
+                queuedFile.backEndData = response;
+                //添加到已上传列表中
+                Upload.savedFiles.push(queuedFile);
+                //从待上传中删除
+                delFileFormList(file.name, Upload.queuedFiles);
+
+                //设置成功状态
+                queuedFile.$status.empty().append('上传成功');
+                queuedFile.saved = true;
+
+                //显示下载按钮
+                queuedFile.$download.show();
+                //全部上传完成回调
+                //if(uploader.getStats().progressNum==0){
+                    Upload.settings.uploadSuccessExt.apply(Upload,[file, response]);
+                //}
+            }
         });
+        /**
+         * 不管成功或者失败，文件上传完成时触发。
+         */
+        uploader.on('uploadComplete',function(file){
+
+        });
+
+        return uploader;
     };
 
     /********************************内部私有工具方法**********************************/
@@ -198,6 +316,20 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
             }
         });
         return tmp;
+    }
+
+    /**
+     * 根据文件名从指定的数组中删除文件对象
+     * @param fileName
+     * @param list
+     */
+    function delFileFormList(fileName, list){
+        $(list).each(function(index,entry){
+            if( entry.file.name.toLowerCase() === fileName.toLowerCase() ) {
+                list.splice(index, 1);
+                return false;
+            }
+        });
     }
 
     /**

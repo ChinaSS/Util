@@ -146,6 +146,8 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
             var closeSlidebar = function(){
                 $Panel.animate({right: "-"+param.width}, 150,function(){
                     typeof(param.afterClose)=="function" && param.afterClose.apply(this);
+                    //如果不缓存,且侧边栏的DOM来自于远程连接，则删除DOM
+                    (!param.cache && param.url) && $Panel.remove();
                 });
             };
             //增加左侧关闭
