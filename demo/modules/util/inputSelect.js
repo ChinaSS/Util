@@ -5,7 +5,7 @@
     searchAble : true,    //当数据为多层级,需树状显示时, 并提供关键字检索功能
     data : url,     //url,[]
     onSelect : function(obj){}, //obj:当前点击的数据对象
-    callback : function(data){}, //data:所有选中id的数组
+    callback : function(data,arrObj){}, //data:所有选中数据id的数组,arrObj:所有选中数据对象的数组,
     key : {
         id : "id",
         name : "name",
@@ -22,9 +22,9 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
     }
 
     function Input(config){
-        this.$input = $("#"+config.id);
-        this.$input.addClass("inputSelect");
-        if (this.$input.length!=1) {
+        var $input = $("#"+config.id);
+        $input.addClass("inputSelect");
+        if ($input.length!=1) {
             return;
         }
         this.config = $.extend(true,{
@@ -37,30 +37,54 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 name : "name",
                 data : "data"
             },
-            initData : null
+            initData : []
         },config);
 
-        if(!cache[config.id]||!this.$input.siblings(".inputPanel").length){
+        if(!cache[config.id]||!$input.siblings(".inputPanel").length){
+            this.$input = $input;
             this.initPanel();
             bindEvent(this);
             cache[config.id]=this;
         }else{
-            this.$panel = cache[config.id].$panel.empty();
+            return cache[config.id];
         }
-        this.getData();
     }
-    
+    function bindDocumentEvent(input){
+        $(document).bind(selectEvent,function(event){
+            if ($(event.target).is("."+input.config.inputClass)||$(event.target).is("."+input.config.panelClass)||$(event.target).parents("."+input.config.panelClass).length>0) {return false};
+            input.hidePanel();
+        });
+    }
     function bindEvent(input){
         //输入框点击事件
         input.$input.on(selectEvent,function(event){
-            input.togglePanel();
-            $(document).bind(selectEvent,function(event){
-                if ($(event.target).is("."+input.config.inputClass)||$(event.target).is("."+input.config.panelClass)||$(event.target).parents("."+input.config.panelClass).length>0) {return false};
-                input.hidePanel();
-                $(document).unbind(selectEvent);
-            })
+            if(input.$panel.is(":hidden")){
+                $(".inputPanel:visible").siblings(".inputSelect").each(function(){
+                    cache[this.id].hidePanel();
+                });
+                input.togglePanel();
+            }else{
+                input.togglePanel();
+                return;
+            }
+            bindDocumentEvent(input);
         }).on("focus",function(){
             $(this).blur();
+        });
+        input.$content.on(selectEvent,".remove",function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            input.showPanel();
+            bindDocumentEvent(input);
+            var item = $(this).parent()[0];
+            input.fillInput(item.firstChild.nodeValue,item.id);
+            input.$panel.find("input:checked").each(function(){
+                var id = $(this).siblings("span").data("id");
+                if(id==item.id){
+                    input.setCheckbox($(this).parent());
+                    return false;
+                }
+            });
         });
         //面板点击事件
         if (input.config.type=="checkbox") {
@@ -71,21 +95,21 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 obj[input.config.key.id]=id;
                 obj[input.config.key.name]=value;
                 if (event.target.nodeName!="INPUT") {
-                    input.setCheckbox(this);
+                    input.setCheckbox($(this));
                 }
                 input.fillInput(value,id);
-                input.config.onSelect(obj);
+                input.config.onSelect?input.config.onSelect(obj):"";
             });
         } else if (input.config.type=="select") {
             input.$panel.on(selectEvent,".item",function(event){
                 var id = $(this).children(".text").data("id"),
                     value = $(this).children(".text").text(),
                     obj={};
-                obj[input.config.id]=id;
-                obj[input.config.name]=value;
+                obj[input.config.key.id]=id;
+                obj[input.config.key.name]=value;
                 input.clearInput();
                 input.fillInput(value,id);
-                input.config.onSelect(obj);
+                input.config.onSelect?input.config.onSelect(obj):"";
                 input.hidePanel();
             });
         }
@@ -97,10 +121,24 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 $.extend(Input.fn,object);
             }
         },
+        refreshPanel : function (data) {
+            this.config.data = data;
+            this.getData();
+        },
         dataInit : function(data){ //data 为id数组
-            var dataObj = {},
+            var dataObj={},
+                idArray=[],
                 i,length;
-            this.config.initData = data;
+            var input = this;
+            if(!data||data.constructor !== Array){
+                data = data?data.split(","):[];
+            }
+            dataObj = this.getCurrentData();
+            for (i = 0,length=dataObj.length; i < length; i++) {
+                idArray.push(dataObj[i][this.config.key.id]);
+            }
+            if(data.join(",")==idArray.join(",")){return;}
+            dataObj={};
             for(i=0,length=data.length;i<length;i++){
                 dataObj[data[i]]=true;
             }
@@ -108,14 +146,16 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             if(this.config.type=="checkbox") {
                 this.resetPanel();
             }
+            if(dataObj.valueOf()=={}.valueOf()){return;}
             this.$panel.find(".item .text").each(function(){
                 if(dataObj[$(this).data("id")]){
-                    $(this)[selectEvent]();
+                    if (input.config.type=="checkbox") {
+                        input.setCheckbox($(this).parent());
+                    }
+                    input.fillInput($(this).text(),$(this).data("id"));
+                    return --length?true:false;
                 }
             });
-        },
-        refreshPanel : function(data){
-            this.$panel.children(".panelData").empty().append(this.initItem(data));
         }
     };
 
@@ -123,12 +163,26 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
         initPanel : function(){
             var offset = this.$input.offset();
             this.$panel = $("<div class='inputPanel'></div>");
-            this.$input.parent().append(this.$panel);
+            this.$content = $("<div class='inputContent'></div>");
+            this.$panel.append("<div class='panelData'></div>");
+            this.$input.parent().append(this.$panel).append(this.$content).css({
+                "position" : "relative"
+            });
+            this.$content.css({
+                "top" : this.$input.parent().css("padding-top"),
+                "left" : this.$input.parent().css("padding-left")
+            });
+            search.treeInit(this.$panel.children(".panelData"));
+            if (this.config.searchAble) {
+                var $panelSearch = $("<input class='panelSearch form-control'>");
+                this.$panel.prepend($panelSearch);
+                search.listen($panelSearch);
+            }
+            this.getData();
         },
         getData : function(){
             var _this = this,
                 data = this.config.data;
-            _this.clearInput();
             if (typeof data !== "string") {
                 _this.fillPanel(data);
             } else {
@@ -146,14 +200,11 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             }
         },
         fillPanel : function(data){
-            var html = this.initItem(data);
-            this.$panel.append("<div class='panelData'>"+html+"</div>");
-            search.treeInit(this.$panel.children(".panelData"));
-            if (this.config.searchAble) {
-                var $panelSearch = $("<input class='panelSearch form-control'>");
-                this.$panel.prepend($panelSearch);
-                search.listen(this.$panel.children(".panelSearch"));
-            }
+            this.refreshPanel(data);
+            this.dataInit(this.config.initData);
+        },
+        refreshPanel : function(data){
+            this.$panel.children(".panelData").empty().append(this.initItem(data));
         },
         initItem : function(items,lvl){
             var i,length,cur,li="",html="";
@@ -172,7 +223,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
                 } else if (this.config.type=="checkbox") {
-                    li =  "<a class='item' style='padding-left:"+10*lvl+"px'>"+
+                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"' style='padding-left:"+(10*lvl)+"px'>"+
                             "<input type='checkbox'>"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
@@ -185,55 +236,54 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             return "<ul>"+html+"</ul>";
         },
         fillInput : function(val,id){  //回填input
-            var oldValue = this.$input.val(),
-                oldIds = this.$input.data("ids");
+            var $item=null;
+            if(!id){
+                this.$input.val(val);
+                return;
+            }
             if (this.config.type=="select") { //单选
-                this.$input.data("ids",$.trim(id));
+                this.$input.data("id",$.trim(id));
                 this.$input.val($.trim(val));
             } else if (this.config.type=="checkbox") { //多选
-                id?this.$input.data("ids",this.toggleData(id,oldIds)):null;
-                val?this.$input.val(this.toggleData(val,oldValue)):null;
+                $item = this.$content.children("#"+id);
+                if($item.length==0){
+                    this.$content.append("<a id='"+id+"'>"+val+"<span class='remove'>x</span></a>");
+                }else{
+                    $item.remove();
+                }
             }
         },
-        toggleData : function(data,oldData){
-            data = $.trim(data);
-            if (!oldData) {
-                return data;
-            } else {
-                if(oldData.indexOf(data)>-1){
-                    var dataArr = oldData.split(","),
-                        cur="",
-                        i;
-                    for (i = 0; i < dataArr.length; i++) {
-                        cur = $.trim(dataArr[i]);
-                        if (cur==data) {
-                            dataArr.splice(i,1);
-                            data="";
-                            break;
-                        }
-                    }
-                    if (data) {
-                        dataArr.push(data);
-                    }
-                    data = dataArr.join(",");
-                } else {
-                    data = oldData+","+data;
-                }
-            }            
-            return data;
+        getCurrentData : function(){
+            var obj,objArray=[];
+            var _this = this;
+            if (this.config.type=="select") { //单选
+                obj={};
+                obj[_this.config.key.id]=this.$input.data("id");
+                obj[_this.config.key.name]=this.$input.val();
+                objArray.push(obj);
+            } else if (this.config.type=="checkbox") { //多选
+                this.$content.children("a").each(function(){
+                    obj={};
+                    obj[_this.config.key.id]=this.id;
+                    obj[_this.config.key.name]=this.firstChild.nodeValue;
+                    objArray.push(obj);
+                });   
+            }
+            return objArray;
         },
         clearInput : function(){
             this.$input.val("");
-            this.$input.data("ids","");
+            if (this.config.type=="select") { //单选
+                this.$input.data("id","");
+            } else if (this.config.type=="checkbox") { //多选
+                this.$content.empty();
+            }
         },
         resetPanel : function(){
             this.$panel.find("input:checked").removeAttr("checked");
         },
         showPanel : function(){
             if(!this.$panel[0].style.width){
-                this.$panel.parent().css({
-                    "position" : "relative"
-                });
                 this.$panel.css({
                     "top" : this.$input.outerHeight()*1+this.$input.parent().css("padding-top")*1,
                     "left" : this.$input.parent().css("padding-left"),
@@ -249,25 +299,26 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             this.$panel.show();
         },
         hidePanel : function(){
-            this.$panel.hide();
             if(!!this.config.callback){
-                var oldStatus={},
-                    initData = this.config.initData;
-                for(var i = 0;i<initData.length;i++){
-                    oldStatus[initData[i]]=true;
+                var objArray = this.getCurrentData();
+                var idArray = [];
+                for (var i = 0,length=objArray.length; i <length; i++) {
+                    idArray.push(objArray[i][this.config.key.id]);
                 }
-                this.config.callback(this.$input.data("ids")?this.$input.data("ids").split(","):"",oldStatus);
+                this.config.callback(idArray,objArray);
             }
+            $(document).unbind(selectEvent);//隐藏panel时,解除document事件绑定
+            this.$panel.hide();
         },
         togglePanel : function(){
             this.$panel.is(":visible")?this.hidePanel():this.showPanel();
         },
-        setCheckbox : function(item){
-            if($(item).has("input:checked").length){
-                $(item).find("input").removeAttr("checked");
+        setCheckbox : function($item){
+            if($item.has("input:checked").length){
+                $item.find("input").removeAttr("checked");
                 //$(item).find("input")[0].checked="";
             } else {
-                $(item).find("input")[0].checked=true;
+                $item.find("input")[0].checked=true;
             }
         }
     });

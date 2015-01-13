@@ -41,7 +41,7 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
      * @param okCallback
      * @param cancelCallback
      */
-    util.confirm = function(message,okCallback,cancelCallback){
+    util.confirm = function(message,okCallback,cancelCallback){//整合回调函数成一个,利用回传参数判断是否成功
         require(["UtilDir/dialog"],function(Dialog){
             var dialog = Dialog({id:"system_dialog_confirm",title:"提示信息",modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
@@ -163,7 +163,9 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
 
             //如果已经把模板放在了页面上，则通过id取得
             if(param.id){
-                $Panel = $("#"+param.id).append(addClose());
+                $Panel = $("#"+param.id);
+                //如果已经增加过关闭则不再增加
+                !$Panel.find(">div[class='cs-slidebar-left']").length && $Panel.append(addClose());
                 init();
                 return false;
             }

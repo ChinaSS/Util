@@ -12,7 +12,8 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
             swf: getStaticPath() + 'modules/webuploader/Uploader.swf',      //flash地址
             server: getServer() +"/file/upload",
             formData:{},                                                    //向服务器额外发送的数据
-            pick: ''                                                        //上传按钮所在位置
+            pick: '',                                                       //上传按钮所在位置
+            uploadSuccessExt:function(file, response){}                     //上传成功扩展
         };
 
         return new Upload($.extend(settings,options)).render();
@@ -54,12 +55,9 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.webUploader    = InitUploader(this,this.settings);
 
         //渲染已上传的附件
-        var data = this.settings.data;
-        if(data.length){
-            for(var i= 0,file;file=data[i++];){
-                this.savedFiles.push(new File(this,this.webUploader,file,true));
-            }
-        }
+        this.renderSavedFiles();
+
+        return this;
     };
 
     /**
@@ -103,12 +101,35 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
     };
 
     /**
+     * 渲染已上传的附件
+     * @param files
+     */
+    Upload.prototype.renderSavedFiles = function(files){
+        var data = files || this.settings.data;
+        if(data.length){
+            for(var i= 0,file;file=data[i++];){
+                this.savedFiles.push(new File(this,this.webUploader,file,true));
+            }
+        }
+    };
+
+    /**
      * 渲染状态栏
      */
     Upload.prototype.renderStatus = function(){
         var html = '<div class="cs-upload-status"></div>';
         this.$status = $(html);
         this.container.append(this.$status);
+    };
+
+    /**
+     * 附件控件清空
+     */
+    Upload.prototype.clear = function(){
+        this.queuedFiles    = [];
+        this.savedFiles     = [];
+        this.webUploader.reset();
+        this.$table.find("tr").not(":first").remove();
     };
 
     /**
@@ -168,6 +189,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.$tr.append(this.$operation);
 
         this.Upload.$table.append(this.$tr);
+        this.Upload.settings.afterRenderFile.apply(this,[this]);
     };
     /**
      * 渲染已经上传的附件，适用于已保存的表单编辑
@@ -177,10 +199,10 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
 
         var file = this.file;
         var html = '<tr>'+
-            '<td>'+ file.name +'</td>'+
-            '<td>'+ file.uploadDate +'</td>'+
-            '<td>'+ file.size +'</td>'+
-            '</tr>';
+                        '<td>'+ file.name +'</td>'+
+                        '<td>'+ file.uploadDate +'</td>'+
+                        '<td>'+ file.size +'</td>'+
+                    '</tr>';
         this.$tr = $(html);
 
         var _this       = this;
@@ -195,6 +217,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.$tr.append(this.$operation);
 
         this.Upload.$table.append(this.$tr);
+        this.Upload.settings.afterRenderFile.apply(this,[this]);
     };
 
     /**
@@ -280,7 +303,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
                 delFileFormList(file.name, Upload.queuedFiles);
 
                 //设置成功状态
-                queuedFile.$status.empty().append('上传成功');
+                queuedFile.$status.empty().append('已上传');
                 queuedFile.saved = true;
 
                 //显示下载按钮

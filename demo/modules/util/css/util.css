@@ -6,9 +6,9 @@ label{
 .form-group {
     margin-bottom: 8px !important;
 }
-.col-md-8{
+/* .col-md-8{
     padding-left: 0px !important;
-}
+} */
 .col-sm-10{
     padding-left: 0px !important;
 }
@@ -108,8 +108,30 @@ label{
     padding: 5px;
     color: #d9534f;
 }
+
+/*简单附件上传*/
+.cs-sUpload .fa{
+    position: absolute;
+    top: 10px;
+}
+.cs-sUpload .fa:hover{
+    color: #2898e0;
+    cursor: pointer;
+}
+.cs-sUpload .fa-cloud-upload{
+    right: 26px;
+}
+.cs-sUpload .fa-upload{
+    right: 26px;
+    display: none;
+}
+.cs-sUpload .fa-times{
+    right: 45px;
+    display: none;
+}
+
 /*修改样式，解决高宽1px无法点击上传按钮的问题*/
 .webuploader-pick +div{
-    width: 55px!important;
-    height: 20px!important;
+    width: 100%!important;
+    height: 100%!important;
 }

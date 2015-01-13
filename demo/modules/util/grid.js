@@ -173,7 +173,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             var $ul = $('<ul></ul>');
             for(var i= 0;i<this.config.toolbar.length;i++){
                 var item = this.config.toolbar[i];
-                $('<li '+(i==0?'class="first"':"")+'><a><i class="'+item.class+'">&nbsp;</i>'+ item.name +'</a></li>')
+                $('<li '+(i==0?'class="first"':"")+'><a><i class="'+item.class+'"></i>'+ item.name +'</a></li>')
                     .bind("click",this,item.callback)
                     .appendTo($ul);
             }

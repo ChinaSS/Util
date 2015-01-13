@@ -34,17 +34,39 @@ define(["jquery"],function($){
         var width = config.width?"width:"+config.width:"";
         dialogHTML.push('<div class="modal-dialog '+(config.dialogSize||"")+'" style="'+width+'">');
         dialogHTML.push('<div class="modal-content">');
-        dialogHTML.push('<div class="modal-header">');
+        var dragCss = config.drag ? 'style="cursor:move;"' : '';
+        dialogHTML.push('<div class="modal-header" '+dragCss+'>');
         dialogHTML.push('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
         dialogHTML.push('<h4 class="modal-title">'+ (config.title||"") +'</h4>');
         dialogHTML.push('</div>');
-        var height = config.height?"min-height:"+config.height:"";
+        var height = config.height?"height:"+config.height:"";
         dialogHTML.push('<div class="modal-body" style="'+height+'"></div>');
         var footStyle = 'style="border-bottom-right-radius:6px;border-bottom-left-radius:6px;padding:10px 20px 10px;background-color:#eff3f8;"';
         dialogHTML.push('<div class="modal-footer" '+footStyle+'></div>');
         dialogHTML.push('</div></div></div>');
         //生成dialog元素
         this.$dialog = $(dialogHTML.join(""));
+
+        /*拖拽实现*/
+        if(config.drag){
+            var DRAG = {};
+            this.$dialog.mousemove(function(e){
+                if(DRAG.widget!=null){
+                    DRAG.widget.style.left = (e.pageX - DRAG.widget.eLeft) +"px";
+                    DRAG.widget.style.top = (e.pageY - DRAG.widget.eTop) +"px";
+                }
+            }).mouseup(function(e){
+                DRAG = {}
+            });
+
+            this.$dialog.find("div[class='modal-header']").mousedown(function(e){
+                DRAG.widget = this.parentNode;
+                DRAG.widget.eLeft   = e.pageX - DRAG.widget.offsetLeft;
+                DRAG.widget.eTop    = e.pageY - DRAG.widget.offsetTop;
+            });
+        }
+
+
         //生成body内容
         this.setBody(config.body||"");
         //生成底部buttons
@@ -59,6 +81,7 @@ define(["jquery"],function($){
                 this.remove();
             })
         }
+        this.$dialog.modal(config.modal);
     }
     //模块通用方法(扩展)
     Dialog.fn = Dialog.prototype = {
@@ -72,7 +95,7 @@ define(["jquery"],function($){
             return this.$dialog;
         },
         show : function(){
-            this.$dialog.modal("show");
+            this.$dialog.modal('show');
         },
         hide : function(){
             this.$dialog.modal("hide");

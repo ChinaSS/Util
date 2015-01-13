@@ -45,8 +45,8 @@ function doSearch(input,tree){
 		}while($items.length);
 	}else{
 		$items.find("ul").hide().find("li").show();
-		$items.find(">ul").show();
-		$items.find(">.node").addClass("open");
+		$items.find(">ul").filter(":hidden").show();
+		$items.find(">.node").not(".open").addClass("open");
 	}
 }
 //重置树结构
@@ -61,8 +61,10 @@ function resetTree($tree){
 			}
 		});
 		lastItems=[];
-	};
+	}
 	$tree.find("a.open").removeClass("open");
+	$tree.find(".top>.node").addClass("open");
+	$tree.find(".top>ul").show();
 }
 //判断元素是否含有文本,并控制是否显示
 function hasContent(elem,data){

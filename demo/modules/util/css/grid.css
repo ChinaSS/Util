@@ -31,37 +31,33 @@
 
 /*操作栏*/
 .s_grid_toolbar{
-    height:44px;
     border-bottom:#DDDDDD 1px solid;
+    overflow: hidden;
 }
 .s_grid_toolbar ul{
     list-style: none;
     float: left;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 10px 0;
     padding:0;
 }
-.s_grid_toolbar ul li.first
-{
+.s_grid_toolbar ul li.first {
     border-left:0;
-    padding-left: 5px;
 }
 .s_grid_toolbar ul li{
     float: left;
     font-size: 14px;
     line-height: 12px;
     border-left: 1px solid #c9c9c9;
-    margin-left: 15px;
-    padding-left: 15px;
+    padding: 0 10px;
     font-family: Arial, "微软雅黑", "宋体", Tahoma, Helvetica, sans-serif;
 }
 .s_grid_toolbar ul li a{
-    padding:5px;
+    padding: 3px 5px;
 }
 .s_grid_toolbar ul li a:hover {
     background-color: #2898e0!important;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 3px;
     color: #fff;
 }
 
@@ -91,6 +87,7 @@
 /* 导航栏定位处理 */
 .s_grid_content{
     position: relative;
+    margin-bottom: 40px;
 }
 
 /*分页样式*/

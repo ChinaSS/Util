@@ -5,11 +5,11 @@
         data : data,        //数据地址
         filter : false,     //是否对数据启用前端匹配
         lazyMatch : true,   //延迟匹配,默认为true
-        dataFormat : null,  //用于自定义每列数据的格式化输出,接受一个数据参数
+        dataFormat : null,  //用于自定义每列数据输出格式的对象数组
         callback : null     //绑定功能函数
     }
 */
-define(["jquery","css!UtilDir/css/typeahead"],function($){
+define(["jquery","css!UtilDir/css/typeahead.css"],function($){
     function TypeaheadInit(config){
         var _param = {
             id : null,
@@ -22,7 +22,7 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
                 id : "id",
                 data : "data"
             },
-            dataFormat : null, //function(data){处理数据格式,并返回html结构}
+            dataFormat : null, //
             callback : function(data){
                 console.log(data);
             }
@@ -70,85 +70,77 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
     };
 
     Typeahead.fn.extend({
-
     });
 
     //内部事件对象构造函数
     function EventModal(obj){
-        this.status = obj.status,
-        this.lastContent = obj.lastContent,
-        this.cur = obj.cur,
-        this.config = obj.config,
-        this.$input = obj.$input,
-        this.$suggest = obj.$suggest,
-        this.$submit = obj.$submit;
-
+        $.extend(this,obj);
         var modal = this;
         //绑定事件
-        modal.$input.on("keyup",function(){
-            modal.inputValidation();
-        }).on("focus",function(){
-            if(modal.lastContent&&!modal.status){
-               modal.inputValidation();
-            }
-        });
-        modal.$suggest.on("mouseover",function(){
-            $(this).children("a:focus").blur();
-            modal.cur=-1;
-        }).delegate("a","click",function(event){
-            //console.log(event.target==this)
-            var val = $(event.target).text();
-            modal.fillInput(val);
-            modal.doEnd(event,$(this));
-        });
-
-        //绑定键盘事件,额外鼠标事件
-        $(document).on("keydown",function(event){
+        modal.$input.on("keyup",function(event){
             modal.keyEvent(event);
-        }).on("click",function(event){
-            if(event.target!=modal.$input[0]){
+        }).on("focus",function(){
+            modal.inputValidation();
+        }).on("blur",function(){
+            if(modal.$suggest.is(":visible")){
                 modal.hideSuggest();
             }
         });
+        modal.$suggest.
+            on("mouseenter",function(){
+                $(this).children("a.cur").removeClass("cur");
+            }).
+            on("mouseleave",function(event){
+                $(event.target).addClass("cur");
+            }).
+            delegate("a","mousedown",function(event){
+                if(!!modal.config.dataFormat){
+                    modal.lastContent = $(this).children("."+modal.config.key.data).text();
+                }else{
+                    modal.lastContent = $(this).text();
+                }
+                modal.doEnd(event,$(this));
+            });
     }
 
     EventModal.fn = EventModal.prototype = {
         keyEvent : function(event){ //键盘事件
-            var modal = this,cur;
+            var modal = this;
+            var $list = modal.$suggest.children("a"),
+                length = $list.length;
+            var $cur = $list.filter(".cur"),
+                cur = $list.index($cur);
             if(event.which=="13"){
-               if(event.target==modal.$suggest.children("a:focus")[0]){
-                    modal.doEnd(event,$(event.target));
-               }
+                if($cur.length>0){
+                    modal.lastContent = $cur.text();
+                    modal.doEnd(event,$cur);
+                }
             }
             else if (event.which=="40"||event.which=="38") {
                 event.preventDefault();
                 event.stopPropagation();
-                cur = modal.cur;
-                if(modal.$suggest.is(":visible")){
-                    var $list = modal.$suggest.children("a");
-                    var length = $list.length;
-                    if(!length){return false;}
+
+                if(!!length&&modal.$suggest.is(":visible")){
                     if (event.which=="40") {
                         cur = (++cur+length)%length;
                     }else{
                         if (cur===0) {
-                            modal.cur=-1;
-                            modal.$suggest.children("a:focus").blur();
-                            modal.$input.focus();
+                            $($list[0]).removeClass("cur");
                             modal.fillInput(modal.lastContent);
-                            return false;
+                            return;
                         }else if (cur===-1) {
                             cur = cur+length;
                         }else{
                             cur = (--cur+length)%length;
                         }
                     }
-                    modal.cur = cur;
-                    modal.$suggest.children("a:focus").blur();
-                    var val = ($($list[cur]).focus()).text();
-                    modal.fillInput(val);
+                    $cur.removeClass("cur");
+                    modal.fillInput($($list[cur]).addClass("cur").text());
+                }else{
+                    //history
                 }
-
+            } else {
+                modal.inputValidation();
             }
         },
         inputValidation : function(){   //检查输入
@@ -157,34 +149,47 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
             modal.lastContent=content;
             modal.endTimeout();
             if (content=="") {
-                modal.hideSuggest();
+                modal.$suggest.empty();
+                modal.$suggest.append("<p>请输入汉字进行搜索</p>");
+                modal.$suggest.show();
                 return false;
             }
             modal.status=setTimeout(function(){
                 modal.status=null;
-                modal.cur=-1;
                 modal.getData();
             },400);
         },
         fillSuggest : function(data){   //处理匹配数据并填充推荐列表
             var modal = this,
                 cur = "",
-                id = "",
+                dataFormat = modal.config.dataFormat,
                 lastContent= this.lastContent;
             modal.$suggest.empty();
             if(this.config.filter){
                 data = modal.dataFilter(data);
             }
             if (!!data.length) {
+                if(!!dataFormat){
+                    var formatHtml="";
+                    for(var j=0, length=dataFormat.length;j<length;j++){
+                        formatHtml+="<span style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+dataFormat[j]["field"]+"</span>";
+                    }
+                    modal.$suggest.append("<p>"+formatHtml+"</p>");
+                }
                 for (var i = data.length; --i>-1;) {
                     var $cur = null;
                     cur = data[i];
-                    cur = (typeof cur == "object")?cur[this.config.key.data]:cur;
                     //格式化输出内容
-                    if (!!modal.config.dataFormat) {
-                        cur = modal.config.dataFormat(cur);
+                    if (!!dataFormat) {
+                        formatHtml="";
+                        for(j=0, length=dataFormat.length;j<length;j++){
+                            formatHtml+="<span class="+dataFormat[j]["key"]+" style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+data[i][dataFormat[j]["key"]]+"</span>";
+                        }
+                        cur = formatHtml;
                     } else {
-                        cur = cur.replace(lastContent,"<span class='match'>"+lastContent+"</span>");
+                        cur = (typeof cur == "object")?cur[this.config.key.data]:cur;
+                        cur = cur.replace(lastContent,"<i class='match'>"+lastContent+"</i>");
+                        cur = "<span>"+cur+"</span>";
                     }
                     $cur = $("<a href='#'>"+cur+"</a>");
                     $cur.data("originData",data[i]);
@@ -232,12 +237,13 @@ define(["jquery","css!UtilDir/css/typeahead"],function($){
         },
         doEnd : function(event,$elem){ //结束后,执行回调任务,并隐藏推荐列表
             event.preventDefault();
-            this.fillInput($elem.text());
             this.hideSuggest();
+            this.fillInput(this.lastContent);
             this.config.callback($elem.data("originData"));
         },
         hideSuggest : function(){
             this.$suggest.hide();
+            this.$suggest.children("a.cur").removeClass("cur");
         },
         fillInput : function(val){  //回填input
             val = $.trim(val);

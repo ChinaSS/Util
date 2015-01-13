@@ -12,6 +12,28 @@ ul,li{
     cursor: pointer;
     padding: 3px 10px;
     border: 1px solid #ccc;
+    background: url("../images/selectIcon.png") no-repeat right center;
+}
+.inputContent{
+    position : absolute;
+    overflow-x : hidden;
+    padding: 6px;
+    max-width: 100%;
+}
+.inputContent a{
+    padding: 0 3px;
+    margin-right: 2px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    color : #333;
+    cursor: default;
+}
+.inputContent a:hover span{
+    cursor: pointer;
+}
+.inputContent a span{
+    margin-left: 2px;
 }
 .inputPanel{
     display : none;
