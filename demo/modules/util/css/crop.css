@@ -1,0 +1,63 @@
+.cs_cropper_picker{
+	display: inline-block;
+}
+/* webuploader css start */
+.cs_cropper_picker .webuploader-pick{
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	background: #00b7ee;
+	padding: 5px 10px;
+	color: #fff;
+	text-align: center;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.cs_cropper_picker .webuploader-pick-hover {
+	background-color: #2898e0;
+	color: #fff;
+	text-decoration: none;
+}
+/* webuploader css end */
+.cs_cropper_wrap{
+	width: 680px;
+}
+.cs_cropper_toolbar{
+	/*margin-bottom: 5px;*/
+}
+.cs_cropper_view{
+	width: 480px;
+	height: 270px;
+	margin-right: 200px;
+	background: #ccc;
+}
+.cs_cropper_preview{
+	float: right;
+	width: 200px;
+	height: 270px;
+	background: #eee;
+}
+.cs_cropper_preview_md{
+	width: 160px;
+	/*height: 90px;*/
+	overflow: hidden;
+	margin: 0 auto;
+	margin-top: 10px;
+	border: 3px solid #00b7ee;
+	border-radius: 5px;
+}
+/*
+.cs_cropper_preview_sm{
+	width: 90px;
+	height: 45px;
+	overflow: hidden;
+	margin: 0 auto;
+}
+*/
+.cs_cropper_preview_txt{
+	padding: 0;
+	margin: 0;
+	font-size: 24px;
+	font-weight: normal;
+	font-family: '微软雅黑';
+}
