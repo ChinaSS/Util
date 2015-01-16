@@ -85,7 +85,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             pageCount:0                     //总页数
         };
     }
-
+    
      //模块通用方法(扩展)
     Grid.fn = Grid.prototype = {
         //对象方法扩展API
