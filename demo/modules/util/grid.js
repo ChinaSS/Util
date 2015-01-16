@@ -47,16 +47,23 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
         //创建表格对象
         var grid = new Grid($.extend({
             pageSize: 10,
+            pagination : true,
             trEvent: {},
             sort:{
                 field: null,
                 order: "desc"
+            },
+            dataFormat:{
+                "allDataCount" : "dataCount",
+                "curPageData" : "pageData"
             }
         },config));
         //添加缓存
         cache[config.id] = grid;
         return grid;
     }
+
+    initGrid.init = initGrid;
 
     initGrid.getGrid = function(id){
         return cache[id];
@@ -100,7 +107,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if (!!type) {
                 //grid HTML Structure
                 var html = '<div class="s_grid_title"></div>'+
-                           '<div class="s_grid_content'+(this.config.hidden?' hide':'')+'">'+
+                           '<div class="s_grid_content'+(this._config.hidden?' hide':'')+'">'+
                                '<div class="s_grid_toolbar"></div>'+     //操作栏面板
                                '<div class="s_grid_table"></div>'+
                                '<div class="s_grid_pagination"></div>'+
@@ -108,7 +115,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 //获取 grid 对象, 
                 this._$gridPanel = this.getGridPanel();
                 this._$gridPanel.addClass("s_grid").empty().append(html);
-            };
+            }
 
             //初始化 grid 各个部分
             this.renderTitle(type);
@@ -123,8 +130,8 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if(!!type){
                 $title.empty();
                 var html = '<span class="title"></span>';
-                if(typeof(config.hidden)!="undefined"){
-                    html += '<i class="glyphicon'+config.hidden?' glyphicon-plus-sign':' glyphicon-minus-sign'+'"></i>';
+                if(typeof(this._config.hidden)!="undefined"){
+                    html += '<i class="glyphicon'+this._config.hidden?' glyphicon-plus-sign':' glyphicon-minus-sign'+'"></i>';
                     //表格内容显示隐藏控制
                     $title.on('click','.glyphicon',function(e){
                         $title.siblings(".s_grid_content").slideToggle();
@@ -133,17 +140,17 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 }
                 $title.append(html);
             }
-            $title.children(".title").text(config.title || '数据列表');
+            $title.children(".title").text(this._config.title || '数据列表');
         },
 
         renderToolbar : function(type){
             var $toolbar = this._$gridPanel.find(".s_grid_toolbar");
             if(!!type){
                 $toolbar.empty();
-                if(!!this.config.toolbar&&this.config.toolbar.length>0){
+                if(!!this._config.toolbar&&this._config.toolbar.length>0){
                     var $ul = $('<ul></ul>');
-                    for(var i = 0, length=this.config.toolbar.length;i<length;i++){
-                        var item = this.config.toolbar[i];
+                    for(var i = 0, length=this._config.toolbar.length;i<length;i++){
+                        var item = this._config.toolbar[i];
                         $('<li '+(i==0?'class="first"':"")+'><a><i class="'+item.class+'"></i>'+ item.name +'</a></li>')
                             .bind("click",this,item.callback)
                             .appendTo($ul);
@@ -169,10 +176,10 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if(!!type){
                 $tableHead.empty();
                 //render head
-                var html = '<td>'+_this._config.index=="checkbox"?'<input type="checkbox">':''+'</td>';
+                var html = '<th align="center">'+(_this._config.index=="checkbox"?'<input type="checkbox">':'')+'</th>';
                 var layout = _this._config.layout;
                 for(var i=0,item;item=layout[i++];){
-                    html += '<td align="'+item.align?item.align:'left'+'"'+item.width?(' width="'+item.width+'"'):''+' class="'+item.field+'">'+item.name+item.sort?'<i class="fa fa-sort"></i>':''+'</td>';
+                    html += '<th align="'+(item.align?item.align:'center')+'" width="'+(item.width?item.width:100/layout.length+'%')+'" class="'+item.field+'">'+item.name+(item.sort?'<i class="fa fa-sort"></i>':'')+'</th>';
                 }
                 $tableHead.append('<tr>'+html+'</tr>');
                 //bindEvent
@@ -209,12 +216,14 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
         },
 
         renderPagination : function(type){
-            //数据少于一页时不创建分页栏
-            if(this._pageInfo.pageCount<=1){ return false; }
             var $pagination = this._$gridPanel.find(".s_grid_pagination");
+            //数据少于一页时不创建分页栏
+            this._pageInfo.pageCount = Math.ceil(this._pageInfo.dataCount/this._config.pageSize);
+            if(this._pageInfo.pageCount<1||!this._config.pagination){ $pagination.empty().hide(); return false; }
+
             var _this = this;
             if(!!type){
-                $pagination.empty();
+                $pagination.empty().show();
                 //render pagination
                 var html = '<a title="第一页" class="GoToFirst"><i class="glyphicon glyphicon-step-backward"></i></a>'+
                             '<a title="上一页" class="GoToPrev"><i class="glyphicon glyphicon-chevron-left"></i></a>'+
@@ -222,46 +231,46 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                             '<a title="下一页" class="GoToNext"><i class="glyphicon glyphicon-chevron-right"></i></a>'+
                             '<a title="最后一页" class="GoToEnd"><i class="glyphicon glyphicon-step-forward"></i></a>';
                 for (var i = 1; i < _this._pageInfo.pageCount+1; i++) {
-                    html += '<a class="'+(_this._pageInfo.pageNumber==i)?'curPage':''+'">'+i+'</a>';
+                    html += '<a class="'+(_this._pageInfo.pageNumber==i?'curPage':'')+'">'+i+'</a>';
                 }
-                html += '<span class="pageCount">共'+_this._pageInfo.pageCount+'条</span>';
+                html += '<span class="dataCount">共'+_this._pageInfo.dataCount+'条</span>';
                 html += '<a title="刷新" class="refresh"><i class="glyphicon glyphicon-refresh"></i></a>';
                 $pagination.append(html);
-                $pagination.on("click","a",function(){
-                    var className = this.className;
-                    if(className.indexOf("GoTo")>-1){
-                        var type = className.substring(4);
-                        pageNumber = _this._pageInfo.pageNumber;
-                        pageCount = _this._pageInfo.pageCount;
-                        switch(type){
-                            case 'First' : 
-                                _this._pageInfo.pageNumber=1;
-                                break;
-                            case 'End' : 
-                                _this._pageInfo.pageNumber=pageCount;
-                                break;
-                            case 'Prev' : 
-                                _this._pageInfo.pageNumber=(pageNumber==1)?pageNumber:pageNumber-1;
-                                break;
-                            case 'Next' : 
-                                _this._pageInfo.pageNumber=(pageNumber==pageCount)?pageNumber:pageNumber+1;
-                                break;
+                if(!$pagination.data("bindEvent")){
+                    $pagination.on("mouseup","a",function(){
+                        var className = this.className;
+                        if(className.indexOf("GoTo")>-1){
+                            var type = className.substring(4);
+                            pageNumber = _this._pageInfo.pageNumber;
+                            pageCount = _this._pageInfo.pageCount;
+                            switch(type){
+                                case 'First' :
+                                    _this._pageInfo.pageNumber=1;
+                                    break;
+                                case 'End' :
+                                    _this._pageInfo.pageNumber=pageCount;
+                                    break;
+                                case 'Prev' :
+                                    _this._pageInfo.pageNumber=(pageNumber==1)?pageNumber:pageNumber-1;
+                                    break;
+                                case 'Next' :
+                                    _this._pageInfo.pageNumber=(pageNumber==pageCount)?pageNumber:pageNumber+1;
+                                    break;
+                            }
+
+                        }else if (className!="refresh"&&className!="curPage") {
+                            _this._pageInfo.pageNumber = $(this).text()*1;
+                        }else if (className=="refresh"){
+
                         }
-                        
-                    }else if (className!="refresh"&&className!="curPage") {
-                        _this._pageInfo.pageNumber = $(this).text();
-                    }else if (className=="refresh"){
-                        
-                    }else{
+                        _this.renderData(true);
                         return false;
-                    }
-                    _this.renderData(true);
-                    _this.renderPagination(false);
-                }).on("blur","input",function(){
-                    _this._pageInfo.pageNumber = $(this).val();
-                    _this.renderData(true);
-                    _this.renderPagination(false);
-                });
+                    }).on("blur","input",function(){
+                        _this._pageInfo.pageNumber = $(this).val()*1;
+                        _this.renderData(true);
+                    });
+                    $pagination.data("bindEvent",true);
+                }
             } else {
                 $pagination.find(".curPage").each(function(){
                     if(this.nodeName == 'A'){
@@ -282,19 +291,19 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             }else{
                 var rows = _this._pageInfo.pageData,
                     $tr,trValue,tdValue;
-                //render data
+                //render pagination
+                _this.renderPagination(true);
+                //render tableData
                 for (var i = 0,row; row = rows[i++];) {
                     $tr = $("<tr></tr>");
                     $tr.data("index",i);
-                    trValue = '<td><input type="'+_this._config.index=="checkbox"?'checkbox':'radio'+'"></td>';
-
+                    trValue = '<td><input type="'+(_this._config.index=="checkbox"?'checkbox':'radio')+'"></td>';
                     for (var j=0,item;item=_this._config.layout[j++];) {
                         tdValue = row[item.field]?row[item.field]:"";
-                        tdValue = item.format?item.format(nodeValue):nodeValue;
-                        tdValue = item.click?'<a class="'+item.field+'">'+tdValue+'</a>';
+                        tdValue = item.format?item.format({row:row}):tdValue;
+                        tdValue = item.click?'<a class="'+item.field+'">'+tdValue+'</a>':tdValue;
                         trValue += '<td>'+tdValue+'</td>';
                     }
-
                     $tr.append(trValue);
                     $tableBody.append($tr);
                 }
@@ -305,7 +314,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                     };
                 }
                 $tableBody.on("click","a",function(event){
-                    var rowData = _this._pageInfo.pageData[$(this).data("index")];
+                    var rowData = _this._pageInfo.pageData[$(this).closest("tr").data("index")];
                     event.data = {
                         "row" : rowData
                     };
@@ -319,7 +328,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 this.getAjaxData(callback);
             } else {
                 this._pageInfo.pageData = this._config.data;
-                callback(false);
+                callback.call(this,false);
             }
         },
 
@@ -334,14 +343,14 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                     "pageNumber": _this._pageInfo.pageNumber,
                     "field": _this._config.sort.field,
                     "order": _this._config.sort.order
-                },this.config.formData),
+                },this._config.formData),
                 success: function(returnData){
-                    returnData.pageCount = Math.ceil(returnData.dataCount/_this._config.pageSize);
                     if(typeof _this._config.dataFormat!="undefined"){
-                        //returnData = formatData(returnData,_this._config.dataFormat); datatransfer
+
                     }
+                    returnData = formatData(returnData,_this._config.dataFormat);
                     $.extend(_this._pageInfo,returnData);
-                    callback(false);
+                    callback.call(_this,false);
                     return true;
                 },
                 error:function(jqXHR,status,errorThrown){
@@ -397,26 +406,18 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
      * pageInfo
      */
     function formatData(data,format){
-        var i = null, list = {
-            "total" : "allDataCount",
-            "data" : "curPageData"
-        };
+        var result={};
         //遍历替换列表
-        for (i in format ){
-            if (format.hasOwnProperty(i)) {
-                if(format[i].indexOf('.')>-1){
-                    var arr = format[i].split('.'), j,transferData;
-                    for(j=1,transferData=data[arr[0]];j<arr.length;j++){
-                        transferData = transferData[arr[j]];
-                    }
-                    data[list[i]] = transferData;
+        for (var i in data ){
+            if (data.hasOwnProperty(i)) {
+                if(!!format[i]){
+                    result[format[i]] = data[i];
                 }else{
-                    data[list[i]] = data[format[i]];
+                    result[i] = data[i];
                 }
-                delete data[format[i]];
             }
         }
-        return data;
+        return result;
     }
 
     return initGrid;
