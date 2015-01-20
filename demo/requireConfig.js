@@ -23,7 +23,11 @@ require.config({
         }
     }
 });
-
+var root;
 function getStaticPath(){
-    return "/Util/demo/";
+	if(!root){
+		var pathname=document.location.pathname;
+		root=pathname.replace(/index.html/,"");
+	}
+    return root;
 }
