@@ -7,9 +7,10 @@
     id:"DemoOne",
     placeAt:"DemoGirdDivId",            //存放Grid的容器ID
     pageSize:5,                         //一页多少条数据
-    title:'<i class="fa fa-table" style="color:#2898e0"></i>&nbsp;人员信息列表',
+    title:'人员信息列表',
     hidden:false,                       //表格是否可隐藏，只显示标题
     index:"checkbox",                   //首列为单选[radio]还是多选[checkbox],默认checkbox
+    pagination : true,                  //默认分页,
     cache:false,
     layout:[
         {name:"姓名",field:"Name",click:function(e){
@@ -49,7 +50,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             pageSize: 10,
             pagination : true,
             trEvent: {},
-            sort:{
+            sortParam:{
                 field: null,
                 order: "desc"
             },
@@ -127,8 +128,11 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
 
         renderTitle : function(type){
             var $title = this._$gridPanel.children(".s_grid_title");
+            if(!this._config.title){
+                $title.empty().hide(); return false;
+            }
             if(!!type){
-                $title.empty();
+                $title.empty().show();
                 var html = '<span class="title"></span>';
                 if(typeof(this._config.hidden)!="undefined"){
                     html += '<i class="glyphicon'+this._config.hidden?' glyphicon-plus-sign':' glyphicon-minus-sign'+'"></i>';
@@ -164,7 +168,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             var $table = this._$gridPanel.find(".s_grid_table");
             if(!!type){
                 $table.empty();
-                $table.append('<table><thead></thead><tbody></tbody></table>');
+                $table.append('<table class="table table-hover"><thead></thead><tbody></tbody></table>');
                 this.renderTableHead(type);
                 this.renderTableBody(type);
             }
@@ -179,29 +183,33 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 var html = '<th align="center">'+(_this._config.index=="checkbox"?'<input type="checkbox">':'')+'</th>';
                 var layout = _this._config.layout;
                 for(var i=0,item;item=layout[i++];){
-                    html += '<th align="'+(item.align?item.align:'center')+'" width="'+(item.width?item.width:100/layout.length+'%')+'" class="'+item.field+'">'+item.name+(item.sort?'<i class="fa fa-sort"></i>':'')+'</th>';
+                    html += '<th'+(item.align?' style="text-align:'+item.align+'"':'')+' width="'+(item.width?item.width:100/layout.length+'%')+'" class="'+item.field+'">'+item.name+(item.field?'<i class="fa fa-sort"></i>':'')+'</th>';
                 }
                 $tableHead.append('<tr>'+html+'</tr>');
                 //bindEvent
-                $tableHead.on("click","td",function(event){
+                $tableHead.on("click","th",function(event){
                     var nodeName = event.target.nodeName,
                         field = null,
                         order = "desc";
                     if (nodeName=="INPUT") {
-                        var checked = $(this).is(":checked");
+                        var checked = $(event.target).is(":checked");
                         $tableHead.siblings("tbody").find("input").each(function(){
                             if (checked) {
-                                $(this).prop("checked","checked");
+                                this.checked=true;
                             } else {
-                                $(this).removeProp("checked");
+                                $(this).removeAttr("checked");
                             }
                         });
-                    } else {
+                    } else if(nodeName=="I") {
                         field = this.className?this.className:null;
                         if(!!field){
-                            $(this).parent().children(".curSort").removeClass("curSort");
-                            $(this).addClass("curSort").children(".fa-sort").toggleClass("desc");
-                            order = $(this).children(".fa-sort").is(".desc")?"desc":"asc";
+                            $(this).siblings().children(".fa-sort").removeClass("fa-sort-desc fa-sort-asc");
+                            if($(this).children(".fa-sort").is(".fa-sort-desc,.fa-sort-asc")){
+                                $(this).children(".fa-sort").toggleClass("fa-sort-desc fa-sort-asc");
+                            }else{
+                                $(this).children(".fa-sort").toggleClass("fa-sort-desc");
+                            }
+                            order = $(this).children(".fa-sort").is(".fa-sort-desc")?"desc":"asc";
                             _this.sortTableData(field,order,false);
                         }
                     }
@@ -211,7 +219,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
 
         renderTableBody : function(type){
             if(!!type){
-                this.renderData(type);
+                this.renderTableData(type);
             }
         },
 
@@ -220,22 +228,30 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             //数据少于一页时不创建分页栏
             this._pageInfo.pageCount = Math.ceil(this._pageInfo.dataCount/this._config.pageSize);
             if(this._pageInfo.pageCount<1||!this._config.pagination){ $pagination.empty().hide(); return false; }
-
             var _this = this;
             if(!!type){
                 $pagination.empty().show();
+                _this._$gridPanel.find(".s_grid_table thead .fa-sort").removeClass("fa-sort-desc fa-sort-asc");
                 //render pagination
                 var html = '<a title="第一页" class="GoToFirst"><i class="glyphicon glyphicon-step-backward"></i></a>'+
                             '<a title="上一页" class="GoToPrev"><i class="glyphicon glyphicon-chevron-left"></i></a>'+
-                            '<span class="curPage">第<input type="text" value="'+_this._pageInfo.pageNumber+'"/>页</span>'+
+                            '<span class="curPage"><input type="text" value="'+_this._pageInfo.pageNumber+'"/></span>'+
                             '<a title="下一页" class="GoToNext"><i class="glyphicon glyphicon-chevron-right"></i></a>'+
                             '<a title="最后一页" class="GoToEnd"><i class="glyphicon glyphicon-step-forward"></i></a>';
+
                 for (var i = 1; i < _this._pageInfo.pageCount+1; i++) {
                     html += '<a class="'+(_this._pageInfo.pageNumber==i?'curPage':'')+'">'+i+'</a>';
                 }
-                html += '<span class="dataCount">共'+_this._pageInfo.dataCount+'条</span>';
                 html += '<a title="刷新" class="refresh"><i class="glyphicon glyphicon-refresh"></i></a>';
+                html += '<span class="dataCount">共'+_this._pageInfo.dataCount+'条</span>';
+                html += '<span class="pageSize">每页<select>'+
+                        '<option value="10">10</option>'+
+                        '<option value="20">20</option>'+
+                        '<option value="50">50</option>'+
+                        '<option value="100">100</option>'+
+                        '</select>条</span>';
                 $pagination.append(html);
+                $pagination.find(".pageSize select").val(_this._config.pageSize);
                 if(!$pagination.data("bindEvent")){
                     $pagination.on("mouseup","a",function(){
                         var className = this.className;
@@ -263,11 +279,13 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                         }else if (className=="refresh"){
 
                         }
-                        _this.renderData(true);
-                        return false;
+                        _this.renderTableData(true);
                     }).on("blur","input",function(){
                         _this._pageInfo.pageNumber = $(this).val()*1;
-                        _this.renderData(true);
+                        _this.renderTableData(true);
+                    }).on("change","select",function(){
+                        _this._config.pageSize = $(this).val()*1;
+                        _this.renderTableData(true);
                     });
                     $pagination.data("bindEvent",true);
                 }
@@ -282,44 +300,73 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             }
         },
 
+        renderTableData : function (type) {
+            if(!!type){
+                this.getData(this.renderData);
+            }else{
+                this.renderData(false);
+            }
+        },
+
         renderData : function(type){
             var $tableBody = this._$gridPanel.find(".s_grid_table tbody");
             $tableBody.empty();
             var _this = this;
-            if(!!type){
-                _this.getData(_this.renderData);
-            }else{
                 var rows = _this._pageInfo.pageData,
                     $tr,trValue,tdValue;
-                //render pagination
-                _this.renderPagination(true);
+            //render pagination
+            _this.renderPagination(type);
                 //render tableData
-                for (var i = 0,row; row = rows[i++];) {
-                    $tr = $("<tr></tr>");
-                    $tr.data("index",i);
-                    trValue = '<td><input type="'+(_this._config.index=="checkbox"?'checkbox':'radio')+'"></td>';
-                    for (var j=0,item;item=_this._config.layout[j++];) {
-                        tdValue = row[item.field]?row[item.field]:"";
-                        tdValue = item.format?item.format({row:row}):tdValue;
-                        tdValue = item.click?'<a class="'+item.field+'">'+tdValue+'</a>':tdValue;
-                        trValue += '<td>'+tdValue+'</td>';
-                    }
-                    $tr.append(trValue);
-                    $tableBody.append($tr);
+            for (var i = 0,row; row = rows[i++];) {
+                $tr = $("<tr></tr>");
+                $tr.data("index",i-1);
+                trValue = '<td><input type="'+(_this._config.index=="checkbox"?'checkbox':'radio')+'"></td>';
+                for (var j=0,item;item=_this._config.layout[j++];) {
+                    tdValue = row[item.field]?row[item.field]:"";
+                    tdValue = item.format?item.format({row:row}):tdValue;
+                    tdValue = item.click?'<a class="'+item.field+'">'+tdValue+'</a>':tdValue;
+                    trValue += '<td'+(item.align?' align="'+item.align+'"':'')+'>'+tdValue+'</td>';
                 }
-                _this._layoutEventObj={};
-                for (var i = 0, layout;layout=_this._config.layout[i++];) {
-                    if (!!layout.click) {
-                        _this._layoutEventObj[layout.field]=layout.click;
-                    };
+                $tr.append(trValue);
+                $tableBody.append($tr);
+            }
+            if(--i<_this._config.pageSize){
+                var pageSize = _this._config.pageSize;
+                for(j=i;j<pageSize;j++){
+                    $tableBody.append('<tr class="emptyRow"></tr>');
                 }
+            }
+            _this._layoutEventObj={};
+            for (var i = 0, layout;layout=_this._config.layout[i++];) {
+                if (!!layout.click) {
+                    _this._layoutEventObj[layout.field]=layout.click;
+                }
+            }
+            if(!$tableBody.data("bindEvent")){
                 $tableBody.on("click","a",function(event){
+                    event.stopPropagation();
+                    event.preventDefault();
                     var rowData = _this._pageInfo.pageData[$(this).closest("tr").data("index")];
                     event.data = {
                         "row" : rowData
                     };
                     _this._layoutEventObj[this.className](event);
-                })
+                    console.log(_this.getSelectedRow());
+                }).on("click","tr", function (event) {
+                    if(event.target.nodeName == "A"){
+                        return false;
+                    }else if(event.target.nodeName != "INPUT"){
+                        toggleCheckbox($(this).find("input"));
+                    }
+                    var unCheckedNum = $tableBody.find("tr input").not(":checked").length;
+                    var $checkAll = _this._$gridPanel.find(".s_grid_table thead input");
+                    if(unCheckedNum==0){
+                        $checkAll[0].checked=true;
+                    }else if(unCheckedNum==1){
+                        $checkAll.removeAttr("checked");
+                    }
+                });
+                $tableBody.data("bindEvent",true);
             }
         },
 
@@ -328,7 +375,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 this.getAjaxData(callback);
             } else {
                 this._pageInfo.pageData = this._config.data;
-                callback.call(this,false);
+                callback.call(this,true);
             }
         },
 
@@ -340,17 +387,15 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 dataType: "json",
                 data: $.extend({
                     "pageSize": _this._config.pageSize,
-                    "pageNumber": _this._pageInfo.pageNumber,
-                    "field": _this._config.sort.field,
-                    "order": _this._config.sort.order
-                },this._config.formData),
+                    "pageNumber": _this._pageInfo.pageNumber
+                },_this._config.formData,_this._config.sortParam),
                 success: function(returnData){
                     if(typeof _this._config.dataFormat!="undefined"){
 
                     }
                     returnData = formatData(returnData,_this._config.dataFormat);
                     $.extend(_this._pageInfo,returnData);
-                    callback.call(_this,false);
+                    callback.call(_this,true);
                     return true;
                 },
                 error:function(jqXHR,status,errorThrown){
@@ -363,14 +408,14 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
         sortTableData : function(field,order,type){
             if (arguments.length<2) {return false;}
             if (!!type) {
-                $.extend(this._config.sort,{
+                $.extend(this._config.sortParam,{
                     field : field,
                     order : order
                 });
-                this.renderData(true);
+                this.renderTableData(true);
             } else {
                 this._pageInfo.pageData = sortData(this._pageInfo.pageData,field,order);
-                this.renderData(false);
+                this.renderTableData(false);
             }
         }
     };
@@ -382,22 +427,33 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             $tableBody = _this._$gridPanel.find(".s_grid_table tbody");
             $tableBody.find("input:checked").each(function(){
                 var index = $(this).closest("tr").data("index");
-                if (!index) { return true;}
+                if (typeof index == "undefined") { return true;}
                 selectedArr.push(_this._pageInfo.pageData[index]);
             });
-            return selected;
+            return selectedArr;
         }
     });
 
+    function toggleCheckbox($input){
+        if($input.is(":checked")){
+            $input.removeAttr("checked");
+        }else{
+            $input[0].checked = true;
+        }
+    }
     /* 
      * 排序函数
      * sortData
      */
     function sortData(data,field,order){
-        var result = null;
+        var result = [];
         if (!data||data.length==0) {return data;}
         // sort data
-        result = data; //测试逻辑
+        for(var i= data.length,item;i-->0;){
+            item = data[i];
+            result.push(item);
+        }
+        result = result.length>0?result:data; //测试逻辑
         return result;
     }
 
