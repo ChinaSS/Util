@@ -65,9 +65,8 @@
 
 
 /*表格标题排序样式*/
-.s_grid table tr:first-child i{
-    /*font-family: Arial, "微软雅黑", "宋体", Tahoma, Helvetica, sans-serif;
-    font-weight: bold;*/
+.s_grid thead tr i{
+    margin-left: 4px;
     color:#307ECC;
     cursor:pointer
 }

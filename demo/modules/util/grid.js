@@ -238,10 +238,11 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                             '<span class="curPage"><input type="text" value="'+_this._pageInfo.pageNumber+'"/></span>'+
                             '<a title="下一页" class="GoToNext"><i class="glyphicon glyphicon-chevron-right"></i></a>'+
                             '<a title="最后一页" class="GoToEnd"><i class="glyphicon glyphicon-step-forward"></i></a>';
-
+                /*
                 for (var i = 1; i < _this._pageInfo.pageCount+1; i++) {
                     html += '<a class="'+(_this._pageInfo.pageNumber==i?'curPage':'')+'">'+i+'</a>';
                 }
+                */
                 html += '<a title="刷新" class="refresh"><i class="glyphicon glyphicon-refresh"></i></a>';
                 html += '<span class="dataCount">共'+_this._pageInfo.dataCount+'条</span>';
                 html += '<span class="pageSize">每页<select>'+
@@ -292,7 +293,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             } else {
                 $pagination.find(".curPage").each(function(){
                     if(this.nodeName == 'A'){
-                        $(this).siblings(".curPage").removeClass("curPage").end().addClass("curPage");
+                        //$(this).siblings(".curPage").removeClass("curPage").end().addClass("curPage");
                     }else if (this.nodeName == 'SPAN') {
                         $(this).children("input").val(_this._pageInfo.pageNumber);
                     }

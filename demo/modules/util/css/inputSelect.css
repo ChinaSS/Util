@@ -63,6 +63,9 @@ ul,li{
     padding: 2px 5px;
     display: block;
     cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .inputPanel a:hover{

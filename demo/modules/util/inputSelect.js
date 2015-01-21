@@ -25,7 +25,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
         var $input = $("#"+config.id);
         $input.addClass("inputSelect");
         if ($input.length!=1) {
-            return;
+            return cache[config.id];
         }
         this.config = $.extend(true,{
             type : "checkbox",
@@ -58,16 +58,18 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
     function bindEvent(input){
         //输入框点击事件
         input.$input.on(selectEvent,function(event){
+            if($(this).is(":disabled,[readonly]")){
+                return false;
+            }
             if(input.$panel.is(":hidden")){
                 $(".inputPanel:visible").siblings(".inputSelect").each(function(){
                     cache[this.id].hidePanel();
                 });
                 input.togglePanel();
+                bindDocumentEvent(input);
             }else{
                 input.togglePanel();
-                return;
             }
-            bindDocumentEvent(input);
         }).on("focus",function(){
             $(this).blur();
         });
@@ -139,6 +141,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             }
             if(data.join(",")==idArray.join(",")){return;}
             dataObj={};
+            this.config.initData=data;
             for(i=0,length=data.length;i<length;i++){
                 dataObj[data[i]]=true;
             }
@@ -218,12 +221,12 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 hasData = cur[data]&&cur[data].length>0;
                 if(!cur){continue;}
                 if (this.config.type=="select"||hasData) {
-                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"' style='padding-left:"+(10*lvl)+"px'>"+
+                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"'"+(hasData?"":" title='"+cur[name]+"'")+" style='padding-left:"+(10*lvl)+"px'>"+
                             "<span class='pic'></span>"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
                 } else if (this.config.type=="checkbox") {
-                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"' style='padding-left:"+(10*lvl)+"px'>"+
+                    li =  "<a class='"+(hasData?"node":"item")+(lvl==0&&hasData?" open":"")+"'"+(hasData?"":" title='"+cur[name]+"'")+" style='padding-left:"+(10*lvl)+"px'>"+
                             "<input type='checkbox'>"+
                             "<span class='text' data-id="+cur[id]+">"+cur[name]+"</span>"+
                             "</a>";
