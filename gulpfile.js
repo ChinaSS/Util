@@ -19,3 +19,15 @@ gulp.task('default', function () {
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('dist'));
 });
+
+
+var browserSync = require("browser-sync");
+gulp.task("browser-sync", function(){
+
+	browserSync({
+        server: {
+            baseDir: "./"
+        }
+    });
+	
+});

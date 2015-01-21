@@ -154,7 +154,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
         this.webUploader= webUploader;          //WebUploader对象
         this.file       = file;                 //Webuploader中的file对象
         this.saved      = saved;                //标识当前文件的状态已上传
-        this.backEndData= null;                 //文件所对应的后端数据信息
+        this.responseData= null;                 //文件所对应的后端数据信息
         this.$tr        = "";                   //文件行DOM对象
         this.$status    = "";                   //状态DOM对象
         this.$operation = null;                 //操作DOM对象
@@ -195,7 +195,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
      * 渲染已经上传的附件，适用于已保存的表单编辑
      */
     File.prototype.renderSavedFiles = function(){
-        this.backEndData  = this.file.backEndData;
+        this.responseData  = this.file.responseData;
 
         var file = this.file;
         var html = '<tr>'+
@@ -296,7 +296,7 @@ define(['WebUploader','jquery','css!UtilDir/css/util.css','css!WebUploaderCss'],
             if(response.status=="200"){
                 var queuedFile = getFileFromList(file.name, Upload.queuedFiles);
                 //保存后端返回的数据
-                queuedFile.backEndData = response;
+                queuedFile.responseData = response;
                 //添加到已上传列表中
                 Upload.savedFiles.push(queuedFile);
                 //从待上传中删除
