@@ -432,6 +432,9 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 selectedArr.push(_this._pageInfo.pageData[index]);
             });
             return selectedArr;
+        },
+        refresh : function(){
+            this.renderTableData(true);
         }
     });
 

@@ -23,7 +23,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
 
     function Input(config){
         var $input = $("#"+config.id);
-        $input.addClass("inputSelect");
+        $input.addClass("inputSelect").wrap('<div class="inputWrapper"></div>');
         if ($input.length!=1) {
             return cache[config.id];
         }
