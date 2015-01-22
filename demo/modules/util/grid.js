@@ -137,7 +137,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 $title.empty().show();
                 var html = '<span class="title"><i class="fa fa-table" style="color:#2898e0"></i></span>';
                 if(typeof(this._config.hidden)!="undefined"){
-                    html += '<i class="glyphicon'+this._config.hidden?' glyphicon-plus-sign':' glyphicon-minus-sign'+'"></i>';
+                    html += '<i class="glyphicon'+(this._config.hidden?' glyphicon-plus-sign':' glyphicon-minus-sign')+'"></i>';
                     //表格内容显示隐藏控制
                     $title.on('click','.glyphicon',function(e){
                         $title.siblings(".s_grid_content").slideToggle();
