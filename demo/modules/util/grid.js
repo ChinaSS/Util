@@ -248,6 +248,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 html += '<a title="刷新" class="refresh"><i class="glyphicon glyphicon-refresh"></i></a>';
                 html += '<span class="dataCount">共'+_this._pageInfo.dataCount+'条</span>';
                 html += '<span class="pageSize">每页<select>'+
+                        '<option value="5">5</option>'+
                         '<option value="10">10</option>'+
                         '<option value="20">20</option>'+
                         '<option value="50">50</option>'+
@@ -284,10 +285,11 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                         }
                         _this.renderTableData(true);
                     }).on("blur","input",function(){
-                        _this._pageInfo.pageNumber = $(this).val()*1;
+                        _this._pageInfo.pageNumber = Math.min($(this).val()*1,_this._pageInfo.pageCount);
                         _this.renderTableData(true);
                     }).on("change","select",function(){
                         _this._config.pageSize = $(this).val()*1;
+                        _this._pageInfo.pageNumber = 1;
                         _this.renderTableData(true);
                     });
                     $pagination.data("bindEvent",true);
@@ -313,7 +315,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
 
         renderData : function(type){
             var $tableBody = this._$gridPanel.find(".s_grid_table tbody");
-            $tableBody.empty();
+            $tableBody.empty().siblings("thead").find("input").removeAttr("checked");
             var _this = this;
                 var rows = _this._pageInfo.pageData,
                     $tr,trValue,tdValue;
@@ -377,9 +379,24 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if (this._config.data.type=="URL") {
                 this.getAjaxData(callback);
             } else {
-                this._pageInfo.pageData = this._config.data;
-                callback.call(this,true);
+                this.getCurPageData(callback);
             }
+        },
+        
+        getCurPageData : function (callback) {
+            var data = this._config.data,
+                pageNumber = this._pageInfo.pageNumber,
+                pageSize = this._config.pageSize,
+                curPageData=[],
+                startIndex,endIndex;
+            if(data.length>0){
+                this._pageInfo.dataCount = data.length;
+                startIndex = (pageNumber-1)*pageSize;
+                endIndex = Math.min(pageNumber*pageSize,data.length);
+                curPageData = data.slice(startIndex,endIndex);
+            }
+            this._pageInfo.pageData = curPageData;
+            callback.call(this,true);
         },
 
         getAjaxData : function(callback){
