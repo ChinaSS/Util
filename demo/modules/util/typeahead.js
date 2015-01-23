@@ -185,7 +185,7 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                         formatHtml="";
                         for(j=0, length=dataFormat.length;j<length;j++){
                             var value = data[i][dataFormat[j]["key"]];
-                            formatHtml+="<span class="+dataFormat[j]["key"]+" style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+value?value:""+"</span>";
+                            formatHtml+="<span class="+dataFormat[j]["key"]+" style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+(value?value:"")+"</span>";
                         }
                         cur = formatHtml;
                     } else {
