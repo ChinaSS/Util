@@ -1,11 +1,12 @@
 /**
     config = {
         id : null,          //页面锚id
-        btn : null,         //button名称, 通过是否有值判断是否启用button
+        btn : "",         //button名称, 通过是否有值判断是否启用button
         data : data,        //数据地址
         filter : false,     //是否对数据启用前端匹配
         lazyMatch : true,   //延迟匹配,默认为true
-        dataFormat : null,  //用于自定义每列数据输出格式的对象数组
+        key : null,         //
+        dataFormat : null,  //自定义每列的数据显示格式的对象数组, 每个对象定义一列数据
         callback : null     //绑定功能函数
     }
 */
@@ -13,10 +14,10 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
     function TypeaheadInit(config){
         var _param = {
             id : null,
-            btn : null,
+            btn : "",
             lazyMatch : true,
             data : [],
-            filter : true,
+            filter : false,
             MAX_RESULT : 100,
             key:{
                 id : "id",
@@ -165,7 +166,7 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                 dataFormat = modal.config.dataFormat,
                 lastContent= this.lastContent;
             modal.$suggest.empty();
-            if(this.config.filter){
+            if(!!this.config.filter){
                 data = modal.dataFilter(data);
             }
             if (!!data.length) {
@@ -183,7 +184,8 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                     if (!!dataFormat) {
                         formatHtml="";
                         for(j=0, length=dataFormat.length;j<length;j++){
-                            formatHtml+="<span class="+dataFormat[j]["key"]+" style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+data[i][dataFormat[j]["key"]]+"</span>";
+                            var value = data[i][dataFormat[j]["key"]];
+                            formatHtml+="<span class="+dataFormat[j]["key"]+" style='width:"+(dataFormat[j]["width"]?dataFormat[j]["width"]:100/dataFormat.length)+"%'>"+value?value:""+"</span>";
                         }
                         cur = formatHtml;
                     } else {
@@ -221,12 +223,14 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                 modal.fillSuggest(data);
             } else {
                 $.ajax({
-                    type : "GET",
+                    type : "POST",
                     url : data,
-                    data : modal.lastContent,
+                    data : {
+                      q : modal.lastContent
+                    },
                     dataType : "json",
                     success : function(data){
-                        modal.fillSuggest(data);
+                    	modal.fillSuggest(data);
                     },
                     error : function(){
                         console.log("ajax error");

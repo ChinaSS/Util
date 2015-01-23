@@ -74,6 +74,9 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             $(this).blur();
         });
         input.$content.on(selectEvent,".remove",function(event){
+            if($(this).is(":disabled,[readonly]")){
+                return false;
+            }
             event.preventDefault();
             event.stopPropagation();
             input.showPanel();
