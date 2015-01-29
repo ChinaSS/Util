@@ -21,6 +21,10 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
         return new Input(config);
     }
 
+    init.getInput = function(id){
+        return cache[id];
+    };
+
     function Input(config){
         var $input = $("#"+config.id);
         $input.addClass("inputSelect").wrap('<div class="inputWrapper"></div>');
@@ -126,10 +130,6 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
                 $.extend(Input.fn,object);
             }
         },
-        refreshPanel : function (data) {
-            this.config.data = data;
-            this.getData();
-        },
         dataInit : function(data){ //data 为id数组
             var dataObj={},
                 idArray=[],
@@ -210,6 +210,7 @@ define(["jquery","./treeSearch","css!UtilDir/css/inputSelect.css"],function($,se
             this.dataInit(this.config.initData);
         },
         refreshPanel : function(data){
+            this.config.data = data;
             this.$panel.children(".panelData").empty().append(this.initItem(data));
         },
         initItem : function(items,lvl){

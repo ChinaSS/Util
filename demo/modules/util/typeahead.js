@@ -17,7 +17,7 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
             btn : "",
             lazyMatch : true,
             data : [],
-            filter : false,
+            filter : true,
             MAX_RESULT : 100,
             key:{
                 id : "id",

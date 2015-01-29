@@ -182,7 +182,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if(!!type){
                 $tableHead.empty();
                 //render head
-                var html = '<th align="center">'+(_this._config.index=="checkbox"?'<input type="checkbox">':'')+'</th>';
+                var html = '<th align="center">'+(_this._config.index?'<input type="'+_this._config.index+'">':'')+'</th>';
                 var layout = _this._config.layout;
                 for(var i=0,item;item=layout[i++];){
                     html += '<th'+(item.align?' style="text-align:'+item.align+'"':'')+' width="'+(item.width?item.width:100/layout.length+'%')+'" class="'+item.field+'">'+item.name+(item.field?'<i class="fa fa-sort"></i>':'')+'</th>';
@@ -285,7 +285,8 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                         }
                         _this.renderTableData(true);
                     }).on("blur","input",function(){
-                        _this._pageInfo.pageNumber = Math.min($(this).val()*1,_this._pageInfo.pageCount);
+                        var pageNumber = Math.min($(this).val()*1,_this._pageInfo.pageCount);
+                        _this._pageInfo.pageNumber = pageNumber>0?pageNumber:1;
                         _this.renderTableData(true);
                     }).on("change","select",function(){
                         _this._config.pageSize = $(this).val()*1;
@@ -305,7 +306,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             }
         },
 
-        renderTableData : function (type) {
+        renderTableData : function (type) { //type:true/false, 当前页所显示数据是否发生改变
             if(!!type){
                 this.getData(this.renderData);
             }else{
@@ -325,11 +326,11 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             for (var i = 0,row; row = rows[i++];) {
                 $tr = $("<tr></tr>");
                 $tr.data("index",i-1);
-                trValue = '<td><input type="'+(_this._config.index=="checkbox"?'checkbox':'radio')+'"></td>';
+                trValue = '<td align="center">'+(_this._config.index?'<input type="'+_this._config.index+'">':'')+'</td>';
                 for (var j=0,item;item=_this._config.layout[j++];) {
                     tdValue = row[item.field]?row[item.field]:"";
                     tdValue = item.format?item.format({row:row}):tdValue;
-                    tdValue = item.click?'<a class="'+item.field+'">'+tdValue+'</a>':tdValue;
+                    tdValue = item.click?'<a'+(item.field?' class="'+item.field+'"':'')+'>'+tdValue+'</a>':tdValue;
                     trValue += '<td'+(item.align?' align="'+item.align+'"':'')+'>'+tdValue+'</td>';
                 }
                 $tr.append(trValue);
@@ -349,18 +350,16 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             }
             if(!$tableBody.data("bindEvent")){
                 $tableBody.on("click","a",function(event){
-                    event.stopPropagation();
-                    event.preventDefault();
-                    var rowData = _this._pageInfo.pageData[$(this).closest("tr").data("index")];
-                    event.data = {
-                        "row" : rowData
-                    };
-                    _this._layoutEventObj[this.className](event);
-                    console.log(_this.getSelectedRow());
+                	if(this.className&&_this._layoutEventObj[this.className]){
+	                    event.stopPropagation();
+	                    var rowData = _this._pageInfo.pageData[$(this).closest("tr").data("index")];
+	                    event.data = {
+	                        "row" : rowData
+	                    };
+	                    _this._layoutEventObj[this.className](event);
+                	}
                 }).on("click","tr", function (event) {
-                    if(event.target.nodeName == "A"){
-                        return false;
-                    }else if(event.target.nodeName != "INPUT"){
+                    if(event.target.nodeName != "INPUT"){
                         toggleCheckbox($(this).find("input"));
                     }
                     var unCheckedNum = $tableBody.find("tr input").not(":checked").length;
