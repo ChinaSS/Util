@@ -2,13 +2,14 @@
  * 弹出框组件
 config = {
     id:"TestDialog",
-    cache:false,                        //是否缓存，默认为true
+    cache:false,                        //是否缓存，默认为false
     title:"测试窗口",
     width:"400px",
     height:"100px",
     dialogSize:"",                      //modal-lg或modal-sm
     body:"窗口中间内容",
-    buttons:buttons
+    buttons:buttons,
+    callback : function(dialog){}
 };
 **/
 define(["jquery"],function($){
@@ -17,7 +18,7 @@ define(["jquery"],function($){
     function DialogInit(config){
         //合并参数
         config = $.extend({
-            cache:true
+            cache:false
         },config);
         //判断是否已缓存
         if (cache[config.id] && config.cache) {
@@ -26,6 +27,19 @@ define(["jquery"],function($){
         //创建并返回新dialog
         return new Dialog(config);
     }
+
+    DialogInit.dropCache = function(){
+        for(var i in cache){
+            if(cache.hasOwnProperty(i)){
+                cache[i].$getDialog().remove();
+            }
+        }
+        cache={};
+    };
+
+    DialogInit.getDialog = function(id){
+        return cache[id];
+    };
 
     function Dialog(config){
         //Dialog HTML字符串
@@ -65,8 +79,6 @@ define(["jquery"],function($){
                 DRAG.widget.eTop    = e.pageY - DRAG.widget.offsetTop;
             });
         }
-
-
         //生成body内容
         this.setBody(config.body||"");
         //生成底部buttons
@@ -79,10 +91,12 @@ define(["jquery"],function($){
         }else{
             this.$dialog.on('hidden.bs.modal', function (e) {
                 this.remove();
-            })
+            });
         }
         this.$dialog.modal(config.modal);
+        (typeof config.callback == "function")?config.callback(this):null;
     }
+
     //模块通用方法(扩展)
     Dialog.fn = Dialog.prototype = {
         //对象方法扩展API
@@ -99,9 +113,6 @@ define(["jquery"],function($){
         },
         hide : function(){
             this.$dialog.modal("hide");
-        },
-        save : function(){
-            //保存Dialog信息的扩展api, 需用户自定义扩展功能
         }
     };
 
