@@ -24,10 +24,11 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
     /**
      * 用法：require(["UtilDir/util"],function(u){u.alert("请填写基本信息！")})
      * @param message
+     * @param title
      */
-    util.alert =function(message,type){
+    util.alert =function(message,title){
         require(["UtilDir/dialog"],function(Dialog){
-            var dialog = Dialog({id:"system_dialog_alert",title:(type?type:"系统信息"),modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
+            var dialog = Dialog({id:"system_dialog_alert",title:(title?title:"系统信息"),modal:{backdrop:"static",show:true},dialogSize:"modal-sm",height:"66px"});
             dialog.setBody(message);
             $dialog = dialog.$getDialog();
             $dialog.css({"margin-top":"13%"});
@@ -127,13 +128,14 @@ define(["jquery","css!UtilDir/css/util.css"],function($){
                     typeof(param.afterLoad)=="function" && param.afterLoad.apply(this);
                 });
                 //添加点击侧边栏之外的元素关闭侧边栏事件监听
-                param.close && $(document.body).unbind("mouseup").bind("mouseup",function(e) {
+                var $target = $("#main-container") || $(document.body);
+                param.close && $target.unbind("mouseup").bind("mouseup",function(e) {
                     //不是目标区域且不是子元素,且不是自定义允许点击节点
                     if ((!$Panel.is(e.target) && $Panel.has(e.target).length === 0) && !isAllowTarget(e)) {
                         //关闭页面
                         closeSlidebar();
                         //取消事件
-                        $(document.body).unbind("mouseup");
+                        $target.unbind("mouseup");
                     }
                 });
                 //增加以添加样式即可关闭侧边栏的方法
