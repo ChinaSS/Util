@@ -182,7 +182,10 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if(!!type){
                 $tableHead.empty();
                 //render head
-                var html = '<th align="center">'+(_this._config.index?'<input type="'+_this._config.index+'">':'')+'</th>';
+                var html = "";
+                if(!!_this._config.index){
+                    html += '<th align="center"><input type="'+(_this._config.index=='checkbox'?'checkbox':'radio')+'"></th>';
+                }
                 var layout = _this._config.layout;
                 for(var i=0,item;item=layout[i++];){
                     html += '<th'+(item.align?' style="text-align:'+item.align+'"':'')+' width="'+(item.width?item.width:100/layout.length+'%')+'" class="'+item.field+'">'+item.name+(item.field?'<i class="fa fa-sort"></i>':'')+'</th>';
@@ -250,6 +253,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                 html += '<span class="pageSize">每页<select>'+
                         '<option value="5">5</option>'+
                         '<option value="10">10</option>'+
+                        '<option value="15">15</option>'+
                         '<option value="20">20</option>'+
                         '<option value="50">50</option>'+
                         '<option value="100">100</option>'+
@@ -326,7 +330,10 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             for (var i = 0,row; row = rows[i++];) {
                 $tr = $("<tr></tr>");
                 $tr.data("index",i-1);
-                trValue = '<td align="center">'+(_this._config.index?'<input type="'+_this._config.index+'">':'')+'</td>';
+                trValue = "";
+                if(!!_this._config.index){
+                    trValue += '<td align="center"><input type="'+(_this._config.index=='checkbox'?'checkbox':'radio')+'" name="gridSelect"></td>';
+                }
                 for (var j=0,item;item=_this._config.layout[j++];) {
                     tdValue = row[item.field]?row[item.field]:"";
                     tdValue = item.format?item.format({row:row}):tdValue;
@@ -350,8 +357,8 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             }
             if(!$tableBody.data("bindEvent")){
                 $tableBody.on("click","a",function(event){
+                    event.stopPropagation();
                 	if(this.className&&_this._layoutEventObj[this.className]){
-	                    event.stopPropagation();
 	                    var rowData = _this._pageInfo.pageData[$(this).closest("tr").data("index")];
 	                    event.data = {
 	                        "row" : rowData
@@ -359,9 +366,11 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
 	                    _this._layoutEventObj[this.className](event);
                 	}
                 }).on("click","tr", function (event) {
+                    if(!_this._config.index){return false;}
                     if(event.target.nodeName != "INPUT"){
                         toggleCheckbox($(this).find("input"));
                     }
+                    if(_this._config.index=="radio"){return true;}
                     var unCheckedNum = $tableBody.find("tr input").not(":checked").length;
                     var $checkAll = _this._$gridPanel.find(".s_grid_table thead input");
                     if(unCheckedNum==0){

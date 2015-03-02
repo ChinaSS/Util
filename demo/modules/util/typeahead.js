@@ -6,6 +6,10 @@
         filter : false,     //是否对数据启用前端匹配
         lazyMatch : true,   //延迟匹配,默认为true
         key : null,         //
+        panelCss : {
+            width : "1.0",
+            align : "left"
+        },
         dataFormat : null,  //自定义每列的数据显示格式的对象数组, 每个对象定义一列数据
         callback : null     //绑定功能函数
     }
@@ -23,20 +27,23 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                 id : "id",
                 data : "data"
             },
+            panelCss : {
+                width : "1.0",
+                align : "left"
+            },
             dataFormat : null, //
             callback : function(data){
                 console.log(data);
             }
         };
-        config.key = $.extend(_param.key,config.key);
-        config = $.extend(_param,config);
+        config = $.extend(true,_param,config);
         return new Typeahead(config);
     }
 
     function Typeahead(config){
-        this.status = null,
-        this.lastContent = "",
-        this.cur = -1,
+        this.status = null;
+        this.lastContent = "";
+        this.cur = -1;
         this.config = config;
 
         var $elem = $("#"+config.id);
@@ -53,6 +60,10 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
         //获取元素
         this.$input = $elem;
         this.$suggest = this.$typeahead.find(".typeahead-suggest");
+        this.$suggest.css({
+            width : config.panelCss.width*100+"%",
+            left : config.panelCss.align=="left"?0:(1-config.panelCss.width)*100+"%"
+        });
         this.$submit = this.$typeahead.find(".typeahead-submit");
 
         this.bindEvent();
@@ -151,7 +162,7 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
             modal.endTimeout();
             if (content=="") {
                 modal.$suggest.empty();
-                modal.$suggest.append("<p>请输入汉字进行搜索</p>");
+                modal.$suggest.append("<p class='info'>请输入汉字进行搜索</p>");
                 modal.$suggest.show();
                 return false;
             }
@@ -198,7 +209,7 @@ define(["jquery","css!UtilDir/css/typeahead.css"],function($){
                     modal.$suggest.append($cur);
                 }
             } else {
-                modal.$suggest.append("<p>没有结果</p>");
+                modal.$suggest.append("<p class='info'>没有结果</p>");
             }
             modal.$suggest.show();
         },

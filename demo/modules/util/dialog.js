@@ -53,7 +53,7 @@ define(["jquery"],function($){
         dialogHTML.push('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
         dialogHTML.push('<h4 class="modal-title">'+ (config.title||"") +'</h4>');
         dialogHTML.push('</div>');
-        var height = config.height?"height:"+config.height:"";
+        var height = config.height?"overflow-y:scroll;overflow-x:hidden;height:"+config.height:"";
         dialogHTML.push('<div class="modal-body" style="'+height+'"></div>');
         var footStyle = 'style="border-bottom-right-radius:6px;border-bottom-left-radius:6px;padding:10px 20px 10px;background-color:#eff3f8;"';
         dialogHTML.push('<div class="modal-footer" '+footStyle+'></div>');
