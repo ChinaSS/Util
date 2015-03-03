@@ -63,9 +63,9 @@ define(["WebUploader", "css!WebUploaderCss", "Cropper", "css!CropperCss", "css!U
 								'<h2 class="cs_cropper_preview_txt">预览：</h2>' + 
 								'<div class="cs_cropper_preview_md"></div>' + 
 							'</div>' + 
-							'<div class="cs_cropper_view">' + 
-								'<img src="" alt="请选择图片" />' + 
-							'</div>' + 
+							'<div class="cs_cropper_view">' +
+								'<img src="modules/util/images/cropper2.jpg" alt="请选择图片" />' +
+							'</div>' +
 						'</div>' +
 					'</div>';
 			var selector = self.options.id,
@@ -205,6 +205,9 @@ define(["WebUploader", "css!WebUploaderCss", "Cropper", "css!CropperCss", "css!U
 							//alert("complete");
 						});
 					},
+					uploader:function(){
+						return uploader;
+					},
 					crop: function( data ) { //获取要裁剪的数据
 			            var scale = data.width / Cropper.getImageSize().width;
 			            data.scale = scale;
@@ -335,9 +338,14 @@ define(["WebUploader", "css!WebUploaderCss", "Cropper", "css!CropperCss", "css!U
 			if (!this.options.url) {
 				alert("url is undefined");
 				return ;
-			} 
-			this.Uploader.crop(this.Cropper.getCropData());
-			this.Uploader.upload();
+			}
+			var files = this.Uploader.uploader().getFiles();
+			if (files && files.length > 0) {
+				this.Uploader.crop(this.Cropper.getCropData());
+				this.Uploader.upload();
+			} else {
+				alert("请选择要裁剪的图片");
+			}
 		}
 	}
 

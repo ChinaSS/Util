@@ -20,31 +20,29 @@
 }
 /* webuploader css end */
 .cs_cropper_wrap{
-	width: 680px;
+	width: 720px;
 }
 .cs_cropper_toolbar{
 	/*margin-bottom: 5px;*/
 }
 .cs_cropper_view{
 	width: 480px;
-	height: 270px;
-	margin-right: 200px;
-	background: #ccc;
+	height: 360px;
+	margin-right: 240px;
+	/*border: 1px solid #eef;*/
 }
 .cs_cropper_preview{
 	float: right;
-	width: 200px;
-	height: 270px;
-	background: #eee;
+	width: 240px;
+	height: 360px;
 }
 .cs_cropper_preview_md{
-	width: 160px;
+	width: 200px;
 	/*height: 90px;*/
 	overflow: hidden;
 	margin: 0 auto;
 	margin-top: 10px;
-	border: 3px solid #00b7ee;
-	border-radius: 5px;
+	border-radius: 3px;
 }
 /*
 .cs_cropper_preview_sm{
@@ -55,9 +53,9 @@
 }
 */
 .cs_cropper_preview_txt{
-	padding: 0;
+	padding: 40px 0 0 20px;
 	margin: 0;
-	font-size: 24px;
+	font-size: 16px;
 	font-weight: normal;
 	font-family: '微软雅黑';
 }
