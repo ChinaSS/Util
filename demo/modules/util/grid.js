@@ -27,6 +27,9 @@
         {name:"查询",class:"fa fa-search",callback:function(event){console.log(event.data)}},
         {name:"导出",class:"fa fa-download",callback:function(event){console.log('导出')}}
     ],
+    trEvent:[
+        {type:"click",callback:function(event){}}
+    ],
     data:[{Name:"张三",Sex:"男",Phone:"123456",Email:"",Address:"BJ"},{Name:"张三",Sex:"男",Phone:"123456",Email:"",Address:"BJ"}]
     //data:{type:"URL",value:""}                                //只要data值的类型数组都视为假分页，为对象视为真分页
     formData:{                                  //数据请求的额外参数
@@ -346,7 +349,7 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
             if(--i<_this._config.pageSize){
                 var pageSize = _this._config.pageSize;
                 for(j=i;j<pageSize;j++){
-                    $tableBody.append('<tr class="emptyRow"></tr>');
+                    $tableBody.append('<tr class="emptyRow"><td>&nbsp;</td></tr>');
                 }
             }
             _this._layoutEventObj={};
@@ -379,8 +382,20 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
                         $checkAll.removeAttr("checked");
                     }
                 });
+                for(var evt in this._config.trEvent){
+                    (function(trEvent){
+                        var type = evt;
+                        $tableBody.on(type,"tr",function(event){
+                            event.data = {
+                                "row" : _this._pageInfo.pageData[$(this).data("index")]
+                            };
+                            trEvent[type](event);
+                        });
+                    })(this._config.trEvent);
+                }
                 $tableBody.data("bindEvent",true);
             }
+
         },
 
         getData : function(callback){
@@ -461,6 +476,14 @@ define(["jquery","css!UtilDir/css/grid.css"],function($){
         },
         refresh : function(){
             this.renderTableData(true);
+        },
+        setData : function(callback){
+            if (!this._config.data.type) {
+                this._config.data = callback(this._config.data);
+                this.refresh();
+            }else{
+                console.log("data retrived from database!")
+            }
         }
     });
 

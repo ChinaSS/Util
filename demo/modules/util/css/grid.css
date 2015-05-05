@@ -80,8 +80,9 @@
 }
 
 /*空行不显示边框*/
-.s_grid table .emptyRow{
-    height:38px;
+.s_grid table .emptyRow td{
+    border-color: transparent;
+    cursor: auto;
 }
 .s_grid .emptyRow:hover td{
     background: transparent;
